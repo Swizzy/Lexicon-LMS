@@ -1,15 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
 namespace LexiconLMS.Models
 {
-    public class Module
+    public class Module 
     {
         public int Id { get; set; }
+
+        [Required(AllowEmptyStrings = false)]
         public string Name { get; set; }
+    
         public string Description { get; set; }
         public int CourseId { get; set; }
+
+        // Navigation properties
+        //public virtual Course Course { get; set; }
+        //public virtual ICollection<Activity> Activities { get; set; }
+        //public virtual ICollection<Document> Documents { get; set; }
     }
 }
