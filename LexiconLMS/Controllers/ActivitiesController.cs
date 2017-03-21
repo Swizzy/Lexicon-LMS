@@ -94,16 +94,22 @@ namespace LexiconLMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Description,StartDate,EndDate,ModuleId,ActivityTypeId")] Activity activity)
+        public ActionResult Edit(int? id, ActivityCreateViewModel activity)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(activity).State = EntityState.Modified;
+                //db.Entry(activity).State = EntityState.Modified;
+                Activity dbactivity = db.Activities.Find(id);
+                if (dbactivity == null)
+                {
+                    return HttpNotFound();
+                }
+                dbactivity.Update(activity);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { activity.ModuleId });
             }
             ViewBag.ActivityTypeId = new SelectList(db.ActivityTypes, "Id", "Name", activity.ActivityTypeId);
-            return View(new ActivityCreateViewModel(activity));
+            return View(activity);
         }
 
         // GET: Activities/Delete/5
@@ -142,3 +148,4 @@ namespace LexiconLMS.Controllers
         }
     }
 }
+
