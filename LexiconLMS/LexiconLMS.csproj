@@ -311,7 +311,6 @@
     <Content Include="Views\Users\StudentIndex.cshtml" />
     <Content Include="Views\Users\EditStudent.cshtml" />
     <Content Include="Views\Modules\Index.cshtml" />
-    <Content Include="Views\Activities\StudentIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201703210849336_AddModules.resx">

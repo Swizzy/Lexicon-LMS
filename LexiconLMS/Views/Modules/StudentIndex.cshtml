@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<LexiconLMS.Models.ModuleIndexStudentViewModel>
 
-@*<h1>@Model.CourseName</h1>*@
+@*<h1>@Model</h1>*@
 <h2>Course Schedule</h2>
 
 @{int i = 0;}
@@ -18,10 +18,12 @@
             <div id="collapseOne_@i" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
                 <div class="panel-body">
                     <ol>
-                        @foreach (var activity in item.Activities)
-                        {
-                            <li>@activity.StartDate - @activity.EndDate : @activity.Name</li>
-                        }
+                    @foreach (var activity in item.Activities)
+                    {
+                        @*<li>@Html.DisplayFor(modelItem => item.Activities.StartDate)</li>*@
+                        <li>@Html.DisplayFor(modelItem => activity.EndDate)</li>
+                        <li>@Html.DisplayFor(modelItem => activity.Name)</li>
+                    }
                     </ol>
                 </div>
             </div>

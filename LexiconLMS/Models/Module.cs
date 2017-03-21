@@ -63,6 +63,7 @@ namespace LexiconLMS.Models
 
     public class ModuleIndexStudentViewModel
     {
+
         public ModuleIndexStudentViewModel(DateTime timestamp, IEnumerable<ActivityViewModel> activities) 
         {
             Activities = activities;
@@ -70,9 +71,13 @@ namespace LexiconLMS.Models
 
         }
 
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
         public DateTime Timestamp { get; set; }
 
         public IEnumerable<ActivityViewModel> Activities { get; }
+        
+
+
     }
 
     public class ModuleIndexViewModel
