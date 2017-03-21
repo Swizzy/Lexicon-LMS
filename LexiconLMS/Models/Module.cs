@@ -18,7 +18,7 @@ namespace LexiconLMS.Models
 
         // Navigation properties
         //public virtual Course Course { get; set; }
-        //public virtual ICollection<Activity> Activities { get; set; }
+        public virtual ICollection<Activity> Activities { get; set; }
         //public virtual ICollection<Document> Documents { get; set; }
     }
 }

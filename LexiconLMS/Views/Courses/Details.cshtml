@@ -4,27 +4,27 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<h2>@Html.DisplayFor(model => model.Name)</h2>
 
-<div>
-    <h4>Course</h4>
+<div style="word-wrap:break-word;">
+    <h4>Description</h4>
     <hr />
-    <dl class="dl-horizontal">
+    <dl>
         <dt>
-            @Html.DisplayNameFor(model => model.Name)
+            @*@Html.DisplayNameFor(model => model.Name)*@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Name)
+            @*@Html.DisplayFor(model => model.Name)*@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Description)
+            @*@Html.DisplayNameFor(model => model.Description)*@
         </dt>
-
-        <dd>
+            @*@Html.TextAreaFor(model => model.Description, new { rows = 10 })*@
+            @*@Html.TextBoxFor(model => model.Description, new { rows = 1000 })*@
             @Html.DisplayFor(model => model.Description)
-        </dd>
+      
 
     </dl>
 </div>

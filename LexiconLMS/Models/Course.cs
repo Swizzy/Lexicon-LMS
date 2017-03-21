@@ -10,8 +10,32 @@ namespace LexiconLMS.Models
     {
         public int Id { get; set; }
         [Required]
-        [Display(Name = "Course Name")]
+       // [Display(Name = "Course Name")]
         public string Name { get; set; }
+
+        [DataType(DataType.MultilineText)]
         public string Description { get; set; }
+        [Display(Name = "Start Date")]
+        public DateTime? StartDate {
+            get
+            {
+                var sortedActivities = Modules.SelectMany(m => m.Activities)
+                                              .OrderBy(a => a.StartDate);
+                return sortedActivities.FirstOrDefault()?.StartDate;
+            }
+        }
+        [Display(Name = "End Date")]
+        public DateTime? EndDate
+        {
+            get
+            {
+                var sortedActivities = Modules.SelectMany(m => m.Activities)
+                                              .OrderBy(a => a.StartDate);
+                return sortedActivities.LastOrDefault()?.EndDate;
+            }
+        }
+
+        //Navigation Properties
+        public virtual ICollection<Module> Modules { get; set; }
     }
 }
