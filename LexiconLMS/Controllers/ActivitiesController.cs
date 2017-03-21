@@ -44,10 +44,17 @@ namespace LexiconLMS.Controllers
         }
 
         // GET: Activities/Create
-        public ActionResult Create()
+        public ActionResult Create(int? moduleId)
         {
+            if (moduleId == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var module = db.Modules.Find(moduleId);
+            if (module == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
             ViewBag.ActivityTypeId = new SelectList(db.ActivityTypes, "Id", "Name");
-            return View();
+            return View(new ActivityCreateViewModel(module));
         }
 
         // POST: Activities/Create
@@ -55,16 +62,14 @@ namespace LexiconLMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Description,StartDate,EndDate,ModuleId,ActivityTypeId")] Activity activity)
+        public ActionResult Create(ActivityCreateViewModel activity)
         {
             if (ModelState.IsValid)
             {
-                db.Activities.Add(activity);
+                db.Activities.Add(new Activity(activity));
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { activity.ModuleId });
             }
-
-            ViewBag.ActivityTypeId = new SelectList(db.ActivityTypes, "Id", "Name", activity.ActivityTypeId);
             return View(activity);
         }
 
@@ -81,7 +86,7 @@ namespace LexiconLMS.Controllers
                 return HttpNotFound();
             }
             ViewBag.ActivityTypeId = new SelectList(db.ActivityTypes, "Id", "Name", activity.ActivityTypeId);
-            return View(activity);
+            return View(new ActivityCreateViewModel(activity));
         }
 
         // POST: Activities/Edit/5
@@ -98,7 +103,7 @@ namespace LexiconLMS.Controllers
                 return RedirectToAction("Index");
             }
             ViewBag.ActivityTypeId = new SelectList(db.ActivityTypes, "Id", "Name", activity.ActivityTypeId);
-            return View(activity);
+            return View(new ActivityCreateViewModel(activity));
         }
 
         // GET: Activities/Delete/5
