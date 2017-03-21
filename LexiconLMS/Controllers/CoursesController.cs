@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using LexiconLMS.Models;
+using Microsoft.AspNet.Identity;
 
 namespace LexiconLMS.Controllers
 {
@@ -18,7 +19,21 @@ namespace LexiconLMS.Controllers
         // GET: Courses
         public ActionResult Index()
         {
-            return View(db.Courses.ToList());
+            if (User.IsInRole("Teacher"))
+            {
+                return View(db.Courses.ToList());
+            }
+            else
+                return RedirectToAction("StudentIndex");
+        }
+
+        public ActionResult StudentIndex()
+        {
+            var user = db.Users.Find(User.Identity.GetUserId());
+            var courseId = db.Users.Where(u => u.Id == user.Id).ToList();
+            var studentCourse = db.Courses.Where(c => c.Id == user.CourseId).ToList();
+            return View(studentCourse);
+           // return RedirectToAction("Index", "Module", new { id = courseId});
         }
 
         // GET: Courses/Details/5
