@@ -29,5 +29,8 @@ namespace LexiconLMS.Models
         {
             return new ApplicationDbContext();
         }
+
+        public DbSet<Activity> Activities { get; set; }
+        public DbSet<ActivityType> ActivityTypes { get; set; }
     }
 }
