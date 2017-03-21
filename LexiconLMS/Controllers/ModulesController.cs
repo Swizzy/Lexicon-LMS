@@ -28,6 +28,23 @@ namespace LexiconLMS.Controllers
             var modules = db.Modules.Where(m => m.CourseId == courseId)
                                     .ToList()
                                     .Select(m => new ModuleViewModel(m));
+
+            return View(new ModuleIndexViewModel(course, modules));
+        }
+
+        public ActionResult StudentIndex(int? courseId)
+        {
+            if (courseId == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var course = db.Courses.FirstOrDefault(c => c.Id == courseId);
+            if (course == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var modules = db.Modules.Where(m => m.CourseId == courseId)
+                                    .ToList()
+                                    .Select(m => new ModuleViewModel(m));
+
             return View(new ModuleIndexViewModel(course, modules));
         }
 

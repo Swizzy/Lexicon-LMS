@@ -35,9 +35,7 @@
             @Html.DisplayFor(modelItem => item.ActivityCount)
         </td>
         <td>
-            @Html.ActionLink("Modify", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.Id }) |
-            @Html.ActionLink("Activities", "Index", "Activities", new { moduleId = item.Id }, null)
+            @Html.ActionLink("Activities", "StudentIndex", "Activities", new { moduleId = item.Id }, null)
             @*@Html.ActionLink("Documents", "Documents", new { id = item.Id }) *@
         </td>
     </tr>

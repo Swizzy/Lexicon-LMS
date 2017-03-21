@@ -19,22 +19,17 @@ namespace LexiconLMS.Controllers
         // GET: Courses
         public ActionResult Index()
         {
+            var course = new Course();
+
             if (User.IsInRole("Teacher"))
             {
                 return View(db.Courses.ToList());
             }
             else
-                return RedirectToAction("StudentIndex");
+
+            return RedirectToAction("StudentIndex", "Modules", new { db.Users.Find(User.Identity.GetUserId()).CourseId });
         }
 
-        public ActionResult StudentIndex()
-        {
-            var user = db.Users.Find(User.Identity.GetUserId());
-            var courseId = db.Users.Where(u => u.Id == user.Id).ToList();
-            var studentCourse = db.Courses.Where(c => c.Id == user.CourseId).ToList();
-            return View(studentCourse);
-           // return RedirectToAction("Index", "Module", new { id = courseId});
-        }
 
         // GET: Courses/Details/5
         public ActionResult Details(int? id)
