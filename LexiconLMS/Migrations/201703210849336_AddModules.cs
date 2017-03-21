@@ -1,9 +1,9 @@
 namespace LexiconLMS.Migrations
 {
-    using System; 
+    using System;
     using System.Data.Entity.Migrations;
     
-    public partial class InitialCreate : DbMigration
+    public partial class AddModules : DbMigration
     {
         public override void Up()
         {
@@ -12,7 +12,7 @@ namespace LexiconLMS.Migrations
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        Name = c.String(),
+                        Name = c.String(nullable: false),
                         Description = c.String(),
                         CourseId = c.Int(nullable: false),
                     })
