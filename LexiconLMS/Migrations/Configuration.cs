@@ -45,6 +45,128 @@ namespace LexiconLMS.Migrations
             context.Modules.AddOrUpdate(m => m.CourseId, modules);
             context.SaveChanges();
 
+            var activityTypes = new[]
+            {
+                new ActivityType() { Name = "Föreläsning" },
+                new ActivityType() { Name = "E-Learning" },
+                new ActivityType() { Name = "Övning", IsAssignment = true },
+            };
+            context.ActivityTypes.AddOrUpdate(at => at.Name, activityTypes);
+            context.SaveChanges();
+
+            var activities = new[]
+            {
+                new Activity()
+                {
+                    Name = "Intro",
+                    Description = "",
+                    ModuleId = modules[0].Id,
+                    ActivityTypeId = activityTypes[0].Id,
+                    StartDate = DateTime.Parse("2017-01-09 08:30"),
+                    EndDate = DateTime.Parse("2017-01-09 17:00")
+                },
+                new Activity()
+                {
+                    Name = "Grund",
+                    Description = "",
+                    ModuleId = modules[0].Id,
+                    ActivityTypeId = activityTypes[1].Id,
+                    StartDate = DateTime.Parse("2017-01-10 08:30"),
+                    EndDate = DateTime.Parse("2017-01-10 17:00")
+                },
+                new Activity()
+                {
+                    Name = "Övning 1",
+                    Description = "",
+                    ModuleId = modules[0].Id,
+                    ActivityTypeId = activityTypes[2].Id,
+                    StartDate = DateTime.Parse("2017-01-11 08:30"),
+                    EndDate = DateTime.Parse("2017-01-11 17:00")
+                },
+                new Activity()
+                {
+                    Name = "OOP",
+                    Description = "",
+                    ModuleId = modules[0].Id,
+                    ActivityTypeId = activityTypes[0].Id,
+                    StartDate = DateTime.Parse("2017-01-12 08:30"),
+                    EndDate = DateTime.Parse("2017-01-12 17:00")
+                },
+                new Activity()
+                {
+                    Name = "HTML",
+                    Description = "",
+                    ModuleId = modules[1].Id,
+                    ActivityTypeId = activityTypes[0].Id,
+                    StartDate = DateTime.Parse("2017-01-13 08:30"),
+                    EndDate = DateTime.Parse("2017-01-13 12:00")
+                },
+                new Activity()
+                {
+                    Name = "CSS",
+                    Description = "",
+                    ModuleId = modules[1].Id,
+                    ActivityTypeId = activityTypes[0].Id,
+                    StartDate = DateTime.Parse("2017-01-13 13:00"),
+                    EndDate = DateTime.Parse("2017-01-13 17:00")
+                },
+                new Activity()
+                {
+                    Name = "SQL",
+                    Description = "",
+                    ModuleId = modules[3].Id,
+                    ActivityTypeId = activityTypes[1].Id,
+                    StartDate = DateTime.Parse("2017-01-14 08:30"),
+                    EndDate = DateTime.Parse("2017-01-14 17:00")
+                },
+                new Activity()
+                {
+                    Name = "ISTQB",
+                    Description = "",
+                    ModuleId = modules[4].Id,
+                    ActivityTypeId = activityTypes[0].Id,
+                    StartDate = DateTime.Parse("2017-01-15 08:30"),
+                    EndDate = DateTime.Parse("2017-01-17 17:00")
+                },
+                new Activity()
+                {
+                    Name = "AngularJS",
+                    Description = "",
+                    ModuleId = modules[5].Id,
+                    ActivityTypeId = activityTypes[0].Id,
+                    StartDate = DateTime.Parse("2017-01-18 08:30"),
+                    EndDate = DateTime.Parse("2017-01-18 17:00")
+                },
+                new Activity()
+                {
+                    Name = "Intro",
+                    Description = "",
+                    ModuleId = modules[7].Id,
+                    ActivityTypeId = activityTypes[0].Id,
+                    StartDate = DateTime.Parse("2017-08-18 08:30"),
+                    EndDate = DateTime.Parse("2017-08-18 17:00")
+                },
+                new Activity()
+                {
+                    Name = "Grund",
+                    Description = "",
+                    ModuleId = modules[7].Id,
+                    ActivityTypeId = activityTypes[0].Id,
+                    StartDate = DateTime.Parse("2017-08-18 08:30"),
+                    EndDate = DateTime.Parse("2017-08-18 17:00")
+                },
+                new Activity()
+                {
+                    Name = "OOP",
+                    Description = "",
+                    ModuleId = modules[7].Id,
+                    ActivityTypeId = activityTypes[0].Id,
+                    StartDate = DateTime.Parse("2017-08-18 08:30"),
+                    EndDate = DateTime.Parse("2017-08-18 17:00")
+                },
+            };
+            context.Activities.AddOrUpdate(at => at.ModuleId, activities);
+            context.SaveChanges();
         }
     }
 }
