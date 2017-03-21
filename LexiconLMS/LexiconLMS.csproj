@@ -180,6 +180,10 @@
     <Compile Include="Migrations\201703210849336_AddModules.Designer.cs">
       <DependentUpon>201703210849336_AddModules.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703211024429_AddCourseActivity.cs" />
+    <Compile Include="Migrations\201703211024429_AddCourseActivity.Designer.cs">
+      <DependentUpon>201703211024429_AddCourseActivity.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Activity.cs" />
@@ -192,10 +196,6 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\aspnet-LexiconLMS-20170320043719.mdf" />
-    <Content Include="App_Data\aspnet-LexiconLMS-20170320043719_log.ldf">
-      <DependentUpon>aspnet-LexiconLMS-20170320043719.mdf</DependentUpon>
-    </Content>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
@@ -271,6 +271,9 @@
     <EmbeddedResource Include="Migrations\201703210849336_AddModules.resx">
       <DependentUpon>201703210849336_AddModules.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703211024429_AddCourseActivity.resx">
+      <DependentUpon>201703211024429_AddCourseActivity.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -279,6 +282,9 @@
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
