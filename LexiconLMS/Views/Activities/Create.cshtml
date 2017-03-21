@@ -1,19 +1,13 @@
 ﻿@model LexiconLMS.Models.ActivityCreateViewModel
 
-@{
-    ViewBag.Title = "Create";
-}
-
-<h2>Create</h2>
-
+<h1>@Model.ModuleName</h1>
+<h2>Add Activity</h2>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>Activity</h4>
-        <hr/>
         @Html.ValidationSummary(excludePropertyErrors: true, message: "", htmlAttributes: new {@class = "text-danger"})
         @Html.HiddenFor(model => model.ModuleId, new {htmlAttributes = new {@class = "form-control"}})
 
