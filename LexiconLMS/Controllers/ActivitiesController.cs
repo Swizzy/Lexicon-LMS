@@ -11,10 +11,21 @@ namespace LexiconLMS.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Activities
-        public ActionResult Index()
+        public ActionResult Index(int? moduleId)
         {
-            var activities = db.Activities.Include(a => a.ActivityType);
-            return View(activities.ToList());
+            if (moduleId == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var module = db.Modules.FirstOrDefault(m => m.Id == moduleId);
+            if (module == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var activities = db.Activities.Where(a => a.ModuleId == moduleId)
+                                          .Include(a => a.ActivityType)
+                                          .ToList()
+                                          .Select(a => new ActivityViewModel(a));
+
+            return View(new ActivityIndexVieWModel(module, activities));
         }
 
         // GET: Activities/Details/5
@@ -33,10 +44,17 @@ namespace LexiconLMS.Controllers
         }
 
         // GET: Activities/Create
-        public ActionResult Create()
+        public ActionResult Create(int? moduleId)
         {
+            if (moduleId == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var module = db.Modules.Find(moduleId);
+            if (module == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
             ViewBag.ActivityTypeId = new SelectList(db.ActivityTypes, "Id", "Name");
-            return View();
+            return View(new ActivityCreateViewModel(module));
         }
 
         // POST: Activities/Create
@@ -44,16 +62,14 @@ namespace LexiconLMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Description,StartDate,EndDate,ModuleId,ActivityTypeId")] Activity activity)
+        public ActionResult Create(ActivityCreateViewModel activity)
         {
             if (ModelState.IsValid)
             {
-                db.Activities.Add(activity);
+                db.Activities.Add(new Activity(activity));
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { activity.ModuleId });
             }
-
-            ViewBag.ActivityTypeId = new SelectList(db.ActivityTypes, "Id", "Name", activity.ActivityTypeId);
             return View(activity);
         }
 
@@ -70,7 +86,7 @@ namespace LexiconLMS.Controllers
                 return HttpNotFound();
             }
             ViewBag.ActivityTypeId = new SelectList(db.ActivityTypes, "Id", "Name", activity.ActivityTypeId);
-            return View(activity);
+            return View(new ActivityCreateViewModel(activity));
         }
 
         // POST: Activities/Edit/5
@@ -78,13 +94,19 @@ namespace LexiconLMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Description,StartDate,EndDate,ModuleId,ActivityTypeId")] Activity activity)
+        public ActionResult Edit(int? id, ActivityCreateViewModel activity)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(activity).State = EntityState.Modified;
+                //db.Entry(activity).State = EntityState.Modified;
+                Activity dbactivity = db.Activities.Find(id);
+                if (dbactivity == null)
+                {
+                    return HttpNotFound();
+                }
+                dbactivity.Update(activity);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { activity.ModuleId });
             }
             ViewBag.ActivityTypeId = new SelectList(db.ActivityTypes, "Id", "Name", activity.ActivityTypeId);
             return View(activity);
@@ -126,3 +148,4 @@ namespace LexiconLMS.Controllers
         }
     }
 }
+
