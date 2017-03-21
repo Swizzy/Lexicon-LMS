@@ -11,10 +11,21 @@ namespace LexiconLMS.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Activities
-        public ActionResult Index()
+        public ActionResult Index(int? moduleId)
         {
-            var activities = db.Activities.Include(a => a.ActivityType);
-            return View(activities.ToList());
+            if (moduleId == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var module = db.Modules.FirstOrDefault(m => m.Id == moduleId);
+            if (module == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var activities = db.Activities.Where(a => a.ModuleId == moduleId)
+                                          .Include(a => a.ActivityType)
+                                          .ToList()
+                                          .Select(a => new ActivityViewModel(a));
+
+            return View(new ActivityIndexVieWModel(module, activities));
         }
 
         // GET: Activities/Details/5

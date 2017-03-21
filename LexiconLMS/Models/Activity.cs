@@ -41,4 +41,47 @@ namespace LexiconLMS.Models
         public bool IsAssignment { get; set; }
         public string Name { get; set; }
     }
+
+    public class ActivityIndexVieWModel
+    {
+        public ActivityIndexVieWModel(Module module, IEnumerable<ActivityViewModel> activities)
+        {
+            ModuleName = module.Name;
+            ModuleId = module.Id;
+            Activities = activities;
+        }
+
+        public string ModuleName { get; }
+        public int ModuleId { get; }
+        public IEnumerable<ActivityViewModel> Activities { get; }
+    }
+
+    public class ActivityViewModel
+    {
+        public ActivityViewModel(Activity activity)
+        {
+            Id = activity.Id;
+            Name = activity.Name;
+            Description = activity.Description;
+            StartDate = activity.StartDate.ToString("yyyy-MM-dd HH:mm");
+            EndDate = activity.EndDate.ToString("yyyy-MM-dd HH:mm");
+            ActivityType = activity.ActivityType.Name;
+            IsAssignment = activity.ActivityType.IsAssignment;
+        }
+
+        public int Id { get; }
+        public string Name { get; }
+        public string Description { get; }
+
+        [Display(Name = "Start Date")]
+        public string StartDate { get; }
+
+        [Display(Name = "End Date")]
+        public string EndDate { get; }
+
+        [Display(Name = "Activity Type")]
+        public string ActivityType { get; }
+
+        public bool IsAssignment { get; }
+    }
 }
