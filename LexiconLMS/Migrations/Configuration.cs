@@ -18,15 +18,15 @@ namespace LexiconLMS.Migrations
 
         protected override void Seed(ApplicationDbContext context)
         {
-            var courses = new Course[]
+            var courses = new[]
             {
-                new Course() { Name = ".NET Vår 2017", Description = "" },
-                new Course() { Name = "Java Höst 2017", Description="" }
+                new Course { Name = ".NET Vår 2017", Description = "" },
+                new Course { Name = "Java Höst 2017", Description="" }
             };
             context.Courses.AddOrUpdate(c => c.Name, courses);
             context.SaveChanges();
 
-            var modules = new Module[]
+            var modules = new[]
             {
                 new Module { Name = "C#", Description = ".NET", CourseId = courses[0].Id  },
                 new Module { Name = "Webb", Description = "Webbutveckling", CourseId = courses[0].Id },
@@ -44,21 +44,21 @@ namespace LexiconLMS.Migrations
                 new Module { Name = "Java adv", Description = "Java Advanced", CourseId = courses[1].Id },
                 new Module { Name = "Java fund", Description = "Java Fundamentals", CourseId = courses[1].Id },
             };
-            context.Modules.AddOrUpdate(m => m.CourseId, modules);
+            context.Modules.AddOrUpdate(m => new { m.Name, m.CourseId }, modules);
             context.SaveChanges();
 
             var activityTypes = new[]
             {
-                new ActivityType() { Name = "Föreläsning" },
-                new ActivityType() { Name = "E-Learning" },
-                new ActivityType() { Name = "Övning", IsAssignment = true },
+                new ActivityType { Name = "Föreläsning" },
+                new ActivityType { Name = "E-Learning" },
+                new ActivityType { Name = "Övning", IsAssignment = true },
             };
             context.ActivityTypes.AddOrUpdate(at => at.Name, activityTypes);
             context.SaveChanges();
 
             var activities = new[]
             {
-                new Activity()
+                new Activity
                 {
                     Name = "Intro",
                     Description = "",
@@ -67,7 +67,7 @@ namespace LexiconLMS.Migrations
                     StartDate = DateTime.Parse("2017-01-09 08:30"),
                     EndDate = DateTime.Parse("2017-01-09 17:00")
                 },
-                new Activity()
+                new Activity
                 {
                     Name = "Grund",
                     Description = "",
@@ -76,7 +76,7 @@ namespace LexiconLMS.Migrations
                     StartDate = DateTime.Parse("2017-01-10 08:30"),
                     EndDate = DateTime.Parse("2017-01-10 17:00")
                 },
-                new Activity()
+                new Activity
                 {
                     Name = "Övning 1",
                     Description = "",
@@ -85,7 +85,7 @@ namespace LexiconLMS.Migrations
                     StartDate = DateTime.Parse("2017-01-11 08:30"),
                     EndDate = DateTime.Parse("2017-01-11 17:00")
                 },
-                new Activity()
+                new Activity
                 {
                     Name = "OOP",
                     Description = "",
@@ -94,7 +94,7 @@ namespace LexiconLMS.Migrations
                     StartDate = DateTime.Parse("2017-01-12 08:30"),
                     EndDate = DateTime.Parse("2017-01-12 17:00")
                 },
-                new Activity()
+                new Activity
                 {
                     Name = "HTML",
                     Description = "",
@@ -103,7 +103,7 @@ namespace LexiconLMS.Migrations
                     StartDate = DateTime.Parse("2017-01-13 08:30"),
                     EndDate = DateTime.Parse("2017-01-13 12:00")
                 },
-                new Activity()
+                new Activity
                 {
                     Name = "CSS",
                     Description = "",
@@ -112,7 +112,7 @@ namespace LexiconLMS.Migrations
                     StartDate = DateTime.Parse("2017-01-13 13:00"),
                     EndDate = DateTime.Parse("2017-01-13 17:00")
                 },
-                new Activity()
+                new Activity
                 {
                     Name = "SQL",
                     Description = "",
@@ -121,7 +121,7 @@ namespace LexiconLMS.Migrations
                     StartDate = DateTime.Parse("2017-01-14 08:30"),
                     EndDate = DateTime.Parse("2017-01-14 17:00")
                 },
-                new Activity()
+                new Activity
                 {
                     Name = "ISTQB",
                     Description = "",
@@ -130,7 +130,7 @@ namespace LexiconLMS.Migrations
                     StartDate = DateTime.Parse("2017-01-15 08:30"),
                     EndDate = DateTime.Parse("2017-01-17 17:00")
                 },
-                new Activity()
+                new Activity
                 {
                     Name = "AngularJS",
                     Description = "",
@@ -139,7 +139,7 @@ namespace LexiconLMS.Migrations
                     StartDate = DateTime.Parse("2017-01-18 08:30"),
                     EndDate = DateTime.Parse("2017-01-18 17:00")
                 },
-                new Activity()
+                new Activity
                 {
                     Name = "Intro",
                     Description = "",
@@ -148,7 +148,7 @@ namespace LexiconLMS.Migrations
                     StartDate = DateTime.Parse("2017-08-18 08:30"),
                     EndDate = DateTime.Parse("2017-08-18 17:00")
                 },
-                new Activity()
+                new Activity
                 {
                     Name = "Grund",
                     Description = "",
@@ -157,7 +157,7 @@ namespace LexiconLMS.Migrations
                     StartDate = DateTime.Parse("2017-08-18 08:30"),
                     EndDate = DateTime.Parse("2017-08-18 17:00")
                 },
-                new Activity()
+                new Activity
                 {
                     Name = "OOP",
                     Description = "",
@@ -167,7 +167,7 @@ namespace LexiconLMS.Migrations
                     EndDate = DateTime.Parse("2017-08-18 17:00")
                 },
             };
-            context.Activities.AddOrUpdate(at => at.ModuleId, activities);
+            context.Activities.AddOrUpdate(at => new { at.Name, at.ModuleId } , activities);
             context.SaveChanges();
 
             //User Accounts and Roles

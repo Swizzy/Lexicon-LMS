@@ -105,6 +105,42 @@ namespace LexiconLMS.Models
         public bool IsAssignment { get; }
     }
 
+    public class ActivityDeleteViewModel
+    {
+        public ActivityDeleteViewModel(Activity activity)
+        {
+            Name = activity.Name;
+            StartDate = activity.StartDate.ToString("yyyy-MM-dd HH:mm");
+            EndDate = activity.EndDate.ToString("yyyy-MM-dd HH:mm");
+
+            ActivityType = activity.ActivityType.Name;
+
+            ModuleId = activity.ModuleId;
+            ModuleName = activity.Module.Name;
+
+            CourseName = activity.Module.Course.Name;
+        }
+
+        public string Name { get; }
+
+        [Display(Name = "Start Date")]
+        public string StartDate { get; }
+
+        [Display(Name = "End Date")]
+        public string EndDate { get; }
+
+        [Display(Name = "Activity Type")]
+        public string ActivityType { get; }
+
+        public int ModuleId { get; }
+
+        [Display(Name = "Module")]
+        public string ModuleName { get; }
+
+        [Display(Name = "Course")]
+        public string CourseName { get; }
+    }
+
     public class ActivityCreateViewModel
     {
         public ActivityCreateViewModel()
@@ -136,15 +172,13 @@ namespace LexiconLMS.Models
         public string Description { get; set; }
 
         [Required]
-        [DataType(DataType.DateTime)]
-        [Display(Name = "Start")]
+        [Display(Name = "Start Date")]
         public DateTime? StartDate { get; set; }
 
         [Required]
-        [DataType(DataType.DateTime)]
-        [Display(Name = "End")]
+        [Display(Name = "End Date")]
         [GenericCompare(CompareToPropertyName = "StartDate", OperatorName = GenericCompareOperator.GreaterThan,
-            ErrorMessage = "The field {0} must be {{0}} Start")]
+            ErrorMessage = "End Date cannot be before the Start Date")]
         public DateTime? EndDate { get; set; }
 
         [Required]

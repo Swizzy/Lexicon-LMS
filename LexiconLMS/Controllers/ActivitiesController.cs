@@ -124,7 +124,7 @@ namespace LexiconLMS.Controllers
             {
                 return HttpNotFound();
             }
-            return View(activity);
+            return View(new ActivityDeleteViewModel(activity));
         }
 
         // POST: Activities/Delete/5
@@ -132,10 +132,14 @@ namespace LexiconLMS.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Activity activity = db.Activities.Find(id);
+            var activity = db.Activities.Find(id);
+            if (activity == null)
+            {
+                return HttpNotFound();
+            }
             db.Activities.Remove(activity);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+                db.SaveChanges();
+            return RedirectToAction("Index", new { activity.ModuleId });
         }
 
         protected override void Dispose(bool disposing)

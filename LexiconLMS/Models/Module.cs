@@ -64,6 +64,52 @@ namespace LexiconLMS.Models
 
     }
 
+    public class ModuleDeleteViewModel
+    {
+        public ModuleDeleteViewModel()
+        {
+
+        }
+
+        public ModuleDeleteViewModel(Module module)
+        {
+            CourseName = module.Course.Name;
+            CourseId = module.CourseId;
+            Name = module.Name;
+            Description = module.Description;
+
+            HasActivities = module.Activities.Any();
+            if (!HasActivities)
+                return;
+
+            ActivityCount = module.Activities.Count;
+
+            var sortedActivities = module.Activities.OrderBy(a => a.StartDate);
+            StartDate = sortedActivities.First().StartDate;
+            EndDate = sortedActivities.Last().EndDate;
+        }
+
+        [Display(Name = "Course")]
+        public string CourseName { get; }
+        public int CourseId { get; }
+        public string Name { get; }
+        public string Description { get; }
+
+        [DisplayFormat(DataFormatString ="{0:yyyy-MM-dd HH:mm}")]
+        [Display(Name = "Start Date")]
+        public DateTime StartDate { get; }
+
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
+        [Display(Name = "End Date")]
+        public DateTime EndDate { get; }
+
+        [Display(Name = "Activities")]
+        public int ActivityCount { get; }
+        public bool HasActivities { get; }
+
+
+    }
+
     public class ModuleViewModel
     {
         public ModuleViewModel(Module module)
@@ -87,4 +133,5 @@ namespace LexiconLMS.Models
         public DateTime? StartDate { get; }
         public DateTime? EndDate { get; }
     }
+
 }
