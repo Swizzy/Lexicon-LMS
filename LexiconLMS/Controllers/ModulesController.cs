@@ -17,12 +17,17 @@ namespace LexiconLMS.Controllers
         // GET: Modules
         public ActionResult Index(int? courseId)
         {
-            var modules = from m in db.Modules
-                           select m;
+            if (courseId == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            modules = modules.Where(m => m.CourseId == courseId);
+            var course = db.Courses.FirstOrDefault(c => c.Id == courseId);
+            if (course == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            return View(modules.ToList());
+            var modules = db.Modules.Where(m => m.CourseId == courseId)
+                                    .ToList()
+                                    .Select(m => new ModuleViewModel(m));
+            return View(new ModuleIndexViewModel(course, modules));
         }
 
         // GET: Modules/Details/5
@@ -37,13 +42,20 @@ namespace LexiconLMS.Controllers
             {
                 return HttpNotFound();
             }
-            return View(module);
+            return View(new ModuleViewModel(module));
         }
 
         // GET: Modules/Create
-        public ActionResult Create()
+        public ActionResult Create(int? courseId)
         {
-            return View();
+            if (courseId == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var course = db.Courses.FirstOrDefault(c => c.Id == courseId);
+            if (course == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            return View(new ModuleSingleViewModel(course));
         }
 
         // POST: Modules/Create
@@ -51,13 +63,18 @@ namespace LexiconLMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Description,CourseId")] Module module)
+        public ActionResult Create(ModuleSingleViewModel module)
         {
             if (ModelState.IsValid)
             {
-                db.Modules.Add(module);
+                db.Modules.Add(new Module()
+                {
+                    CourseId = module.CourseId,
+                    Name = module.Name,
+                    Description = module.Description
+                });
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { courseId = module.CourseId });
             }
 
             return View(module);
@@ -75,7 +92,7 @@ namespace LexiconLMS.Controllers
             {
                 return HttpNotFound();
             }
-            return View(module);
+            return View(new ModuleSingleViewModel(module));
         }
 
         // POST: Modules/Edit/5
@@ -83,13 +100,15 @@ namespace LexiconLMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Description,CourseId")] Module module)
+        public ActionResult Edit(int? id, ModuleSingleViewModel module)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(module).State = EntityState.Modified;
+                var dbmodule = db.Modules.Find(id);
+                dbmodule.Name = module.Name;
+                dbmodule.Description = module.Description;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { courseId = module.CourseId });
             }
             return View(module);
         }
@@ -106,6 +125,7 @@ namespace LexiconLMS.Controllers
             {
                 return HttpNotFound();
             }
+
             return View(module);
         }
 
@@ -117,7 +137,7 @@ namespace LexiconLMS.Controllers
             Module module = db.Modules.Find(id);
             db.Modules.Remove(module);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { courseId = module.CourseId });
         }
 
         protected override void Dispose(bool disposing)
