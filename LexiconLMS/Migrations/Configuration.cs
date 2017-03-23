@@ -1,5 +1,7 @@
 namespace LexiconLMS.Migrations
 {
+    using Microsoft.AspNet.Identity;
+    using Microsoft.AspNet.Identity.EntityFramework;
     using Models;
     using System;
     using System.Data.Entity;
@@ -167,6 +169,57 @@ namespace LexiconLMS.Migrations
             };
             context.Activities.AddOrUpdate(at => at.ModuleId, activities);
             context.SaveChanges();
+
+            //User Accounts and Roles
+            var roleStore = new RoleStore<IdentityRole>(context);
+            var roleManager = new RoleManager<IdentityRole>(roleStore);
+
+            var role = new IdentityRole { Name = "Teacher" };
+            if (!context.Roles.Any(r => r.Name == role.Name))
+            {
+                var result = roleManager.Create(role);
+                if (!result.Succeeded)
+                {
+                    throw new Exception(string.Join("\n", result.Errors));
+                }
+            }
+
+            var userStore = new UserStore<ApplicationUser>(context);
+            var userManager = new UserManager<ApplicationUser>(userStore);
+            var users = new[]
+            {
+                new ApplicationUser
+                {
+                    FirstName = "Adrian",
+                    LastName = "Lozano",
+                    Email = "zano@gmail.com",
+                    UserName = "zano@gmail.com"
+                },
+                new ApplicationUser
+                {
+                    FirstName = "Admin",
+                    LastName = "",
+                    Email = "admin@lexicon.se",
+                    UserName = "admin@lexicon.se",
+                },
+            };
+
+            foreach (var user in users)
+            {
+                if (!context.Users.Any(u => u.UserName == user.UserName))
+                {
+                    var result = userManager.Create(user, "lexicon");
+                    if (!result.Succeeded)
+                    {
+                        throw new Exception(string.Join("\n", result.Errors));
+                    }
+                    result = userManager.AddToRole(user.Id, "Teacher");
+                    if (!result.Succeeded)
+                    {
+                        throw new Exception(string.Join("\n", result.Errors));
+                    }
+                }
+            }
         }
     }
 }

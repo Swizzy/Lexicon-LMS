@@ -17,6 +17,7 @@ namespace LexiconLMS.Models
         [StringLength(250)]
         public string Description { get; set; }
         [Display(Name = "Start Date")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
         public DateTime? StartDate {
             get
             {
@@ -26,6 +27,7 @@ namespace LexiconLMS.Models
             }
         }
         [Display(Name = "End Date")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
         public DateTime? EndDate
         {
             get
