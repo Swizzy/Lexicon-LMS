@@ -1,21 +1,14 @@
 ﻿@model LexiconLMS.Models.ActivityCreateViewModel
 
-@{
-    ViewBag.Title = "Create";
-}
-
-<h2>Create</h2>
-
+<h1>@Model.ModuleName</h1>
+<h2>Add Activity</h2>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>Activity</h4>
-        <hr/>
         @Html.ValidationSummary(excludePropertyErrors: true, message: "", htmlAttributes: new {@class = "text-danger"})
-        @Html.HiddenFor(model => model.ModuleId, new {htmlAttributes = new {@class = "form-control"}})
 
         <div class="form-group">
             @Html.LabelFor(model => model.Name, new {@class = "control-label col-md-2"})
@@ -44,7 +37,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.StartDate, new {@class = "control-label col-md-2"})
             <div class="col-md-10">
-                @Html.EditorFor(model => model.StartDate, new {htmlAttributes = new {@class = "form-control"}})
+                <input class="form-control text-box single-line date" data-val="true" data-val-date="The field Start must be a date." data-val-required="The Start field is required." id="StartDate" name="StartDate" type="text"/>
                 @Html.ValidationMessageFor(model => model.StartDate, "", new {@class = "text-danger"})
             </div>
         </div>
@@ -52,7 +45,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.EndDate, new {@class = "control-label col-md-2"})
             <div class="col-md-10">
-                @Html.EditorFor(model => model.EndDate, new {htmlAttributes = new {@class = "form-control"}})
+                <input class="form-control text-box single-line date" data-val="true" data-val-date="The field End must be a date." data-val-genericcompare="The field End must be {0} Start" data-val-genericcompare-comparetopropertyname="StartDate" data-val-genericcompare-operatorname="GreaterThan" data-val-required="The End field is required." id="EndDate" name="EndDate" type="text"/>
                 @Html.ValidationMessageFor(model => model.EndDate, "", new {@class = "text-danger"})
             </div>
         </div>
@@ -66,9 +59,50 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Index", new {Model.ModuleId}, htmlAttributes: null)
 </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript" src="~/Scripts/jquery-1.10.2.js"></script>
+    <script type="text/javascript" src="~/Scripts/moment-with-locales.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap-datetimepicker.js"></script>
+    <link rel="stylesheet" href="~/Content/bootstrap-datetimepicker.css"/>
+    <script type="text/javascript">
+        $(function() {
+            $('#StartDate').datetimepicker({
+                @{
+                    var startDate = "";
+                    if (Model.StartDate != null)
+                    {
+                        startDate = $"defaultDate: \"{Model.StartDate:yyyy-MM-dd HH:mm}\",";
+                    }
+                }
+                @Html.Raw(startDate)
+                locale: "sv",
+                daysOfWeekDisabled: [0, 6],
+                sideBySide: true,
+                format: "YYYY-MM-DD HH:mm",
+                minDate: "2000-01-01",
+                calendarWeeks: true
+            });
+            $('#EndDate').datetimepicker({
+                @{
+                    var endDate = "";
+                    if (Model.EndDate != null)
+                    {
+                        endDate = $"defaultDate: \"{Model.EndDate:yyyy-MM-dd HH:mm}\",";
+                    }
+                }
+                @Html.Raw(endDate)
+                locale: "sv",
+                daysOfWeekDisabled: [0, 6],
+                sideBySide: true,
+                format: "YYYY-MM-DD HH:mm",
+                minDate: "2000-01-01",
+                calendarWeeks: true
+            });
+        });
+    </script>
 }
