@@ -125,19 +125,22 @@ namespace LexiconLMS.Controllers
             {
                 return HttpNotFound();
             }
-
-            return View(module);
+            return View(new ModuleDeleteViewModel(module));
         }
 
-        // POST: Modules/Delete/5
-        [HttpPost, ActionName("Delete")]
+    // POST: Modules/Delete/5
+    [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Module module = db.Modules.Find(id);
+            var module = db.Modules.Find(id);
+            if (module == null)
+                return HttpNotFound();
+
             db.Modules.Remove(module);
             db.SaveChanges();
             return RedirectToAction("Index", new { courseId = module.CourseId });
+            
         }
 
         protected override void Dispose(bool disposing)
