@@ -9,10 +9,21 @@ namespace LexiconLMS.Models
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
     {
+        public ApplicationUser() { }
+
+        public ApplicationUser(RegisterViewModel model)
+        {
+            UserName = model.Email;
+            Email = model.Email;
+            FirstName = model.FirstName;
+            LastName = model.LastName;
+            PhoneNumber = model.Phone;
+        }
 
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string FullName { get { return FirstName + " " + LastName; } }
+
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
@@ -20,6 +31,15 @@ namespace LexiconLMS.Models
             // Add custom user claims here
             userIdentity.AddClaim(new Claim("FullName", FullName));
             return userIdentity;
+        }
+
+        public void Update(EditTeacherViewModel model)
+        {
+            UserName = model.Email;
+            Email = model.Email;
+            FirstName = model.FirstName;
+            LastName = model.LastName;
+            PhoneNumber = model.Phone;
         }
     }
 

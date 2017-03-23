@@ -12,11 +12,13 @@ namespace LexiconLMS.Models
             Phone = Phone;
         }
 
-        [Key]
         public string Id { get; }
-        public string Name { get; }
-        public string EMail { get; }
-        public string Phone { get; }
 
+        public string Name { get; }
+
+        [Display(Name = "E-Mail")]
+        public string EMail { get; }
+
+        public string Phone { get; }
     }
 }
