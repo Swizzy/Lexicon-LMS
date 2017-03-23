@@ -124,7 +124,7 @@ namespace LexiconLMS.Controllers
             {
                 return HttpNotFound();
             }
-            return View(activity);
+            return View(new ActivityDeleteViewModel(activity));
         }
 
         // POST: Activities/Delete/5
@@ -133,11 +133,12 @@ namespace LexiconLMS.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             var activity = db.Activities.Find(id);
-            if (activity != null)
+            if (activity == null)
             {
-                db.Activities.Remove(activity);
-                db.SaveChanges();
+                return HttpNotFound();
             }
+            db.Activities.Remove(activity);
+                db.SaveChanges();
             return RedirectToAction("Index", new { activity.ModuleId });
         }
 
