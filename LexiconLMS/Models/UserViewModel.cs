@@ -9,14 +9,16 @@ namespace LexiconLMS.Models
             Id = user.Id;
             Name = user.FullName;
             EMail = user.Email;
-            Phone = Phone;
+            Phone = user.PhoneNumber;
         }
 
-        [Key]
         public string Id { get; }
-        public string Name { get; }
-        public string EMail { get; }
-        public string Phone { get; }
 
+        public string Name { get; }
+
+        [Display(Name = "E-Mail")]
+        public string EMail { get; }
+
+        public string Phone { get; }
     }
 }
