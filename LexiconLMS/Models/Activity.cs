@@ -136,15 +136,13 @@ namespace LexiconLMS.Models
         public string Description { get; set; }
 
         [Required]
-        [DataType(DataType.DateTime)]
-        [Display(Name = "Start")]
+        [Display(Name = "Start Date")]
         public DateTime? StartDate { get; set; }
 
         [Required]
-        [DataType(DataType.DateTime)]
-        [Display(Name = "End")]
+        [Display(Name = "End Date")]
         [GenericCompare(CompareToPropertyName = "StartDate", OperatorName = GenericCompareOperator.GreaterThan,
-            ErrorMessage = "The field {0} must be {{0}} Start")]
+            ErrorMessage = "End Date cannot be before the Start Date")]
         public DateTime? EndDate { get; set; }
 
         [Required]
