@@ -132,10 +132,13 @@ namespace LexiconLMS.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Activity activity = db.Activities.Find(id);
-            db.Activities.Remove(activity);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            var activity = db.Activities.Find(id);
+            if (activity != null)
+            {
+                db.Activities.Remove(activity);
+                db.SaveChanges();
+            }
+            return RedirectToAction("Index", new { activity.ModuleId });
         }
 
         protected override void Dispose(bool disposing)
