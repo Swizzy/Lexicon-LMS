@@ -92,6 +92,22 @@ namespace LexiconLMS.Models
         public string Email { get; set; }
     }
 
+    public class EditStudentViewModel : EditTeacherViewModel
+    {
+        public EditStudentViewModel()
+        {
+        }
+
+        public EditStudentViewModel(ApplicationUser user) : base(user)
+        {
+            CourseId = user.CourseId;
+        }
+
+        [Display(Name = "Course")]
+        [Required]
+        public int? CourseId { get; set; }
+    }
+
     public class RegisterViewModel
     {
         [Required]
@@ -119,6 +135,13 @@ namespace LexiconLMS.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+    }
+
+    public class RegisterStudentViewModel : RegisterViewModel
+    {
+        [Display(Name = "Course")]
+        [Required]
+        public int CourseId { get; set; }
     }
 
     public class ResetPasswordViewModel
