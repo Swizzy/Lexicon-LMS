@@ -16,6 +16,16 @@ namespace LexiconLMS.Models
         public string Description { get; set; }
         public int CourseId { get; set; }
 
+        public DateTime? StartDate
+        {
+            get { return Activities.OrderBy(a => a.StartDate).FirstOrDefault()?.StartDate; }
+        }
+
+        public DateTime? EndDate
+        {
+            get { return Activities.OrderBy(a => a.EndDate).LastOrDefault()?.EndDate; }
+        }
+
         // Navigation properties
         public virtual Course Course { get; set; }
         public virtual ICollection<Activity> Activities { get; set; }
@@ -85,9 +95,8 @@ namespace LexiconLMS.Models
 
             ActivityCount = module.Activities.Count;
 
-            var sortedActivities = module.Activities.OrderBy(a => a.StartDate);
-            StartDate = sortedActivities.First().StartDate;
-            EndDate = sortedActivities.Last().EndDate;
+            StartDate = module.StartDate;
+            EndDate = module.EndDate;
         }
 
         [Display(Name = "Course")]
@@ -98,11 +107,11 @@ namespace LexiconLMS.Models
 
         [DisplayFormat(DataFormatString ="{0:yyyy-MM-dd HH:mm}")]
         [Display(Name = "Start Date")]
-        public DateTime StartDate { get; }
+        public DateTime? StartDate { get; }
 
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
         [Display(Name = "End Date")]
-        public DateTime EndDate { get; }
+        public DateTime? EndDate { get; }
 
         [Display(Name = "Activities")]
         public int ActivityCount { get; }
@@ -121,18 +130,24 @@ namespace LexiconLMS.Models
 
             ActivityCount = module.Activities.Count;
 
-            var sortedActivities = module.Activities.OrderBy(a => a.StartDate);
-            StartDate = sortedActivities.FirstOrDefault()?.StartDate;
-            EndDate = sortedActivities.LastOrDefault()?.EndDate;
+            StartDate = module.StartDate;
+            EndDate = module.EndDate;
         }
 
         public int Id { get; }
-        public int ActivityCount { get; set; }
         public string Name { get; }
         public string Description { get; }
 
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
+        [Display(Name = "Start Date")]
         public DateTime? StartDate { get; }
+
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
+        [Display(Name = "End Date")]
         public DateTime? EndDate { get; }
+
+        [Display(Name = "Activities")]
+        public int ActivityCount { get; }
     }
 
 }

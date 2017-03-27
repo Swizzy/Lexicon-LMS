@@ -9,6 +9,7 @@ namespace LexiconLMS.Models
     public class Course
     {
         public int Id { get; set; }
+
         [Required]
         [StringLength(30)]
         public string Name { get; set; }
@@ -16,27 +17,14 @@ namespace LexiconLMS.Models
         [DataType(DataType.MultilineText)]
         [StringLength(250)]
         public string Description { get; set; }
+
         [Display(Name = "Start Date")]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
-        public DateTime? StartDate {
-            get
-            {
-                var sortedActivities = Modules.SelectMany(m => m.Activities)
-                                              .OrderBy(a => a.StartDate);
-                return sortedActivities.FirstOrDefault()?.StartDate;
-            }
-        }
+        public DateTime? StartDate => Modules.Max(m => m.StartDate);
+
         [Display(Name = "End Date")]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
-        public DateTime? EndDate
-        {
-            get
-            {
-                var sortedActivities = Modules.SelectMany(m => m.Activities)
-                                              .OrderBy(a => a.StartDate);
-                return sortedActivities.LastOrDefault()?.EndDate;
-            }
-        }
+        public DateTime? EndDate => Modules.Max(m => m.EndDate);
 
         //Navigation Properties
         public virtual ICollection<Module> Modules { get; set; }
