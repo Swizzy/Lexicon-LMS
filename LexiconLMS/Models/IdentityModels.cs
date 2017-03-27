@@ -20,6 +20,11 @@ namespace LexiconLMS.Models
             PhoneNumber = model.Phone;
         }
 
+        public ApplicationUser(RegisterStudentViewModel model) : this((RegisterViewModel)model)
+        {
+            CourseId = model.CourseId;
+        }
+
         public int? CourseId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

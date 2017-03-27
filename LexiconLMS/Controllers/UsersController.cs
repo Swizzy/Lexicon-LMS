@@ -64,6 +64,35 @@ namespace LexiconLMS.Controllers
             return View(model);
         }
 
+        //
+        // GET: /Users/RegisterStudent
+        [Authorize(Roles = "Teacher")]
+        public ActionResult RegisterStudent()
+        {
+            ViewBag.CourseId = new SelectList(db.Courses, "Id", "Name");
+            return View();
+        }
+
+        //
+        // POST: /Users/RegisterStudent
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Teacher")]
+        public async Task<ActionResult> RegisterStudent(RegisterStudentViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser(model);
+                var result = await UserManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                    return RedirectToAction("Index", new { studentsOnly = true, courseId = model.CourseId });
+                AddErrors(result);
+            }
+            // If we got this far, something failed, redisplay form
+            ViewBag.CourseId = new SelectList(db.Courses, "Id", "Name");
+            return View(model);
+        }
+
 
         private void AddErrors(IdentityResult result)
         {

@@ -306,6 +306,7 @@
     <Content Include="Views\Users\RegisterTeacher.cshtml" />
     <Content Include="Views\Users\Delete.cshtml" />
     <Content Include="Views\Users\EditTeacher.cshtml" />
+    <Content Include="Views\Users\RegisterStudent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201703210849336_AddModules.resx">

@@ -121,6 +121,13 @@ namespace LexiconLMS.Models
         public string ConfirmPassword { get; set; }
     }
 
+    public class RegisterStudentViewModel : RegisterViewModel
+    {
+        [Display(Name = "Course")]
+        [Required]
+        public int CourseId { get; set; }
+    }
+
     public class ResetPasswordViewModel
     {
         [Required]
