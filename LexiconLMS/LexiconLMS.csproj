@@ -302,11 +302,13 @@
     <Content Include="Views\Courses\Details.cshtml" />
     <Content Include="Views\Courses\Edit.cshtml" />
     <Content Include="Views\Courses\Index.cshtml" />
-    <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\Users\TeacherIndexTeachers.cshtml" />
     <Content Include="Views\Users\RegisterTeacher.cshtml" />
     <Content Include="Views\Users\Delete.cshtml" />
     <Content Include="Views\Users\EditTeacher.cshtml" />
     <Content Include="Views\Users\RegisterStudent.cshtml" />
+    <Content Include="Views\Users\TeacherIndexStudents.cshtml" />
+    <Content Include="Views\Users\StudentIndex.cshtml" />
     <Content Include="Views\Users\EditStudent.cshtml" />
   </ItemGroup>
   <ItemGroup>

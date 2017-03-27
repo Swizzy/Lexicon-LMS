@@ -13,19 +13,51 @@ namespace LexiconLMS.Controllers
     public class UsersController : Controller
     {
         private readonly ApplicationDbContext db = new ApplicationDbContext();
-        private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-
-        public ApplicationSignInManager SignInManager => _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-
         public ApplicationUserManager UserManager => _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
 
         // GET: Users
-        public ActionResult Index()
+        public ActionResult Index(bool? studentsOnly, int? courseId)
         {
-            var users =
-                db.Users.ToList().Where(u => UserManager.IsInRole(u.Id, "Teacher")).Select(u => new UserViewModel(u));
-            return View(users);
+            IEnumerable<ApplicationUser> users = null;
+            string view;
+            if (User.IsInRole("Teacher"))
+            {
+                if (studentsOnly != true && courseId == null)
+                {
+                    users = db.Users.ToList();
+                    // Filter out any non-teachers
+                    users = users.Where(u => UserManager.IsInRole(u.Id, "Teacher"));
+                    view = "TeacherIndexTeachers";
+                }
+                else
+                {
+                    if (courseId != null)
+                        users = db.Users.Where(u => u.CourseId == courseId).ToList();
+                    else
+                        users = db.Users.ToList();
+                    // Filter out any teachers, we don't want them here
+                    users = users.Where(u => !UserManager.IsInRole(u.Id, "Teacher"));
+                    // Create courses list
+                    ViewBag.CourseId = new SelectList(db.Courses, "Id", "Name");
+                    view = "TeacherIndexStudents";
+                }
+            }
+            else
+            {
+                view = "StudentIndex";
+                var user = db.Users.Find(User.Identity.GetUserId());
+                if (user != null)
+                {
+                    // Filter out any user not in the current users course
+                    users = db.Users.Where(u => u.CourseId == user.CourseId).ToList();
+                    // Filter out teachers, we don't want them here
+                    users = users.Where(u => !UserManager.IsInRole(u.Id, "Teacher"));
+                }
+            }
+            if (users == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            return View(view, users.Select(u => new UserViewModel(u, false, u.Id != User.Identity.GetUserId())));
         }
 
         //

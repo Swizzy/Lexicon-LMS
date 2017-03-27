@@ -24,6 +24,7 @@
                 @if (User.IsInRole("Teacher"))
                 {
                     <li>@Html.ActionLink("Teachers List", "Index", "Users")</li>
+                    <li>@Html.ActionLink("Student List", "Index", "Users", new { studentsOnly = true }, null)</li>
                 }
                 </ul>
                 @Html.Partial("_LoginPartial")
