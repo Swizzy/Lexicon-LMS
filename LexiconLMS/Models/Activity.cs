@@ -185,6 +185,7 @@ namespace LexiconLMS.Models
         public int ModuleId { get; set; }
 
         [Required]
+        [Display(Name = "Activity Type")]
         public int ActivityTypeId { get; set; }
 
         public string ModuleName { get; set; }
