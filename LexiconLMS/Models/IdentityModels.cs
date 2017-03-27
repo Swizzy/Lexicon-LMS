@@ -20,6 +20,7 @@ namespace LexiconLMS.Models
             PhoneNumber = model.Phone;
         }
 
+        public int? CourseId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string FullName { get { return FirstName + " " + LastName; } }
@@ -41,6 +42,9 @@ namespace LexiconLMS.Models
             LastName = model.LastName;
             PhoneNumber = model.Phone;
         }
+
+        // Navigation Properties
+        public virtual Course Course { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
