@@ -132,16 +132,58 @@ namespace LexiconLMS.Controllers
             return View(model);
         }
 
+        // GET: Users/EditStudent/5
+        [Authorize(Roles = "Teacher")]
+        public ActionResult EditStudent(string id)
+        {
+            if (id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            // Redirect to edit teacher if it's a teacher
+            if (UserManager.IsInRole(id, "Teacher"))
+                return RedirectToAction(nameof(EditTeacher), new { id });
+
+            var user = db.Users.Find(id);
+            if (user == null)
+                return HttpNotFound();
+            ViewBag.CourseId = new SelectList(db.Courses, "Id", "Name", user.CourseId);
+            return View(new EditStudentViewModel(user));
+        }
+
+        // POST: Users/EditStudent/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Teacher")]
+        public ActionResult EditStudent(string id, EditStudentViewModel model)
+        {
+            // Redirect to edit teacher if it's a teacher
+            if (UserManager.IsInRole(id, "Teacher"))
+                return RedirectToAction(nameof(EditTeacher), new { id });
+
+            if (ModelState.IsValid)
+            {
+                var user = db.Users.Find(id);
+                if (user == null)
+                    return HttpNotFound();
+                user.Update(model);
+                db.SaveChanges();
+                return RedirectToAction("Index", new { studentsOnly = true, courseId = model.CourseId });
+            }
+            ViewBag.CourseId = new SelectList(db.Courses, "Id", "Name", model.CourseId);
+            return View(model);
+        }
+
         // GET: Users/Delete/5
         [Authorize(Roles = "Teacher")]
         public ActionResult Delete(string id)
         {
-            if (id == null)
+            var cuser = db.Users.Find(User.Identity.GetUserId());
+            if (cuser == null || id == cuser.Id)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             var user = db.Users.Find(id);
             if (user == null)
                 return HttpNotFound();
-            return View(new UserViewModel(user));
+            return View(new UserViewModel(user, UserManager.IsInRole(user.Id, "Teacher")));
         }
 
         // POST: Users/Delete/5

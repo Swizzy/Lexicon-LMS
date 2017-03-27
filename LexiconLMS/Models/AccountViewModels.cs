@@ -92,6 +92,22 @@ namespace LexiconLMS.Models
         public string Email { get; set; }
     }
 
+    public class EditStudentViewModel : EditTeacherViewModel
+    {
+        public EditStudentViewModel()
+        {
+        }
+
+        public EditStudentViewModel(ApplicationUser user) : base(user)
+        {
+            CourseId = user.CourseId;
+        }
+
+        [Display(Name = "Course")]
+        [Required]
+        public int? CourseId { get; set; }
+    }
+
     public class RegisterViewModel
     {
         [Required]

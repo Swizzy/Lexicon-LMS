@@ -48,6 +48,12 @@ namespace LexiconLMS.Models
             PhoneNumber = model.Phone;
         }
 
+        public void Update(EditStudentViewModel model)
+        {
+            Update((EditTeacherViewModel)model);
+            CourseId = model.CourseId;
+        }
+
         // Navigation Properties
         public virtual Course Course { get; set; }
     }
