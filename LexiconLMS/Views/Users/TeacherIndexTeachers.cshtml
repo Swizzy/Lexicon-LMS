@@ -37,8 +37,11 @@
             @Html.DisplayFor(modelItem => item.Phone)
         </td>
         <td>
-            @Html.ActionLink("Modify", "EditTeacher", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+            @Html.ActionLink("Modify", "EditTeacher", new { id=item.Id }) 
+            @if (item.CanBeDeleted)
+            {
+                <span>|</span> @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            }
         </td>
     </tr>
 }

@@ -225,12 +225,17 @@ namespace LexiconLMS.Controllers
         [Authorize(Roles = "Teacher")]
         public ActionResult DeleteConfirmed(string id)
         {
-            var user = db.Users.Find(id);
+            var cuser = db.Users.Find(User.Identity.GetUserId());
+            if (cuser == null || id == cuser.Id)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            var isTeacher = UserManager.IsInRole(id, "Teacher");
+            var user = UserManager.FindById(id);
             if (user == null)
                 return HttpNotFound();
-            db.Users.Remove(user);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            UserManager.Delete(user);
+            if (isTeacher)
+                return RedirectToAction("Index");
+            return RedirectToAction("Index", new { studentsOnly = true });
         }
 
         protected override void Dispose(bool disposing)
