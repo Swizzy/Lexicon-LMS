@@ -170,10 +170,21 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CoursesController.cs" />
     <Compile Include="Controllers\ActivitiesController.cs" />
+    <Compile Include="Controllers\DocumentsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ModulesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Migrations\201703271332569_AddDocuments.cs" />
+    <Compile Include="Migrations\201703271332569_AddDocuments.Designer.cs">
+      <DependentUpon>201703271332569_AddDocuments.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703271418188_Link.cs" />
+    <Compile Include="Migrations\201703271418188_Link.Designer.cs">
+      <DependentUpon>201703271418188_Link.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Document.cs" />
+    <Compile Include="Models\FileType.cs" />
     <Compile Include="Models\UserViewModel.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -302,6 +313,18 @@
     <Content Include="Views\Users\RegisterTeacher.cshtml" />
     <Content Include="Views\Users\Delete.cshtml" />
     <Content Include="Views\Users\EditTeacher.cshtml" />
+    <Content Include="Views\Documents\ModuleCreateFile.cshtml" />
+    <Content Include="Views\Documents\Delete.cshtml" />
+    <Content Include="Views\Documents\Details.cshtml" />
+    <Content Include="Views\Documents\Edit.cshtml" />
+    <Content Include="Views\Documents\CourseDocumentsIndex.cshtml" />
+    <Content Include="Views\Documents\ModuleDocumentsIndex.cshtml" />
+    <Content Include="Views\Documents\ModuleCreateLink.cshtml" />
+    <Content Include="Views\Documents\ActivityDocumentsIndex.cshtml" />
+    <Content Include="Views\Documents\CourseCreateFile.cshtml" />
+    <Content Include="Views\Documents\ActivityCreateFile.cshtml" />
+    <Content Include="Views\Documents\CourseCreateLink.cshtml" />
+    <Content Include="Views\Documents\ActivityCreateLink.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201703210849336_AddModules.resx">
@@ -315,6 +338,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703231156555_updateIdentity.resx">
       <DependentUpon>201703231156555_updateIdentity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703271332569_AddDocuments.resx">
+      <DependentUpon>201703271332569_AddDocuments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703271418188_Link.resx">
+      <DependentUpon>201703271418188_Link.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

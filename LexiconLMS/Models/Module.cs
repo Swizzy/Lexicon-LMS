@@ -19,7 +19,7 @@ namespace LexiconLMS.Models
         // Navigation properties
         public virtual Course Course { get; set; }
         public virtual ICollection<Activity> Activities { get; set; }
-        //public virtual ICollection<Document> Documents { get; set; }
+        public virtual ICollection<Document> Documents { get; set; }
     }
 
     public class ModuleSingleViewModel
@@ -81,13 +81,18 @@ namespace LexiconLMS.Models
 
             HasActivities = module.Activities.Any();
             if (!HasActivities)
-                return;
+            {
+                ActivityCount = module.Activities.Count;
 
-            ActivityCount = module.Activities.Count;
-
-            var sortedActivities = module.Activities.OrderBy(a => a.StartDate);
-            StartDate = sortedActivities.First().StartDate;
-            EndDate = sortedActivities.Last().EndDate;
+                var sortedActivities = module.Activities.OrderBy(a => a.StartDate);
+                StartDate = sortedActivities.First().StartDate;
+                EndDate = sortedActivities.Last().EndDate;
+            }
+            if (!HasDocuments)
+            {
+                DocumentCount = module.Documents.Count;
+                //var sortedDocuments = module.Documents.OrderByDescending(d => d.CreateDate);
+            }
         }
 
         [Display(Name = "Course")]
@@ -108,6 +113,10 @@ namespace LexiconLMS.Models
         public int ActivityCount { get; }
         public bool HasActivities { get; }
 
+        [Display(Name = "Module Document")]
+        public int DocumentCount { get; }
+        public bool HasDocuments { get; }
+
 
     }
 
@@ -119,20 +128,42 @@ namespace LexiconLMS.Models
             Name = module.Name;
             Description = module.Description;
 
-            ActivityCount = module.Activities.Count;
+            HasActivities = module.Activities.Any();
+            if (HasActivities)
+            {
+                ActivityCount = module.Activities.Count;
 
-            var sortedActivities = module.Activities.OrderBy(a => a.StartDate);
-            StartDate = sortedActivities.FirstOrDefault()?.StartDate;
-            EndDate = sortedActivities.LastOrDefault()?.EndDate;
+                var sortedActivities = module.Activities.OrderBy(a => a.StartDate);
+                StartDate = sortedActivities.First().StartDate;
+                EndDate = sortedActivities.Last().EndDate;
+            }
+            if (HasDocuments)
+            {
+                DocumentCount = module.Documents.Count;
+                //var sortedDocuments = module.Documents.OrderByDescending(d => d.CreateDate);
+            }
         }
 
         public int Id { get; }
-        public int ActivityCount { get; set; }
         public string Name { get; }
         public string Description { get; }
 
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
+        [Display(Name = "Start Date")]
         public DateTime? StartDate { get; }
+
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
+        [Display(Name = "End Date")]
         public DateTime? EndDate { get; }
+
+        [Display(Name = "Activities")]
+        public int ActivityCount { get; }
+        public bool HasActivities { get; }
+
+        [Display(Name = "Module Document")]
+        public int DocumentCount { get; }
+        public bool HasDocuments { get; }
+
     }
 
 }
