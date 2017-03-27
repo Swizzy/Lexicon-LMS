@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web;
@@ -140,6 +141,11 @@ namespace LexiconLMS.Controllers
         {
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            // Redirect to edit student if it's not a teacher
+            if (!UserManager.IsInRole(id, "Teacher"))
+                return RedirectToAction(nameof(EditStudent), new { id });
+
             var user = db.Users.Find(id);
             if (user == null)
                 return HttpNotFound();
@@ -152,6 +158,10 @@ namespace LexiconLMS.Controllers
         [Authorize(Roles = "Teacher")]
         public ActionResult EditTeacher(string id, EditTeacherViewModel model)
         {
+            // Redirect to edit student if it's not a teacher
+            if (!UserManager.IsInRole(id, "Teacher"))
+                return RedirectToAction(nameof(EditStudent), new { id });
+
             if (ModelState.IsValid)
             {
                 var user = db.Users.Find(id);
