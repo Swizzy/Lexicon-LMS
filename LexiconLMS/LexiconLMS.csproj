@@ -188,6 +188,10 @@
       <DependentUpon>201703271418188_Link.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Document.cs" />
+    <Compile Include="Migrations\201703270659476_AddCourseIdToUser.cs" />
+    <Compile Include="Migrations\201703270659476_AddCourseIdToUser.Designer.cs">
+      <DependentUpon>201703270659476_AddCourseIdToUser.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\UserViewModel.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -312,7 +316,7 @@
     <Content Include="Views\Courses\Details.cshtml" />
     <Content Include="Views\Courses\Edit.cshtml" />
     <Content Include="Views\Courses\Index.cshtml" />
-    <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\Users\TeacherIndexTeachers.cshtml" />
     <Content Include="Views\Users\RegisterTeacher.cshtml" />
     <Content Include="Views\Users\Delete.cshtml" />
     <Content Include="Views\Users\EditTeacher.cshtml" />
@@ -329,6 +333,10 @@
     <Content Include="Views\Documents\CourseCreateLink.cshtml" />
     <Content Include="Views\Documents\ActivityCreateLink.cshtml" />
     <Content Include="Views\Documents\EditLink.cshtml" />
+    <Content Include="Views\Users\RegisterStudent.cshtml" />
+    <Content Include="Views\Users\TeacherIndexStudents.cshtml" />
+    <Content Include="Views\Users\StudentIndex.cshtml" />
+    <Content Include="Views\Users\EditStudent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201703210849336_AddModules.resx">
@@ -348,6 +356,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703271418188_Link.resx">
       <DependentUpon>201703271418188_Link.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703270659476_AddCourseIdToUser.resx">
+      <DependentUpon>201703270659476_AddCourseIdToUser.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
