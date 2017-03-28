@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using LexiconLMS.Models;
+using Microsoft.AspNet.Identity;
 
 namespace LexiconLMS.Controllers
 {
@@ -18,8 +19,20 @@ namespace LexiconLMS.Controllers
         // GET: Modules
         public ActionResult Index(int? courseId)
         {
-            if (courseId == null)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            var view = "Index";
+            if (User.IsInRole("Teacher"))
+            {
+                if (courseId == null)
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            else
+            {
+                var user = db.Users.Find(User.Identity.GetUserId());
+                if (user == null)
+                    return HttpNotFound();
+                courseId = user.CourseId;
+                view = "StudentIndex";
+            }
 
             var course = db.Courses.FirstOrDefault(c => c.Id == courseId);
             if (course == null)
@@ -29,23 +42,7 @@ namespace LexiconLMS.Controllers
                                     .ToList()
                                     .Select(m => new ModuleViewModel(m));
 
-            return View(new ModuleIndexViewModel(course, modules));
-        }
-
-        public ActionResult StudentIndex(int? courseId)
-        {
-            if (courseId == null)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-
-            var course = db.Courses.FirstOrDefault(c => c.Id == courseId);
-            if (course == null)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-
-            var modules = db.Modules.Where(m => m.CourseId == courseId)
-                                    .ToList()
-                                    .Select(m => new ModuleViewModel(m));
-
-            return View(new ModuleIndexViewModel(course, modules));
+            return View(view, new ModuleIndexViewModel(course, modules));
         }
 
         // GET: Modules/Details/5

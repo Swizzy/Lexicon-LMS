@@ -35,7 +35,7 @@ namespace LexiconLMS.Models
             get
             {
                 var sortedActivities = Modules.SelectMany(m => m.Activities)
-                                              .OrderBy(a => a.StartDate);
+                                              .OrderBy(a => a.EndDate);
                 return sortedActivities.LastOrDefault()?.EndDate;
             }
         }

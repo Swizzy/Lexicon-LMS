@@ -27,7 +27,7 @@ namespace LexiconLMS.Controllers
             }
             else
 
-            return RedirectToAction("StudentIndex", "Modules", new { db.Users.Find(User.Identity.GetUserId()).CourseId });
+            return RedirectToAction("Index", "Modules");
         }
 
 

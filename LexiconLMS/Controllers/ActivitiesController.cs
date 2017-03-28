@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using LexiconLMS.Models;
+using Microsoft.AspNet.Identity;
 
 namespace LexiconLMS.Controllers
 {
@@ -14,9 +15,19 @@ namespace LexiconLMS.Controllers
         // GET: Activities
         public ActionResult Index(int? moduleId)
         {
-            if (moduleId == null)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-
+            var view = "Index";
+            if (User.IsInRole("Teacher"))
+            {
+                if (moduleId == null)
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            else
+            {
+                var user = db.Users.Find(User.Identity.GetUserId());
+                if (user == null)
+                    return HttpNotFound();
+                view = "StudentIndex";
+            }
             var module = db.Modules.FirstOrDefault(m => m.Id == moduleId);
             if (module == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -26,7 +37,7 @@ namespace LexiconLMS.Controllers
                                           .ToList()
                                           .Select(a => new ActivityViewModel(a));
 
-            return View(new ActivityIndexVieWModel(module, activities));
+            return View(view, new ActivityIndexVieWModel(module, activities));
         }
 
         public ActionResult StudentIndex(int? moduleId)
