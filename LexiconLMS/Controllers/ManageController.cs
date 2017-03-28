@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using LexiconLMS.Models;
+using MvcBreadCrumbs;
 
 namespace LexiconLMS.Controllers
 {
@@ -18,9 +19,11 @@ namespace LexiconLMS.Controllers
 
         public ManageController()
         {
+            BreadCrumb.Clear();
+            BreadCrumb.Add("/", "Home");
         }
 
-        public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
+        public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager) : this()
         {
             UserManager = userManager;
             SignInManager = signInManager;

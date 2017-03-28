@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using LexiconLMS.Models;
+using MvcBreadCrumbs;
 
 namespace LexiconLMS.Controllers
 {
@@ -14,6 +15,14 @@ namespace LexiconLMS.Controllers
     public class ModulesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+
+        private void MakeBreadCrumbs(Course course)
+        {
+            BreadCrumb.Clear();
+            BreadCrumb.Add("/", "Home");
+            if (course != null)
+                BreadCrumb.Add(Url.Action("Index", "Modules", new { courseId = course.Id }), course.Name);
+        }
 
         // GET: Modules
         public ActionResult Index(int? courseId)
@@ -24,6 +33,8 @@ namespace LexiconLMS.Controllers
             var course = db.Courses.FirstOrDefault(c => c.Id == courseId);
             if (course == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            MakeBreadCrumbs(course);
 
             var modules = db.Modules.Where(m => m.CourseId == courseId)
                                     .ToList()
@@ -43,6 +54,9 @@ namespace LexiconLMS.Controllers
             {
                 return HttpNotFound();
             }
+
+            MakeBreadCrumbs(module.Course);
+
             return View(new ModuleViewModel(module));
         }
 
@@ -56,6 +70,8 @@ namespace LexiconLMS.Controllers
             var course = db.Courses.FirstOrDefault(c => c.Id == courseId);
             if (course == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            MakeBreadCrumbs(course);
 
             return View(new ModuleSingleViewModel(course));
         }
@@ -80,6 +96,8 @@ namespace LexiconLMS.Controllers
                 return RedirectToAction("Index", new { courseId = module.CourseId });
             }
 
+            MakeBreadCrumbs(db.Courses.Find(module.CourseId));
+
             return View(module);
         }
 
@@ -96,6 +114,9 @@ namespace LexiconLMS.Controllers
             {
                 return HttpNotFound();
             }
+
+            MakeBreadCrumbs(module.Course);
+
             return View(new ModuleSingleViewModel(module));
         }
 
@@ -110,11 +131,16 @@ namespace LexiconLMS.Controllers
             if (ModelState.IsValid)
             {
                 var dbmodule = db.Modules.Find(id);
+                if (dbmodule == null)
+                    return HttpNotFound();
                 dbmodule.Name = module.Name;
                 dbmodule.Description = module.Description;
                 db.SaveChanges();
                 return RedirectToAction("Index", new { courseId = module.CourseId });
             }
+
+            MakeBreadCrumbs(db.Courses.Find(id));
+
             return View(module);
         }
 
@@ -131,6 +157,9 @@ namespace LexiconLMS.Controllers
             {
                 return HttpNotFound();
             }
+
+            MakeBreadCrumbs(module.Course);
+
             return View(new ModuleDeleteViewModel(module));
         }
 

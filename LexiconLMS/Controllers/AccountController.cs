@@ -9,10 +9,12 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using LexiconLMS.Models;
+using MvcBreadCrumbs;
 
 namespace LexiconLMS.Controllers
 {
     [Authorize]
+    [BreadCrumb(Clear = true, Label = "Home")]
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;
@@ -20,9 +22,11 @@ namespace LexiconLMS.Controllers
 
         public AccountController()
         {
+            BreadCrumb.Clear();
+            BreadCrumb.Add("/", "Home");
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager) : this()
         {
             UserManager = userManager;
             SignInManager = signInManager;

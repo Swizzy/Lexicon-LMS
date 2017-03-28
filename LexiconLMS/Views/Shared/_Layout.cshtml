@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using MvcBreadCrumbs
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -34,6 +35,9 @@
                 @Html.Partial("_LoginPartial")
             </div>
         </div>
+    </div>
+    <div class="container">
+        @Html.Raw(BreadCrumb.Display())
     </div>
     <div class="container body-content">
         @RenderBody()

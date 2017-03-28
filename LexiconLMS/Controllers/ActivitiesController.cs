@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using LexiconLMS.Models;
+using MvcBreadCrumbs;
 
 namespace LexiconLMS.Controllers
 {
@@ -10,6 +11,17 @@ namespace LexiconLMS.Controllers
     public class ActivitiesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+
+        private void MakeBreadCrumbs(Module module)
+        {
+            BreadCrumb.Clear();
+            BreadCrumb.Add("/", "Home");
+            if (module != null)
+            {
+                BreadCrumb.Add(Url.Action("Index", "Modules", new { courseId = module.CourseId}), module.Course.Name);
+                BreadCrumb.Add(Url.Action("Index", "Activities", new {moduleId = module.Id}), module.Name);
+            }
+        }
 
         // GET: Activities
         public ActionResult Index(int? moduleId)
@@ -25,6 +37,7 @@ namespace LexiconLMS.Controllers
                                           .Include(a => a.ActivityType)
                                           .ToList()
                                           .Select(a => new ActivityViewModel(a));
+            MakeBreadCrumbs(module);
 
             return View(new ActivityIndexVieWModel(module, activities));
         }
@@ -41,6 +54,7 @@ namespace LexiconLMS.Controllers
             {
                 return HttpNotFound();
             }
+            MakeBreadCrumbs(activity.Module);
             return View(activity);
         }
 
@@ -55,6 +69,7 @@ namespace LexiconLMS.Controllers
             if (module == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
+            MakeBreadCrumbs(module);
             ViewBag.ActivityTypeId = new SelectList(db.ActivityTypes, "Id", "Name");
             return View(new ActivityCreateViewModel(module));
         }
@@ -73,6 +88,7 @@ namespace LexiconLMS.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index", new { activity.ModuleId });
             }
+            MakeBreadCrumbs(db.Modules.Find(activity.ModuleId));
             return View(activity);
         }
 
@@ -89,6 +105,7 @@ namespace LexiconLMS.Controllers
             {
                 return HttpNotFound();
             }
+            MakeBreadCrumbs(activity.Module);
             ViewBag.ActivityTypeId = new SelectList(db.ActivityTypes, "Id", "Name", activity.ActivityTypeId);
             return View(new ActivityCreateViewModel(activity));
         }
@@ -113,6 +130,7 @@ namespace LexiconLMS.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index", new { activity.ModuleId });
             }
+            MakeBreadCrumbs(db.Activities.Find(id)?.Module);
             ViewBag.ActivityTypeId = new SelectList(db.ActivityTypes, "Id", "Name", activity.ActivityTypeId);
             return View(activity);
         }
@@ -130,6 +148,7 @@ namespace LexiconLMS.Controllers
             {
                 return HttpNotFound();
             }
+            MakeBreadCrumbs(activity.Module);
             return View(new ActivityDeleteViewModel(activity));
         }
 
@@ -145,7 +164,7 @@ namespace LexiconLMS.Controllers
                 return HttpNotFound();
             }
             db.Activities.Remove(activity);
-                db.SaveChanges();
+            db.SaveChanges();
             return RedirectToAction("Index", new { activity.ModuleId });
         }
 
