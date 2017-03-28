@@ -13,7 +13,6 @@ namespace LexiconLMS.Models
         public string Name { get; set; }
 
         [StringLength(255)]
-        [Display(Name = "File Name")]
         public string FileName { get; set; }
 
         [StringLength(2000)]
@@ -24,9 +23,6 @@ namespace LexiconLMS.Models
 
         public byte[] Content { get; set; }
         public string UserId { get; set; }
-
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
-        [Display(Name = "Date")]
         public DateTime CreateDate { get; set; }
 
         public int? CourseId { get; set; }
@@ -37,8 +33,114 @@ namespace LexiconLMS.Models
         public virtual Course Course { get; set; }
         public virtual Module Module { get; set; }
         public virtual Activity Activity { get; set; }
+
         [ForeignKey("UserId")]
         public virtual ApplicationUser ApplicationUser { get; set; }
+
+        internal void Update(DocumentEditFileViewModel document)
+        {
+            Name = document.Name;
+        }
+
+        internal void Update(DocumentEditLinkViewModel document)
+        {
+            Name = document.Name;
+            Link = document.Link;
+        }
+    }
+
+    public class DocumentEditLinkViewModel
+    {
+        public DocumentEditLinkViewModel()
+        {
+        }
+
+        public DocumentEditLinkViewModel(Document document)
+        {
+            Id = document.Id;
+            Name = document.Name;
+            Link = document.Link;
+            CreatedBy = document.ApplicationUser.FullName;
+            CreateDate = document.CreateDate;
+        }
+
+        public int Id { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+        [Required]
+        [DataType(DataType.Url)]
+        public string Link { get; set; }
+
+        [Display(Name = "Created by")]
+        public string CreatedBy { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
+        [Display(Name = "Created")]
+        public DateTime CreateDate { get; set; }
+    }
+
+    public class DocumentEditFileViewModel
+    {
+        public DocumentEditFileViewModel()
+        {
+        }
+
+        public DocumentEditFileViewModel(Document document)
+        {
+            Id = document.Id;
+            Name = document.Name;
+            FileName = document.FileName;
+            CreatedBy = document.ApplicationUser.FullName;
+            CreateDate = document.CreateDate;
+        }
+
+        public int Id { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        [Display(Name = "File")]
+        public string FileName { get; set; }
+
+        [Display(Name = "Created by")]
+        public string CreatedBy { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
+        [Display(Name = "Created")]
+        public DateTime CreateDate { get; set; }
+    }
+
+    public class DocumentDeleteViewModel
+    {
+        public DocumentDeleteViewModel()
+        {
+        }
+
+        public DocumentDeleteViewModel(Document document)
+        {
+            Name = document.Name;
+            FileName = document.FileName;
+            Link = document.Link;
+            CreatedBy = document.ApplicationUser.FullName;
+            CreateDate = document.CreateDate;
+        }
+
+        [Display(Name = "Name")]
+        public string Name { get; set; }
+
+        [Display(Name = "File")]
+        public string FileName { get; set; }
+
+        [Display(Name = "Link")]
+        public string Link { get; set; }
+
+        [Display(Name = "Created by")]
+        public string CreatedBy { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
+        [Display(Name = "Created")]
+        public DateTime CreateDate { get; set; }
 
     }
 
@@ -218,11 +320,11 @@ namespace LexiconLMS.Models
         public int Id { get; }
         public string Name { get; }
 
-        [Display(Name = "Uploaded by")]
+        [Display(Name = "Created by")]
         public string UploadedBy { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
-        [Display(Name = "Date")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
+        [Display(Name = "Created")]
         public DateTime CreateDate { get; set; }
 
     }

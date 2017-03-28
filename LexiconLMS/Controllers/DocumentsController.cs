@@ -67,6 +67,7 @@ namespace LexiconLMS.Controllers
         }
 
         // GET: Documents/Create
+        [Authorize(Roles = "Teacher")]
         public ActionResult CreateFile(int? courseId, int? moduleId, int? activityId)
         {
             if (courseId != null)
@@ -93,9 +94,10 @@ namespace LexiconLMS.Controllers
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
 
-        // POST: Documents/CreateFile
+        // POST: Course Documents/CreateFile
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Teacher")]
         public ActionResult CreateCourseFile(CreateCourseDocumentFileViewModel model)
         {
             if (ModelState.IsValid)
@@ -120,9 +122,10 @@ namespace LexiconLMS.Controllers
             return View(model);
         }
 
-        // POST: Documents/CreateFile
+        // POST: Module Documents/CreateFile
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Teacher")]
         public ActionResult CreateModuleFile(CreateModuleDocumentFileViewModel model)
         {
             if (ModelState.IsValid)
@@ -147,9 +150,10 @@ namespace LexiconLMS.Controllers
             return View(model);
         }
 
-        // POST: Documents/CreateFile
+        // POST: Activity Documents/CreateFile
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Teacher")]
         public ActionResult CreateActivityFile(CreateActivityDocumentFileViewModel model)
         {
             if (ModelState.IsValid)
@@ -174,6 +178,7 @@ namespace LexiconLMS.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Teacher")]
         public ActionResult CreateLink(int? courseId, int? moduleId, int? activityId)
         {
             if (courseId != null)
@@ -200,9 +205,10 @@ namespace LexiconLMS.Controllers
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
 
-        // POST: Documents/CreateLink
+        // POST: Course Documents/CreateLink
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Teacher")]
         public ActionResult CreateCourseLink(CreateCourseDocumentLinkViewModel model)
         {
             if (ModelState.IsValid)
@@ -222,9 +228,10 @@ namespace LexiconLMS.Controllers
             return View(model);
         }
 
-        // POST: Documents/CreateLink
+        // POST: Module Documents/CreateLink
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Teacher")]
         public ActionResult CreateModuleLink(CreateModuleDocumentLinkViewModel model)
         {
             if (ModelState.IsValid)
@@ -244,9 +251,10 @@ namespace LexiconLMS.Controllers
             return View(model);
         }
 
-        // POST: Documents/CreateLink
+        // POST: Activity Documents/CreateLink
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Teacher")]
         public ActionResult CreateActivityLink(CreateActivityDocumentLinkViewModel model)
         {
             if (ModelState.IsValid)
@@ -266,6 +274,7 @@ namespace LexiconLMS.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Teacher")]
         public ActionResult Download(int id)
         {
             var document = db.Documents.Find(id);
@@ -278,6 +287,7 @@ namespace LexiconLMS.Controllers
         }
 
         // GET: Documents/Edit/5
+        [Authorize(Roles = "Teacher")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -289,32 +299,62 @@ namespace LexiconLMS.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.ActivityId = new SelectList(db.Activities, "Id", "Name", document.ActivityId);
-            ViewBag.CourseId = new SelectList(db.Courses, "Id", "Name", document.CourseId);
-            ViewBag.ModuleId = new SelectList(db.Modules, "Id", "Name", document.ModuleId);
-            return View(document);
+            ViewBag.RoutingObject = new
+            {
+                CourseId = document.CourseId,
+                ModuleId = document.ModuleId,
+                ActivityId = document.ActivityId
+            };
+
+            if (!string.IsNullOrWhiteSpace(document.Link))
+            {
+                return View("EditLink", new DocumentEditLinkViewModel(document));
+            }
+
+            return View("EditFile", new DocumentEditFileViewModel(document));
         }
 
         // POST: Documents/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,FileName,ContentType,Content,FileType,UserId,CreateDate,CourseId,ModuleId,ActivityId")] Document document)
+        [Authorize(Roles = "Teacher")]
+        public ActionResult EditFile(DocumentEditFileViewModel document)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(document).State = EntityState.Modified;
+                var doc = db.Documents.Find(document.Id);
+                doc.Update(document);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new {
+                    CourseId = doc.CourseId,
+                    ModuleId = doc.ModuleId,
+                    ActivityId = doc.ActivityId
+                });
             }
-            ViewBag.ActivityId = new SelectList(db.Activities, "Id", "Name", document.ActivityId);
-            ViewBag.CourseId = new SelectList(db.Courses, "Id", "Name", document.CourseId);
-            ViewBag.ModuleId = new SelectList(db.Modules, "Id", "Name", document.ModuleId);
+            return View(document);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Teacher")]
+        public ActionResult EditLink(DocumentEditLinkViewModel document)
+        {
+            if (ModelState.IsValid)
+            {
+                var doc = db.Documents.Find(document.Id);
+                doc.Update(document);
+                db.SaveChanges();
+                return RedirectToAction("Index", new {
+                    CourseId = doc.CourseId,
+                    ModuleId = doc.ModuleId,
+                    ActivityId = doc.ActivityId
+                });
+            }
             return View(document);
         }
 
         // GET: Documents/Delete/5
+        [Authorize(Roles = "Teacher")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -326,18 +366,31 @@ namespace LexiconLMS.Controllers
             {
                 return HttpNotFound();
             }
-            return View(document);
+            ViewBag.RoutingObject = new
+            {
+                CourseId = document.CourseId,
+                ModuleId = document.ModuleId,
+                ActivityId = document.ActivityId
+            };
+            return View(new DocumentDeleteViewModel(document));
         }
 
         // POST: Documents/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Teacher")]
         public ActionResult DeleteConfirmed(int id)
         {
             Document document = db.Documents.Find(id);
+            var routingObject = new
+            {
+                CourseId = document.CourseId,
+                ModuleId = document.ModuleId,
+                ActivityId = document.ActivityId
+            };
             db.Documents.Remove(document);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", routingObject);
         }
 
         protected override void Dispose(bool disposing)

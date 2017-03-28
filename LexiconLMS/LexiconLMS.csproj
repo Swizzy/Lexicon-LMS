@@ -49,6 +49,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="MvcBreadCrumbs, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvcBreadCrumbs.0.69\lib\MvcBreadCrumbs.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -184,7 +188,6 @@
       <DependentUpon>201703271418188_Link.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Document.cs" />
-    <Compile Include="Models\FileType.cs" />
     <Compile Include="Models\UserViewModel.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -316,7 +319,7 @@
     <Content Include="Views\Documents\ModuleCreateFile.cshtml" />
     <Content Include="Views\Documents\Delete.cshtml" />
     <Content Include="Views\Documents\Details.cshtml" />
-    <Content Include="Views\Documents\Edit.cshtml" />
+    <Content Include="Views\Documents\EditFile.cshtml" />
     <Content Include="Views\Documents\CourseDocumentsIndex.cshtml" />
     <Content Include="Views\Documents\ModuleDocumentsIndex.cshtml" />
     <Content Include="Views\Documents\ModuleCreateLink.cshtml" />
@@ -325,6 +328,7 @@
     <Content Include="Views\Documents\ActivityCreateFile.cshtml" />
     <Content Include="Views\Documents\CourseCreateLink.cshtml" />
     <Content Include="Views\Documents\ActivityCreateLink.cshtml" />
+    <Content Include="Views\Documents\EditLink.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201703210849336_AddModules.resx">

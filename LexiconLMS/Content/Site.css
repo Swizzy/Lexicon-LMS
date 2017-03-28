@@ -24,5 +24,9 @@ textarea {
 }
 
 .deleteView > dt, dd {
-    line-height: 200%;
+    line-height: 320%;
+}
+
+.editdisplay {
+    padding-top: 7px;
 }

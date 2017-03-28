@@ -1,7 +1,7 @@
 ﻿@model LexiconLMS.Models.CreateModuleDocumentFileViewModel
 
 <h1>@Model.ModuleName</h1>
-<h2>Add Module Document</h2>
+<h2>Add Module File</h2>
 
 @using (Html.BeginForm("CreateModuleFile", "Documents", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
@@ -22,7 +22,7 @@
         </div>
 
         <div class="form-group">
-            @Html.Label("Document", new { @class = "control-label col-md-2" })
+            @Html.Label("File", new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 <input type="file" id="Document" name="upload" />
                 @Html.ValidationMessageFor(model => model.Upload, "", new { @class = "text-danger" })
