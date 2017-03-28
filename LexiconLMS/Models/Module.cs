@@ -94,14 +94,15 @@ namespace LexiconLMS.Models
             {
                 ActivityCount = module.Activities.Count;
 
-            StartDate = module.StartDate;
-            EndDate = module.EndDate;
+                StartDate = module.StartDate;
+                EndDate = module.EndDate;
                 if (!HasDocuments)
                 {
                     DocumentCount = module.Documents.Count;
                     //var sortedDocuments = module.Documents.OrderByDescending(d => d.CreateDate);
                 }
             }
+        }
 
         [Display(Name = "Course")]
         public string CourseName { get; }
@@ -141,14 +142,15 @@ namespace LexiconLMS.Models
             {
                 ActivityCount = module.Activities.Count;
 
-            StartDate = module.StartDate;
-            EndDate = module.EndDate;
+                StartDate = module.StartDate;
+                EndDate = module.EndDate;
                 if (HasDocuments)
                 {
                     DocumentCount = module.Documents.Count;
                     //var sortedDocuments = module.Documents.OrderByDescending(d => d.CreateDate);
                 }
             }
+        }
 
         public int Id { get; }
         public string Name { get; }
