@@ -1,44 +1,34 @@
-﻿@model LexiconLMS.Models.ModuleIndexViewModel
+﻿@model IEnumerable<LexiconLMS.Models.ModuleIndexStudentViewModel>
 
-<h1>@Model.CourseName</h1>
-<h2>Course Modules</h2>
+@*<h1>@Model.CourseName</h1>*@
+<h2>Course Schedule</h2>
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Modules.FirstOrDefault().Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Modules.FirstOrDefault().StartDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Modules.FirstOrDefault().EndDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Modules.FirstOrDefault().ActivityCount)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model.Modules) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.StartDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EndDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ActivityCount)
-        </td>
-        <td>
-            @Html.ActionLink("Activities", "StudentIndex", "Activities", new { moduleId = item.Id }, null)
-            @*@Html.ActionLink("Documents", "Documents", new { id = item.Id }) *@
-        </td>
-    </tr>
+@{int i = 0;}
+@foreach (var item in Model)
+{
+    <div class="panel-group" id="accordion" >
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne_@i" aria-expanded="true" aria-controls="collapseOne_@i">
+                                @Html.DisplayFor(modelItem => item.Timestamp)
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseOne_@i" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                <div class="panel-body">
+                    <ol>
+                        @foreach (var activity in item.Activities)
+                        {
+                            <li>@activity.StartDate - @activity.EndDate : @activity.Name</li>
+                        }
+                    </ol>
+                </div>
+            </div>
+        </div>
+       
+        
+    </div>
+    ++i;
 }
-
-</table>
+   

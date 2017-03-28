@@ -20,6 +20,7 @@ namespace LexiconLMS.Controllers
         public ActionResult Index(int? courseId)
         {
             var view = "Index";
+            ModuleIndexViewModel ViewModel = null;
             if (User.IsInRole("Teacher"))
             {
                 if (courseId == null)
@@ -37,11 +38,32 @@ namespace LexiconLMS.Controllers
             var course = db.Courses.FirstOrDefault(c => c.Id == courseId);
             if (course == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            var dbmodules = db.Modules.Where(m => m.CourseId == courseId).ToList();
+            var modules = dbmodules.Select(m => new ModuleViewModel(m));
 
-            var modules = db.Modules.Where(m => m.CourseId == courseId)
-                                    .ToList()
-                                    .Select(m => new ModuleViewModel(m));
+            if (!User.IsInRole("Teacher")) {
+                var activities = dbmodules.SelectMany(m => m.Activities);
+                var data = new List<ModuleIndexStudentViewModel>();
+                if (course.StartDate != null)
+                {
+                    var date = (DateTime)course.StartDate;
+                    do
+                    {
+                        var dayActivities = new List<ActivityViewModel>();
+                        foreach (var activity in activities.Where(a => a.StartDate > date && a.EndDate < date))
+                        {
+                            dayActivities.Add(new ActivityViewModel(activity));
+                        }
+                        data.Add(new ModuleIndexStudentViewModel(date, dayActivities));
+                        date = date.AddDays(1);
+                        if (date.DayOfWeek == DayOfWeek.Saturday) {
+                            date = date.AddDays(2);
+                        }                        
+                    } while (date < course.EndDate);
+                }
 
+                return View(view, data);
+            }            
             return View(view, new ModuleIndexViewModel(course, modules));
         }
 
