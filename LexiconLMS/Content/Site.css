@@ -22,3 +22,7 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.deleteView > dt, dd {
+    line-height: 200%;
+}
