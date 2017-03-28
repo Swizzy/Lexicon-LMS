@@ -30,3 +30,7 @@ textarea {
     margin-bottom: inherit;
     border-radius: inherit;
 }
+
+.table {
+    border-bottom: 1px solid #ddd;
+}
