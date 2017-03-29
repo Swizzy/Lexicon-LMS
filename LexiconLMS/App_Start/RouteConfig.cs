@@ -11,6 +11,7 @@ namespace LexiconLMS
     {
         public static void RegisterRoutes(RouteCollection routes)
         {
+            MvcBreadCrumbs.BreadCrumb.SetLastItemAsLink();
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
