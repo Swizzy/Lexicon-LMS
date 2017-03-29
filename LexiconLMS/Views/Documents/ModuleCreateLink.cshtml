@@ -1,4 +1,4 @@
-﻿@model LexiconLMS.Models.CreateModuleDocumentLinkViewModel
+﻿@model LexiconLMS.Models.ModuleCreateDocumentLinkViewModel
 
 <h2>Add Module Link</h2>
 
@@ -9,7 +9,6 @@
     <div class="form-horizontal">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(m => Model.ModuleId)
-        @Html.HiddenFor(m => Model.ModuleName)
 
         <div class="form-group">
             @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })

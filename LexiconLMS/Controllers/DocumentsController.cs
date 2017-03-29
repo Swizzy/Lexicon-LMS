@@ -82,21 +82,21 @@ namespace LexiconLMS.Controllers
                 var course = db.Courses.Find(courseId);
                 if (course == null)
                     return HttpNotFound();
-                return View("CourseCreateFile", new CreateCourseDocumentFileViewModel(course));
+                return View("CourseCreateFile", new CourseCreateDocumentFileViewModel(course));
             }
             if (moduleId != null)
             {
                 var module = db.Modules.Find(moduleId);
                 if (module == null)
                     return HttpNotFound();
-                return View("ModuleCreateFile", new CreateModuleDocumentFileViewModel(module));
+                return View("ModuleCreateFile", new ModuleCreateDocumentFileViewModel(module));
             }
             if (activityId != null)
             {
                 var activity = db.Activities.Find(activityId);
                 if (activity == null)
                     return HttpNotFound();
-                return View("ActivityCreateFile", new CreateActivityDocumentFileViewModel(activity));
+                return View("ActivityCreateFile", new ActivityCreateDocumentFileViewModel(activity));
             }
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
@@ -105,7 +105,7 @@ namespace LexiconLMS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Teacher")]
-        public ActionResult CreateCourseFile(CreateCourseDocumentFileViewModel model)
+        public ActionResult CreateCourseFile(CourseCreateDocumentFileViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -123,7 +123,7 @@ namespace LexiconLMS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Teacher")]
-        public ActionResult CreateModuleFile(CreateModuleDocumentFileViewModel model)
+        public ActionResult CreateModuleFile(ModuleCreateDocumentFileViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -141,7 +141,7 @@ namespace LexiconLMS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Teacher")]
-        public ActionResult CreateActivityFile(CreateActivityDocumentFileViewModel model)
+        public ActionResult CreateActivityFile(ActivityCreateDocumentFileViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -165,21 +165,21 @@ namespace LexiconLMS.Controllers
                 var course = db.Courses.Find(courseId);
                 if (course == null)
                     return HttpNotFound();
-                return View("CourseCreateLink", new CreateCourseDocumentLinkViewModel(course));
+                return View("CourseCreateLink", new CourseCreateDocumentLinkViewModel(course));
             }
             if (moduleId != null)
             {
                 var module = db.Modules.Find(moduleId);
                 if (module == null)
                     return HttpNotFound();
-                return View("ModuleCreateLink", new CreateModuleDocumentLinkViewModel(module));
+                return View("ModuleCreateLink", new ModuleCreateDocumentLinkViewModel(module));
             }
             if (activityId != null)
             {
                 var activity = db.Activities.Find(activityId);
                 if (activity == null)
                     return HttpNotFound();
-                return View("ActivityCreateLink", new CreateActivityDocumentLinkViewModel(activity));
+                return View("ActivityCreateLink", new ActivityCreateDocumentLinkViewModel(activity));
             }
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
@@ -188,7 +188,7 @@ namespace LexiconLMS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Teacher")]
-        public ActionResult CreateCourseLink(CreateCourseDocumentLinkViewModel model)
+        public ActionResult CreateCourseLink(CourseCreateDocumentLinkViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -206,7 +206,7 @@ namespace LexiconLMS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Teacher")]
-        public ActionResult CreateModuleLink(CreateModuleDocumentLinkViewModel model)
+        public ActionResult CreateModuleLink(ModuleCreateDocumentLinkViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -224,7 +224,7 @@ namespace LexiconLMS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Teacher")]
-        public ActionResult CreateActivityLink(CreateActivityDocumentLinkViewModel model)
+        public ActionResult CreateActivityLink(ActivityCreateDocumentLinkViewModel model)
         {
             if (ModelState.IsValid)
             {

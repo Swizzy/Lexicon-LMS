@@ -1,15 +1,6 @@
 ﻿@model LexiconLMS.Models.DocumentDeleteViewModel
 
-@if (!string.IsNullOrWhiteSpace(Model.Link))
-{
-    <h2>Delete Link</h2>
-}
-else
-{
-    <h2>Delete File</h2>
-}
-
-<h3>Are you sure you want to delete this?</h3>
+<h3>Are you sure you want to delete this @Model.DocumentType?</h3>
 <div>
     <hr />
     <dl class="dl-horizontal deleteView">

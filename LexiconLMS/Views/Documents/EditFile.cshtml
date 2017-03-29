@@ -1,6 +1,6 @@
 ﻿@model LexiconLMS.Models.DocumentEditFileViewModel
 
-<h2>Modify File</h2>
+<h2>Modify @Model.DocumentType File</h2>
 
 @using (Html.BeginForm("EditFile", "Documents", new { Model.Id }, FormMethod.Post, null))
 {

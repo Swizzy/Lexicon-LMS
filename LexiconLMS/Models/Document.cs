@@ -76,50 +76,24 @@ namespace LexiconLMS.Models
         }
     }
 
-    public class DocumentEditLinkViewModel
+    public abstract class DocumentEditViewModel
     {
-        public DocumentEditLinkViewModel()
+        public DocumentEditViewModel()
         {
         }
 
-        public DocumentEditLinkViewModel(Document document)
+        public DocumentEditViewModel(Document document)
         {
             Id = document.Id;
             Name = document.Name;
-            Link = document.Link;
             CreatedBy = document.ApplicationUser.FullName;
             CreateDate = document.CreateDate;
-        }
-
-        public int Id { get; set; }
-
-        [Required]
-        public string Name { get; set; }
-        [Required]
-        [DataType(DataType.Url)]
-        public string Link { get; set; }
-
-        [Display(Name = "Created by")]
-        public string CreatedBy { get; set; }
-
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
-        [Display(Name = "Created")]
-        public DateTime CreateDate { get; set; }
-    }
-
-    public class DocumentEditFileViewModel
-    {
-        public DocumentEditFileViewModel()
-        {
-        }
-
-        public DocumentEditFileViewModel(Document document)
-        {
-            Id = document.Id;
-            Name = document.Name;
-            FileName = document.FileName;
-            CreatedBy = document.ApplicationUser.FullName;
-            CreateDate = document.CreateDate;
+            if (document.ActivityId != null)
+                DocumentType = "Activity";
+            if (document.ModuleId != null)
+                DocumentType = "Module";
+            if (document.CourseId != null)
+                DocumentType = "Course";
         }
 
         public int Id { get; set; }
@@ -127,41 +101,6 @@ namespace LexiconLMS.Models
         [Required]
         public string Name { get; set; }
 
-        [Display(Name = "File")]
-        public string FileName { get; set; }
-
-        [Display(Name = "Created by")]
-        public string CreatedBy { get; set; }
-
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
-        [Display(Name = "Created")]
-        public DateTime CreateDate { get; set; }
-    }
-
-    public class DocumentDeleteViewModel
-    {
-        public DocumentDeleteViewModel()
-        {
-        }
-
-        public DocumentDeleteViewModel(Document document)
-        {
-            Name = document.Name;
-            FileName = document.FileName;
-            Link = document.Link;
-            CreatedBy = document.ApplicationUser.FullName;
-            CreateDate = document.CreateDate;
-        }
-
-        [Display(Name = "Name")]
-        public string Name { get; set; }
-
-        [Display(Name = "File")]
-        public string FileName { get; set; }
-
-        [Display(Name = "Link")]
-        public string Link { get; set; }
-
         [Display(Name = "Created by")]
         public string CreatedBy { get; set; }
 
@@ -169,6 +108,7 @@ namespace LexiconLMS.Models
         [Display(Name = "Created")]
         public DateTime CreateDate { get; set; }
 
+        public string DocumentType { get; }
     }
 
     public abstract class CreateDocumentFileViewModel
@@ -190,150 +130,6 @@ namespace LexiconLMS.Models
         public string Link { get; set; }
     }
 
-    public class CreateCourseDocumentFileViewModel : CreateDocumentFileViewModel
-    {
-        public CreateCourseDocumentFileViewModel()
-        {
-        }
-
-        public CreateCourseDocumentFileViewModel(Course course)
-        {
-            CourseName = course.Name;
-            CourseId = course.Id;
-        }
-
-        [Required]
-        public int CourseId { get; set; }
-        public string CourseName { get; set; }
-    }
-
-    public class CreateCourseDocumentLinkViewModel : CreateDocumentLinkViewModel
-    {
-        public CreateCourseDocumentLinkViewModel()
-        {
-        }
-
-        public CreateCourseDocumentLinkViewModel(Course course)
-        {
-            CourseName = course.Name;
-            CourseId = course.Id;
-        }
-
-        [Required]
-        public int CourseId { get; set; }
-        public string CourseName { get; set; }
-    }
-
-    public class CreateModuleDocumentFileViewModel : CreateDocumentFileViewModel
-    {
-        public CreateModuleDocumentFileViewModel()
-        {
-        }
-
-        public CreateModuleDocumentFileViewModel(Module module)
-        {
-            ModuleName = module.Name;
-            ModuleId = module.Id;
-        }
-
-        [Required]
-        public int ModuleId { get; set; }
-        public string ModuleName { get; set; }
-    }
-
-    public class CreateModuleDocumentLinkViewModel : CreateDocumentLinkViewModel
-    {
-        public CreateModuleDocumentLinkViewModel()
-        {
-        }
-
-        public CreateModuleDocumentLinkViewModel(Module module)
-        {
-            ModuleName = module.Name;
-            ModuleId = module.Id;
-        }
-
-        [Required]
-        public int ModuleId { get; set; }
-        public string ModuleName { get; set; }
-    }
-
-    public class CreateActivityDocumentFileViewModel : CreateDocumentFileViewModel
-    {
-        public CreateActivityDocumentFileViewModel()
-        {
-        }
-
-        public CreateActivityDocumentFileViewModel(Activity activity)
-        {
-            ActivityName = activity.Name;
-            ActivityId = activity.Id;
-        }
-
-        [Required]
-        public int ActivityId { get; set; }
-        public string ActivityName { get; set; }
-    }
-
-    public class CreateActivityDocumentLinkViewModel : CreateDocumentLinkViewModel
-    {
-        public CreateActivityDocumentLinkViewModel()
-        {
-        }
-
-        public CreateActivityDocumentLinkViewModel(Activity activity)
-        {
-            ActivityName = activity.Name;
-            ActivityId = activity.Id;
-        }
-
-        [Required]
-        public int ActivityId { get; set; }
-        public string ActivityName { get; set; }
-    }
-
-    public class CourseDocumentsViewModel
-    {
-        public CourseDocumentsViewModel(Course course, IEnumerable<DocumentViewModel> documents)
-        {
-            CourseName = course.Name;
-            CourseId = course.Id;
-            Documents = documents;
-        }
-
-        public string CourseName { get; }
-        public int CourseId { get; }
-        public IEnumerable<DocumentViewModel> Documents { get; }
-    }
-
-    public class ModuleDocumentsViewModel
-    {
-        public ModuleDocumentsViewModel(Module module, IEnumerable<DocumentViewModel> documents)
-        {
-            ModuleName = module.Name;
-            ModuleId = module.Id;
-            Documents = documents;
-        }
-
-        public string ModuleName { get; }
-        public int ModuleId { get; }
-        public IEnumerable<DocumentViewModel> Documents { get;}
-    }
-
-    public class ActivityDocumentsViewModel
-    {
-        public ActivityDocumentsViewModel(Activity activity, IEnumerable<DocumentViewModel> documents)
-        {
-            ActivityName = activity.Name;
-            ActivityId = activity.Id;
-            Documents = documents;
-        }
-
-        public string ActivityName { get; }
-        public int ActivityId { get; }
-        public IEnumerable<DocumentViewModel> Documents { get; }
-    }
-
     public class DocumentViewModel
     {
         public DocumentViewModel(Document document)
@@ -348,11 +144,188 @@ namespace LexiconLMS.Models
         public string Name { get; }
 
         [Display(Name = "Created by")]
-        public string UploadedBy { get; set; }
+        public string UploadedBy { get; }
 
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
         [Display(Name = "Created")]
-        public DateTime CreateDate { get; set; }
+        public DateTime CreateDate { get; }
 
+    }
+
+    public class DocumentEditLinkViewModel : DocumentEditViewModel
+    {
+        public DocumentEditLinkViewModel()
+        {
+        }
+
+        public DocumentEditLinkViewModel(Document document) : base(document)
+        {
+            Link = document.Link;
+        }
+        
+        [Required]
+        [DataType(DataType.Url)]
+        public string Link { get; set; }
+    }
+
+    public class DocumentEditFileViewModel : DocumentEditViewModel
+    {
+        public DocumentEditFileViewModel()
+        {
+        }
+
+        public DocumentEditFileViewModel(Document document) : base(document)
+        {
+            FileName = document.FileName;
+        }
+
+        [Display(Name = "File")]
+        public string FileName { get; set; }
+
+    }
+
+    public class DocumentDeleteViewModel : DocumentEditViewModel
+    {
+        public DocumentDeleteViewModel()
+        {
+        }
+
+        public DocumentDeleteViewModel(Document document) : base(document)
+        {
+            FileName = document.FileName;
+            Link = document.Link;
+        }
+
+        [Display(Name = "File")]
+        public string FileName { get; set; }
+
+        [Display(Name = "Link")]
+        public string Link { get; set; }
+    }
+
+    public class CourseCreateDocumentFileViewModel : CreateDocumentFileViewModel
+    {
+        public CourseCreateDocumentFileViewModel()
+        {
+        }
+
+        public CourseCreateDocumentFileViewModel(Course course)
+        {
+            CourseId = course.Id;
+        }
+
+        [Required]
+        public int CourseId { get; set; }
+    }
+
+    public class CourseCreateDocumentLinkViewModel : CreateDocumentLinkViewModel
+    {
+        public CourseCreateDocumentLinkViewModel()
+        {
+        }
+
+        public CourseCreateDocumentLinkViewModel(Course course)
+        {
+            CourseId = course.Id;
+        }
+
+        [Required]
+        public int CourseId { get; set; }
+    }
+
+    public class CourseDocumentsViewModel
+    {
+        public CourseDocumentsViewModel(Course course, IEnumerable<DocumentViewModel> documents)
+        {
+            CourseId = course.Id;
+            Documents = documents;
+        }
+
+        public int CourseId { get; }
+        public IEnumerable<DocumentViewModel> Documents { get; }
+    }
+
+    public class ModuleCreateDocumentFileViewModel : CreateDocumentFileViewModel
+    {
+        public ModuleCreateDocumentFileViewModel()
+        {
+        }
+
+        public ModuleCreateDocumentFileViewModel(Module module)
+        {
+            ModuleId = module.Id;
+        }
+
+        [Required]
+        public int ModuleId { get; set; }
+    }
+
+    public class ModuleCreateDocumentLinkViewModel : CreateDocumentLinkViewModel
+    {
+        public ModuleCreateDocumentLinkViewModel()
+        {
+        }
+
+        public ModuleCreateDocumentLinkViewModel(Module module)
+        {
+            ModuleId = module.Id;
+        }
+
+        [Required]
+        public int ModuleId { get; set; }
+    }
+
+    public class ModuleDocumentsViewModel
+    {
+        public ModuleDocumentsViewModel(Module module, IEnumerable<DocumentViewModel> documents)
+        {
+            ModuleId = module.Id;
+            Documents = documents;
+        }
+
+        public int ModuleId { get; }
+        public IEnumerable<DocumentViewModel> Documents { get;}
+    }
+
+    public class ActivityDocumentsViewModel
+    {
+        public ActivityDocumentsViewModel(Activity activity, IEnumerable<DocumentViewModel> documents)
+        {
+            ActivityId = activity.Id;
+            Documents = documents;
+        }
+
+        public int ActivityId { get; }
+        public IEnumerable<DocumentViewModel> Documents { get; }
+    }
+
+    public class ActivityCreateDocumentFileViewModel : CreateDocumentFileViewModel
+    {
+        public ActivityCreateDocumentFileViewModel()
+        {
+        }
+
+        public ActivityCreateDocumentFileViewModel(Activity activity)
+        {
+            ActivityId = activity.Id;
+        }
+
+        [Required]
+        public int ActivityId { get; set; }
+    }
+
+    public class ActivityCreateDocumentLinkViewModel : CreateDocumentLinkViewModel
+    {
+        public ActivityCreateDocumentLinkViewModel()
+        {
+        }
+
+        public ActivityCreateDocumentLinkViewModel(Activity activity)
+        {
+            ActivityId = activity.Id;
+        }
+
+        [Required]
+        public int ActivityId { get; set; }
     }
 }

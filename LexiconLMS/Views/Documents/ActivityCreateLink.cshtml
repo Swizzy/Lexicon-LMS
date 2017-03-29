@@ -1,4 +1,4 @@
-﻿@model LexiconLMS.Models.CreateActivityDocumentLinkViewModel
+﻿@model LexiconLMS.Models.ActivityCreateDocumentLinkViewModel
 
 <h2>Add Activity Link</h2>
 
@@ -9,7 +9,6 @@
     <div class="form-horizontal">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(m => Model.ActivityId)
-        @Html.HiddenFor(m => Model.ActivityName)
 
         <div class="form-group">
             @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })

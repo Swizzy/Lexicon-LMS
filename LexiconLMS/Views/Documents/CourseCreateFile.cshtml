@@ -1,4 +1,4 @@
-﻿@model LexiconLMS.Models.CreateCourseDocumentFileViewModel
+﻿@model LexiconLMS.Models.CourseCreateDocumentFileViewModel
 
 <h2>Add Course File</h2>
 
@@ -9,7 +9,6 @@
     <div class="form-horizontal">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(m => Model.CourseId)
-        @Html.HiddenFor(m => Model.CourseName)
 
         <div class="form-group">
             @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
