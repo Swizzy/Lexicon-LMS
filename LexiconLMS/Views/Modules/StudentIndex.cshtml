@@ -17,14 +17,12 @@
             </div>
             <div id="collapseOne_@i" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
                 <div class="panel-body">
-                    <ol>
+                    <ul>
                     @foreach (var activity in item.Activities)
                     {
-                        @*<li>@Html.DisplayFor(modelItem => item.Activities.StartDate)</li>*@
-                        <li>@Html.DisplayFor(modelItem => activity.EndDate)</li>
-                        <li>@Html.DisplayFor(modelItem => activity.Name)</li>
+                        <li>@Html.DisplayFor(modelItem => activity.StartTime) :  @Html.DisplayFor(m => activity.Name)</li>
                     }
-                    </ol>
+                    </ul>
                 </div>
             </div>
         </div>

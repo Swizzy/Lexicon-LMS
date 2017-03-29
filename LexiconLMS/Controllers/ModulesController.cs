@@ -49,10 +49,10 @@ namespace LexiconLMS.Controllers
                     var date = (DateTime)course.StartDate;
                     do
                     {
-                        var dayActivities = new List<ActivityViewModel>();
-                        foreach (var activity in activities.Where(a => a.StartDate > date && a.EndDate < date))
+                        var dayActivities = new List<ActivityScheduleViewModel>();
+                        foreach (var activity in activities.Where(a => a.StartDate.DayOfYear <= date.DayOfYear && date.DayOfYear <= a.EndDate.DayOfYear))
                         {
-                            dayActivities.Add(new ActivityViewModel(activity));
+                            dayActivities.Add(new ActivityScheduleViewModel(activity));
                         }
                         data.Add(new ModuleIndexStudentViewModel(date, dayActivities));
                         date = date.AddDays(1);
