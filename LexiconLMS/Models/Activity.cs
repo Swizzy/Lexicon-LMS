@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace LexiconLMS.Models
 {
@@ -98,10 +99,11 @@ namespace LexiconLMS.Models
             Id = activity.Id;
             Name = activity.Name;
             Description = activity.Description;
-            StartDate = activity.StartDate.ToString("yyyy-MM-dd HH:mm");
-            EndDate = activity.EndDate.ToString("yyyy-MM-dd HH:mm");
+            StartDate = activity.StartDate;
+            EndDate = activity.EndDate;
             ActivityType = activity.ActivityType.Name;
             IsAssignment = activity.ActivityType.IsAssignment;
+            DocumentsCount = activity.Documents.Count;
         }
 
         public int Id { get; }
@@ -109,15 +111,20 @@ namespace LexiconLMS.Models
         public string Description { get; }
 
         [Display(Name = "Start Date")]
-        public string StartDate { get; }
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
+        public DateTime StartDate { get; }
 
         [Display(Name = "End Date")]
-        public string EndDate { get; }
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
+        public DateTime EndDate { get; }
 
         [Display(Name = "Activity Type")]
         public string ActivityType { get; }
 
         public bool IsAssignment { get; }
+
+        [Display(Name = "Activity Documents")]
+        public int DocumentsCount { get; }
     }
 
     public class ActivityDeleteViewModel
@@ -125,35 +132,46 @@ namespace LexiconLMS.Models
         public ActivityDeleteViewModel(Activity activity)
         {
             Name = activity.Name;
-            StartDate = activity.StartDate.ToString("yyyy-MM-dd HH:mm");
-            EndDate = activity.EndDate.ToString("yyyy-MM-dd HH:mm");
-
+            StartDate = activity.StartDate;
+            EndDate = activity.EndDate;
             ActivityType = activity.ActivityType.Name;
-
             ModuleId = activity.ModuleId;
-            ModuleName = activity.Module.Name;
-
-            CourseName = activity.Module.Course.Name;
+            DocumentsCount = activity.Documents.Count;
         }
 
         public string Name { get; }
 
         [Display(Name = "Start Date")]
-        public string StartDate { get; }
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
+        public DateTime StartDate { get; }
 
         [Display(Name = "End Date")]
-        public string EndDate { get; }
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
+        public DateTime EndDate { get; }
 
         [Display(Name = "Activity Type")]
         public string ActivityType { get; }
 
+        [Display(Name = "Activity Documents")]
+        public int DocumentsCount { get; }
+
         public int ModuleId { get; }
 
-        [Display(Name = "Module")]
-        public string ModuleName { get; }
+        public bool HasDocuments => DocumentsCount > 0;
 
-        [Display(Name = "Course")]
-        public string CourseName { get; }
+        public string DeleteType
+        {
+            get
+            {
+                var sb = new StringBuilder("Activity");
+                if (HasDocuments)
+                {
+                    sb.Append(" and the related Documents");
+                }
+                return sb.ToString();
+            }
+        }
+
     }
 
     public class ActivityCreateViewModel

@@ -60,7 +60,7 @@ namespace LexiconLMS.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Activity activity = db.Activities.Find(id);
+            var activity = db.Activities.Find(id);
             if (activity == null)
             {
                 return HttpNotFound();
@@ -111,7 +111,7 @@ namespace LexiconLMS.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Activity activity = db.Activities.Find(id);
+            var activity = db.Activities.Find(id);
             if (activity == null)
             {
                 return HttpNotFound();
@@ -132,7 +132,7 @@ namespace LexiconLMS.Controllers
             if (ModelState.IsValid)
             {
                 //db.Entry(activity).State = EntityState.Modified;
-                Activity dbactivity = db.Activities.Find(id);
+                var dbactivity = db.Activities.Find(id);
                 if (dbactivity == null)
                 {
                     return HttpNotFound();
@@ -154,7 +154,7 @@ namespace LexiconLMS.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Activity activity = db.Activities.Find(id);
+            var activity = db.Activities.Find(id);
             if (activity == null)
             {
                 return HttpNotFound();
