@@ -67,7 +67,6 @@ namespace LexiconLMS.Models
             CourseName = course.Name;
             CourseId = course.Id;
             Modules = modules;
-            
         }
 
         public string CourseName { get; }
@@ -189,7 +188,7 @@ namespace LexiconLMS.Models
         [Display(Name = "Activities")]
         public int ActivitiesCount { get; }
 
-        [Display(Name = "Module Document")]
+        [Display(Name = "Module Documents")]
         public int DocumentsCount { get; }
     }
 }
