@@ -2,13 +2,39 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
+using System.IO;
 using System.Web;
 
 namespace LexiconLMS.Models
 {
     public class Document
     {
+        public Document()
+        {
+        }
+
+        private Document(string name, string userId)
+        {
+            CreateDate = DateTime.Now;
+            UserId = userId;
+            Name = name;
+        }
+
+        public Document(CreateDocumentFileViewModel model, string userId) : this(model.Name, userId)
+        {
+            using (var br = new BinaryReader(model.Upload.InputStream))
+            {
+                FileName = model.Upload.FileName;
+                ContentType = model.Upload.ContentType;
+                Content = br.ReadBytes(model.Upload.ContentLength);
+            }
+        }
+
+        public Document(CreateDocumentLinkViewModel model, string userId) : this(model.Name, userId)
+        {
+            Link = model.Link;
+        }
+
         public int Id { get; set; }
         public string Name { get; set; }
 
@@ -144,7 +170,7 @@ namespace LexiconLMS.Models
 
     }
 
-    public class CreateDocumentFileViewModel
+    public abstract class CreateDocumentFileViewModel
     {
         [Required]
         public string Name { get; set; }
@@ -153,7 +179,7 @@ namespace LexiconLMS.Models
         public HttpPostedFileBase Upload { get; set; }
     }
 
-    public class CreateDocumentLinkViewModel
+    public abstract class CreateDocumentLinkViewModel
     {
         [Required]
         public string Name { get; set; }

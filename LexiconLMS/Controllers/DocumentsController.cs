@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using LexiconLMS.Models;
 using Microsoft.AspNet.Identity;
@@ -134,22 +130,12 @@ namespace LexiconLMS.Controllers
         {
             if (ModelState.IsValid)
             {
-                using (var br = new System.IO.BinaryReader(model.Upload.InputStream))
+                db.Documents.Add(new Document(model, User.Identity.GetUserId())
                 {
-                    var doc = new Document()
-                    {
-                        Name = model.Name,
-                        FileName = model.Upload.FileName,
-                        ContentType = model.Upload.ContentType,
-                        Content = br.ReadBytes(model.Upload.ContentLength),
-                        CreateDate = DateTime.Now,
-                        UserId = User.Identity.GetUserId(),
-                        CourseId = model.CourseId
-                    };
-                    db.Documents.Add(doc);
-                    db.SaveChanges();
-                    return RedirectToAction("Index", new { model.CourseId });
-                }
+                    CourseId = model.CourseId
+                });
+                db.SaveChanges();
+                return RedirectToAction("Index", new { model.CourseId });
             }
             return View(model);
         }
@@ -162,22 +148,12 @@ namespace LexiconLMS.Controllers
         {
             if (ModelState.IsValid)
             {
-                using (var br = new System.IO.BinaryReader(model.Upload.InputStream))
+                db.Documents.Add(new Document(model, User.Identity.GetUserId())
                 {
-                    var doc = new Document()
-                    {
-                        Name = model.Name,
-                        FileName = model.Upload.FileName,
-                        ContentType = model.Upload.ContentType,
-                        Content = br.ReadBytes(model.Upload.ContentLength),
-                        CreateDate = DateTime.Now,
-                        UserId = User.Identity.GetUserId(),
-                        ModuleId = model.ModuleId
-                    };
-                    db.Documents.Add(doc);
-                    db.SaveChanges();
-                    return RedirectToAction("Index", new { model.ModuleId });
-                }
+                    ModuleId = model.ModuleId
+                });
+                db.SaveChanges();
+                return RedirectToAction("Index", new { model.ModuleId });
             }
             return View(model);
         }
@@ -190,22 +166,12 @@ namespace LexiconLMS.Controllers
         {
             if (ModelState.IsValid)
             {
-                using (var br = new System.IO.BinaryReader(model.Upload.InputStream))
+                db.Documents.Add(new Document(model, User.Identity.GetUserId())
                 {
-                    var doc = new Document()
-                    {
-                        Name = model.Name,
-                        FileName = model.Upload.FileName,
-                        ContentType = model.Upload.ContentType,
-                        Content = br.ReadBytes(model.Upload.ContentLength),
-                        CreateDate = DateTime.Now,
-                        UserId = User.Identity.GetUserId(),
-                        ActivityId = model.ActivityId
-                    };
-                    db.Documents.Add(doc);
-                    db.SaveChanges();
-                    return RedirectToAction("Index", new { model.ActivityId });
-                }
+                    ActivityId = model.ActivityId
+                });
+                db.SaveChanges();
+                return RedirectToAction("Index", new {model.ActivityId});
             }
             return View(model);
         }
@@ -248,17 +214,12 @@ namespace LexiconLMS.Controllers
         {
             if (ModelState.IsValid)
             {
-                    var doc = new Document()
-                    {
-                        Name = model.Name,
-                        Link = model.Link,
-                        CreateDate = DateTime.Now,
-                        UserId = User.Identity.GetUserId(),
-                        CourseId = model.CourseId
-                    };
-                    db.Documents.Add(doc);
-                    db.SaveChanges();
-                    return RedirectToAction("Index", new { model.CourseId });
+                db.Documents.Add(new Document(model, User.Identity.GetUserId())
+                {
+                    CourseId = model.CourseId
+                });
+                db.SaveChanges();
+                return RedirectToAction("Index", new { model.CourseId });
             }
             return View(model);
         }
@@ -271,15 +232,10 @@ namespace LexiconLMS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var doc = new Document()
+                db.Documents.Add(new Document(model, User.Identity.GetUserId())
                 {
-                    Name = model.Name,
-                    Link = model.Link,
-                    CreateDate = DateTime.Now,
-                    UserId = User.Identity.GetUserId(),
                     ModuleId = model.ModuleId
-                };
-                db.Documents.Add(doc);
+                });
                 db.SaveChanges();
                 return RedirectToAction("Index", new { model.ModuleId });
             }
@@ -294,15 +250,10 @@ namespace LexiconLMS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var doc = new Document()
+                db.Documents.Add(new Document(model, User.Identity.GetUserId())
                 {
-                    Name = model.Name,
-                    Link = model.Link,
-                    CreateDate = DateTime.Now,
-                    UserId = User.Identity.GetUserId(),
                     ActivityId = model.ActivityId
-                };
-                db.Documents.Add(doc);
+                });
                 db.SaveChanges();
                 return RedirectToAction("Index", new { model.ActivityId });
             }
@@ -334,13 +285,6 @@ namespace LexiconLMS.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.RoutingObject = new
-            {
-                CourseId = document.CourseId,
-                ModuleId = document.ModuleId,
-                ActivityId = document.ActivityId
-            };
-
             if (document.CourseId != null)
             {
                 MakeBreadCrumbs();
