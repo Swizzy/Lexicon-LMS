@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using LexiconLMS.Models;
 using Microsoft.AspNet.Identity;
+using MvcBreadCrumbs;
 
 namespace LexiconLMS.Controllers
 {
@@ -15,6 +16,31 @@ namespace LexiconLMS.Controllers
     public class DocumentsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+
+        private void MakeBreadCrumbs()
+        {
+            BreadCrumb.Clear();
+            BreadCrumb.Add("/", "Home");
+        }
+
+        private void MakeBreadCrumbs(Course course)
+        {
+            MakeBreadCrumbs();
+            if (course != null)
+            {
+                BreadCrumb.Add(Url.Action("Index", "Modules", new { courseId = course.Id }), course.Name);
+            }
+        }
+
+        private void MakeBreadCrumbs(Module module)
+        {
+            MakeBreadCrumbs();
+            if (module != null)
+            {
+                MakeBreadCrumbs(module.Course);
+                BreadCrumb.Add(Url.Action("Index", "Activities", new { moduleId = module.Id }), module.Name);
+            }
+        }
 
         // GET: Documents
         public ActionResult Index(int? courseId, int? moduleId, int? activityId)
@@ -28,6 +54,7 @@ namespace LexiconLMS.Controllers
                 var course = db.Courses.Find(courseId);
                 if (course == null)
                     return HttpNotFound();
+                MakeBreadCrumbs();
                 return View("CourseDocumentsIndex", new CourseDocumentsViewModel(course, docList));
             }
             if (moduleId != null)
@@ -37,6 +64,7 @@ namespace LexiconLMS.Controllers
                 var module = db.Modules.Find(moduleId);
                 if (module == null)
                     return HttpNotFound();
+                MakeBreadCrumbs(module.Course);
                 return View("ModuleDocumentsIndex", new ModuleDocumentsViewModel(module, docList));
             }
             if (activityId != null)
@@ -46,6 +74,7 @@ namespace LexiconLMS.Controllers
                 var activity = db.Activities.Find(activityId);
                 if (activity == null)
                     return HttpNotFound();
+                MakeBreadCrumbs(activity.Module);
                 return View("ActivityDocumentsIndex", new ActivityDocumentsViewModel(activity, docList));
             }
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -58,7 +87,7 @@ namespace LexiconLMS.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Document document = db.Documents.Find(id);
+            var document = db.Documents.Find(id);
             if (document == null)
             {
                 return HttpNotFound();
@@ -75,6 +104,7 @@ namespace LexiconLMS.Controllers
                 var course = db.Courses.Find(courseId);
                 if (course == null)
                     return HttpNotFound();
+                MakeBreadCrumbs();
                 return View("CourseCreateFile", new CreateCourseDocumentFileViewModel(course));
             }
             if (moduleId != null)
@@ -82,6 +112,7 @@ namespace LexiconLMS.Controllers
                 var module = db.Modules.Find(moduleId);
                 if (module == null)
                     return HttpNotFound();
+                MakeBreadCrumbs(module.Course);
                 return View("ModuleCreateFile", new CreateModuleDocumentFileViewModel(module));
             }
             if (activityId != null)
@@ -89,6 +120,7 @@ namespace LexiconLMS.Controllers
                 var activity = db.Activities.Find(activityId);
                 if (activity == null)
                     return HttpNotFound();
+                MakeBreadCrumbs(activity.Module);
                 return View("ActivityCreateFile", new CreateActivityDocumentFileViewModel(activity));
             }
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -186,6 +218,7 @@ namespace LexiconLMS.Controllers
                 var course = db.Courses.Find(courseId);
                 if (course == null)
                     return HttpNotFound();
+                MakeBreadCrumbs();
                 return View("CourseCreateLink", new CreateCourseDocumentLinkViewModel(course));
             }
             if (moduleId != null)
@@ -193,6 +226,7 @@ namespace LexiconLMS.Controllers
                 var module = db.Modules.Find(moduleId);
                 if (module == null)
                     return HttpNotFound();
+                MakeBreadCrumbs(module.Course);
                 return View("ModuleCreateLink", new CreateModuleDocumentLinkViewModel(module));
             }
             if (activityId != null)
@@ -200,6 +234,7 @@ namespace LexiconLMS.Controllers
                 var activity = db.Activities.Find(activityId);
                 if (activity == null)
                     return HttpNotFound();
+                MakeBreadCrumbs(activity.Module);
                 return View("ActivityCreateLink", new CreateActivityDocumentLinkViewModel(activity));
             }
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -294,7 +329,7 @@ namespace LexiconLMS.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Document document = db.Documents.Find(id);
+            var document = db.Documents.Find(id);
             if (document == null)
             {
                 return HttpNotFound();
@@ -305,6 +340,21 @@ namespace LexiconLMS.Controllers
                 ModuleId = document.ModuleId,
                 ActivityId = document.ActivityId
             };
+
+            if (document.CourseId != null)
+            {
+                MakeBreadCrumbs();
+            }
+            else if (document.ModuleId != null)
+            {
+                var module = db.Modules.Find(document.ModuleId);
+                MakeBreadCrumbs(module?.Course);
+            }
+            else
+            {
+                var activity = db.Activities.Find(document.ActivityId);
+                MakeBreadCrumbs(activity?.Module);
+            }
 
             if (!string.IsNullOrWhiteSpace(document.Link))
             {
@@ -323,12 +373,12 @@ namespace LexiconLMS.Controllers
             if (ModelState.IsValid)
             {
                 var doc = db.Documents.Find(document.Id);
-                doc.Update(document);
+                doc?.Update(document);
                 db.SaveChanges();
                 return RedirectToAction("Index", new {
-                    CourseId = doc.CourseId,
-                    ModuleId = doc.ModuleId,
-                    ActivityId = doc.ActivityId
+                    CourseId = doc?.CourseId,
+                    ModuleId = doc?.ModuleId,
+                    ActivityId = doc?.ActivityId
                 });
             }
             return View(document);
@@ -342,12 +392,12 @@ namespace LexiconLMS.Controllers
             if (ModelState.IsValid)
             {
                 var doc = db.Documents.Find(document.Id);
-                doc.Update(document);
+                doc?.Update(document);
                 db.SaveChanges();
                 return RedirectToAction("Index", new {
-                    CourseId = doc.CourseId,
-                    ModuleId = doc.ModuleId,
-                    ActivityId = doc.ActivityId
+                    CourseId = doc?.CourseId,
+                    ModuleId = doc?.ModuleId,
+                    ActivityId = doc?.ActivityId
                 });
             }
             return View(document);
@@ -361,7 +411,7 @@ namespace LexiconLMS.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Document document = db.Documents.Find(id);
+            var document = db.Documents.Find(id);
             if (document == null)
             {
                 return HttpNotFound();
@@ -381,7 +431,9 @@ namespace LexiconLMS.Controllers
         [Authorize(Roles = "Teacher")]
         public ActionResult DeleteConfirmed(int id)
         {
-            Document document = db.Documents.Find(id);
+            var document = db.Documents.Find(id);
+            if (document == null)
+                return HttpNotFound();
             var routingObject = new
             {
                 CourseId = document.CourseId,
