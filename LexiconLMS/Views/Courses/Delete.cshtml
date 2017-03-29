@@ -1,19 +1,50 @@
-﻿@model LexiconLMS.Models.Course
+﻿@model LexiconLMS.Models.CourseDeleteViewModel
 
-<h3>Are you sure you want to delete this Course?</h3>
-<div>
+<h3>Are you sure you want to delete this @Model.DeleteType?</h3>
+<div class="deleteView">
     <dl class="dl-horizontal">
         <dt>@Html.DisplayNameFor(model => model.Name)</dt>
         <dd>@Html.DisplayFor(model => model.Name)</dd>
+        
+        @if (Model.HasDates)
+        {
+            <dt>@Html.DisplayNameFor(model => model.StartDate)</dt>
+            <dd>@Html.DisplayFor(model => model.StartDate)</dd>
 
-        <dt>@Html.DisplayNameFor(model => model.StartDate)</dt>
-        <dd>@Html.DisplayFor(model => model.StartDate)</dd>
+            <dt>@Html.DisplayNameFor(model => model.EndDate)</dt>
+            <dd>@Html.DisplayFor(model => model.EndDate)</dd>
+        }
+        
+        @if (Model.HasModules)
+        {
+            <dt>@Html.DisplayNameFor(model => model.ModulesCount)</dt>
+            <dd>@Html.DisplayFor(model => model.ModulesCount)</dd>
 
-        <dt>@Html.DisplayNameFor(model => model.EndDate)</dt>
-        <dd>@Html.DisplayFor(model => model.EndDate)</dd>
-
-        <dt>@Html.DisplayNameFor(model => model.Modules)</dt>
-        <dd>@Html.DisplayFor(model => model.Modules.Count)</dd>
+            if (Model.HasActivities)
+            {
+                <dt>@Html.DisplayNameFor(model => model.ActivitiesCount)</dt>
+                <dd>@Html.DisplayFor(model => model.ActivitiesCount)</dd>
+            }
+        }
+        
+        @if (Model.HasDocuments)
+        {
+            if (Model.CourseDocumentsCount > 0)
+            {
+                <dt>@Html.DisplayNameFor(model => model.CourseDocumentsCount)</dt>
+                <dd>@Html.DisplayFor(model => model.CourseDocumentsCount)</dd>
+            }
+            if (Model.ModuleDocumentsCount > 0)
+            {
+                <dt>@Html.DisplayNameFor(model => model.ModuleDocumentsCount)</dt>
+                <dd>@Html.DisplayFor(model => model.ModuleDocumentsCount)</dd>
+            }
+            if (Model.ActivityDocumentsCount > 0)
+            {
+                <dt>@Html.DisplayNameFor(model => model.ActivityDocumentsCount)</dt>
+                <dd>@Html.DisplayFor(model => model.ActivityDocumentsCount)</dd>
+            }
+        }
     </dl>
 
     @using (Html.BeginForm()) {

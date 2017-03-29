@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using LexiconLMS.Models;
 using MvcBreadCrumbs;
-using Microsoft.AspNet.Identity;
 
 namespace LexiconLMS.Controllers
 {
@@ -26,14 +20,10 @@ namespace LexiconLMS.Controllers
         // GET: Courses
         public ActionResult Index()
         {
-            var course = new Course();
-
             if (User.IsInRole("Teacher"))
             {
-                return View(db.Courses.ToList());
+                return View(db.Courses.ToList().Select(c => new CourseViewModel(c)));
             }
-            else
-
             return RedirectToAction("Index", "Modules");
         }
 
@@ -45,7 +35,7 @@ namespace LexiconLMS.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Course course = db.Courses.Find(id);
+            var course = db.Courses.Find(id);
             if (course == null)
             {
                 return HttpNotFound();
@@ -66,11 +56,11 @@ namespace LexiconLMS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Teacher")]
-        public ActionResult Create([Bind(Include = "Id,Name,Description")] Course course)
+        public ActionResult Create(CourseCreateViewModel course)
         {
             if (ModelState.IsValid)
             {
-                db.Courses.Add(course);
+                db.Courses.Add(new Course(course));
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -86,12 +76,12 @@ namespace LexiconLMS.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Course course = db.Courses.Find(id);
+            var course = db.Courses.Find(id);
             if (course == null)
             {
                 return HttpNotFound();
             }
-            return View(course);
+            return View(new CourseCreateViewModel(course));
         }
 
         // POST: Courses/Edit/5
@@ -100,12 +90,16 @@ namespace LexiconLMS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Teacher")]
-        public ActionResult Edit([Bind(Include = "Id,Name,Description")] Course course)
+        public ActionResult Edit(int? id, CourseCreateViewModel course)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(course).State = EntityState.Modified;
-                db.SaveChanges();
+                var dbCourse = db.Courses.Find(id);
+                if (dbCourse != null)
+                {
+                    dbCourse.Update(course);
+                    db.SaveChanges();
+                }
                 return RedirectToAction("Index");
             }
             return View(course);
@@ -119,12 +113,12 @@ namespace LexiconLMS.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Course course = db.Courses.Find(id);
+            var course = db.Courses.Find(id);
             if (course == null)
             {
                 return HttpNotFound();
             }
-            return View(course);
+            return View(new CourseDeleteViewModel(course));
         }
 
         // POST: Courses/Delete/5
@@ -133,9 +127,12 @@ namespace LexiconLMS.Controllers
         [Authorize(Roles = "Teacher")]
         public ActionResult DeleteConfirmed(int id)
         {
-            Course course = db.Courses.Find(id);
-            db.Courses.Remove(course);
-            db.SaveChanges();
+            var course = db.Courses.Find(id);
+            if (course != null)
+            {
+                db.Courses.Remove(course);
+                db.SaveChanges();
+            }
             return RedirectToAction("Index");
         }
 
