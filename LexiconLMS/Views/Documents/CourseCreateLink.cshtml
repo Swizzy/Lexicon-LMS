@@ -1,6 +1,5 @@
 ﻿@model LexiconLMS.Models.CreateCourseDocumentLinkViewModel
 
-<h1>@Model.CourseName</h1>
 <h2>Add Course Link</h2>
 
 @using (Html.BeginForm("CreateCourseLink", "Documents", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
@@ -8,7 +7,6 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(m => Model.CourseId)
         @Html.HiddenFor(m => Model.CourseName)

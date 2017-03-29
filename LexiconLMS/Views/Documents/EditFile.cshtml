@@ -1,13 +1,12 @@
 ﻿@model LexiconLMS.Models.DocumentEditFileViewModel
 
-<h2>Modify Document: @Model.Name</h2>
+<h2>Modify File</h2>
 
 @using (Html.BeginForm("EditFile", "Documents", new { Model.Id }, FormMethod.Post, null))
 {
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.FileName)
         @Html.HiddenFor(model => model.CreatedBy)
