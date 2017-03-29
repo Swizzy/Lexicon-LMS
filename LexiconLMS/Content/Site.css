@@ -42,3 +42,7 @@ textarea {
 .table {
     border-bottom: 1px solid #ddd;
 }
+
+footer {
+  padding-top: 20px;
+} 
