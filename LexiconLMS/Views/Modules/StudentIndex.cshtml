@@ -2,33 +2,33 @@
 
 @*<h1>@Model</h1>*@
 <h2>Course Schedule</h2>
+<div class="panel-group" id="accordion">
 
-@{int i = 0;}
-@foreach (var item in Model)
-{
-    <div class="panel-group" id="accordion" >
+    @{int i = 0;}
+    @foreach (var item in Model)
+    {
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne_@i" aria-expanded="true" aria-controls="collapseOne_@i">
-                                @Html.DisplayFor(modelItem => item.Timestamp)
+                        @Html.DisplayFor(modelItem => item.Timestamp)
                     </a>
                 </h4>
             </div>
             <div id="collapseOne_@i" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
                 <div class="panel-body">
                     <ul>
-                    @foreach (var activity in item.Activities)
-                    {
-                        <li>@Html.DisplayFor(modelItem => activity.StartTime) :  @Html.DisplayFor(m => activity.Name)</li>
-                    }
+                        @foreach (var activity in item.Activities)
+                        {
+                            <li>@Html.DisplayFor(modelItem => activity.StartTime) :  @Html.DisplayFor(m => activity.Name)</li>
+                        }
                     </ul>
                 </div>
             </div>
         </div>
-       
-        
-    </div>
-    ++i;
-}
+
+
+        ++i;
+    }
+</div>
    

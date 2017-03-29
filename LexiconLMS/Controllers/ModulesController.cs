@@ -65,6 +65,8 @@ namespace LexiconLMS.Controllers
                         {
                             dayActivities.Add(new ActivityScheduleViewModel(activity));
                         }
+
+                        if (dayActivities.Count != 0)
                         data.Add(new ModuleIndexStudentViewModel(date, dayActivities));
                         date = date.AddDays(1);
                         if (date.DayOfWeek == DayOfWeek.Saturday) {
