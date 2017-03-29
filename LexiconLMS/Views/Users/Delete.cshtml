@@ -34,16 +34,7 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @if (Model.IsTeacher)
-            {
-                @Html.ActionLink("Back to List", "Index")
-            }
-            else
-            {
-                @Html.ActionLink("Back to List", "Index", new { studentsOnly = true })
-            }
-            
+            <input type="submit" value="Delete" class="btn btn-default" />
         </div>
     }
 </div>
