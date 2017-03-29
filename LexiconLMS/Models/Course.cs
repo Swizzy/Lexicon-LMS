@@ -19,12 +19,26 @@ namespace LexiconLMS.Models
         public string Description { get; set; }
 
         [Display(Name = "Start Date")]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
-        public DateTime? StartDate => Modules.Max(m => m.StartDate);
-
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime? StartDate {
+            get
+            {
+                var sortedActivities = Modules.SelectMany(m => m.Activities)
+                                              .OrderBy(a => a.StartDate);
+                return sortedActivities.FirstOrDefault()?.StartDate;
+            }
+        }
         [Display(Name = "End Date")]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
-        public DateTime? EndDate => Modules.Max(m => m.EndDate);
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime? EndDate
+        {
+            get
+            {
+                var sortedActivities = Modules.SelectMany(m => m.Activities)
+                                              .OrderBy(a => a.EndDate);
+                return sortedActivities.LastOrDefault()?.EndDate;
+            }
+        }
 
         //Navigation Properties
         public virtual ICollection<Module> Modules { get; set; }

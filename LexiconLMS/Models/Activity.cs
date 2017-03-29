@@ -77,6 +77,20 @@ namespace LexiconLMS.Models
         public IEnumerable<ActivityViewModel> Activities { get; }
     }
 
+    public class ActivityScheduleViewModel
+    {
+        public ActivityScheduleViewModel(Activity activity)
+        {
+            Id = activity.Id;
+            Name = activity.Name;
+            StartTime = activity.StartDate.ToString("HH:mm");
+        }
+
+        public int Id { get; }
+        public string Name { get; }
+        public string StartTime { get; }
+    }
+
     public class ActivityViewModel
     {
         public ActivityViewModel(Activity activity)

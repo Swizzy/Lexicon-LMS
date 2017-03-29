@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using LexiconLMS.Models;
 using MvcBreadCrumbs;
+using Microsoft.AspNet.Identity;
 
 namespace LexiconLMS.Controllers
 {
@@ -25,8 +26,17 @@ namespace LexiconLMS.Controllers
         // GET: Courses
         public ActionResult Index()
         {
-            return View(db.Courses.ToList());
+            var course = new Course();
+
+            if (User.IsInRole("Teacher"))
+            {
+                return View(db.Courses.ToList());
+            }
+            else
+
+            return RedirectToAction("Index", "Modules");
         }
+
 
         // GET: Courses/Details/5
         public ActionResult Details(int? id)

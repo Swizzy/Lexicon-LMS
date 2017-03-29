@@ -4,6 +4,7 @@ using System.Net;
 using System.Web.Mvc;
 using LexiconLMS.Models;
 using MvcBreadCrumbs;
+using Microsoft.AspNet.Identity;
 
 namespace LexiconLMS.Controllers
 {
@@ -26,9 +27,19 @@ namespace LexiconLMS.Controllers
         // GET: Activities
         public ActionResult Index(int? moduleId)
         {
-            if (moduleId == null)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-
+            var view = "Index";
+            if (User.IsInRole("Teacher"))
+            {
+                if (moduleId == null)
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            else
+            {
+                var user = db.Users.Find(User.Identity.GetUserId());
+                if (user == null)
+                    return HttpNotFound();
+                view = "StudentIndex";
+            }
             var module = db.Modules.FirstOrDefault(m => m.Id == moduleId);
             if (module == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -39,7 +50,7 @@ namespace LexiconLMS.Controllers
                                           .Select(a => new ActivityViewModel(a));
             MakeBreadCrumbs(module);
 
-            return View(new ActivityIndexVieWModel(module, activities));
+            return View(view, new ActivityIndexVieWModel(module, activities));
         }
 
         // GET: Activities/Details/5

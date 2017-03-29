@@ -288,7 +288,7 @@
     <Content Include="Views\Modules\Delete.cshtml" />
     <Content Include="Views\Modules\Details.cshtml" />
     <Content Include="Views\Modules\Edit.cshtml" />
-    <Content Include="Views\Modules\Index.cshtml" />
+    <Content Include="Views\Modules\StudentIndex.cshtml" />
     <Content Include="Views\Activities\Create.cshtml" />
     <Content Include="Views\Activities\Delete.cshtml" />
     <Content Include="Views\Activities\Details.cshtml" />
@@ -320,6 +320,7 @@
     <Content Include="Views\Users\TeacherIndexStudents.cshtml" />
     <Content Include="Views\Users\StudentIndex.cshtml" />
     <Content Include="Views\Users\EditStudent.cshtml" />
+    <Content Include="Views\Modules\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201703210849336_AddModules.resx">

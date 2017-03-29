@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LexiconLMS.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -60,6 +61,25 @@ namespace LexiconLMS.Models
         public string Description { get; set; }
     }
 
+    public class ModuleIndexStudentViewModel
+    {
+
+        public ModuleIndexStudentViewModel(DateTime timestamp, IEnumerable<ActivityScheduleViewModel> activities)
+        {
+            Activities = activities;
+            Timestamp = timestamp;
+
+        }
+
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime Timestamp { get; set; }
+
+        public IEnumerable<ActivityScheduleViewModel> Activities { get; }
+        
+
+
+    }
+
     public class ModuleIndexViewModel
     {
         public ModuleIndexViewModel(Course course, IEnumerable<ModuleViewModel> modules)
@@ -67,12 +87,12 @@ namespace LexiconLMS.Models
             CourseName = course.Name;
             CourseId = course.Id;
             Modules = modules;
+            
         }
 
         public string CourseName { get; }
         public int CourseId { get; }
         public IEnumerable<ModuleViewModel> Modules { get; }
-
     }
 
     public class ModuleDeleteViewModel
