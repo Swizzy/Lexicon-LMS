@@ -17,22 +17,32 @@ namespace LexiconLMS.Controllers
         {
             BreadCrumb.Clear();
             BreadCrumb.Add("/", "Home");
+
+            // Fetch DB Activity, Module and Course
+            var activity = db.Activities.Find(activityId);
+            var module = db.Modules.Find(moduleId);
             var course = db.Courses.Find(courseId);
+
+            // Create return object
+            var ret = new Tuple<Course, Module, Activity>(course, module, activity);
+
+            // Make sure we have a course, fall back on module.Course or activity.Module.Course if course is null
+            course = course ?? module?.Course ?? activity?.Module?.Course;
             if (course != null)
             {
                 BreadCrumb.Add(Url.Action("Index", "Modules", new { courseId = course.Id }), course.Name);
+                // Make sure we have a module, fall back on activity.Module if module is null
+                module = module ?? activity?.Module;
+                if (module != null)
+                {
+                    BreadCrumb.Add(Url.Action("Index", "Activities", new { moduleId = module.Id }), module.Name);
+                    if (activity != null)
+                    {
+                        BreadCrumb.Add(Url.Action("Index", "Activities", new { moduleId = activity.ModuleId }), activity.Name);
+                    }
+                }
             }
-            var module = db.Modules.Find(moduleId);
-            if (module != null)
-            {
-                BreadCrumb.Add(Url.Action("Index", "Activities", new { moduleId = module.Id }), module.Name);
-            }
-            var activity = db.Activities.Find(activityId);
-            if (activity != null)
-            {
-                BreadCrumb.Add(Url.Action("Index", "Activities", new { moduleId = activity.ModuleId }), activity.Name);
-            }
-            return new Tuple<Course, Module, Activity>(course, module, activity);
+            return ret;
         }
 
         // GET: Documents
@@ -353,3 +363,4 @@ namespace LexiconLMS.Controllers
         }
     }
 }
+
