@@ -1,0 +1,3 @@
+[submodule "MvcBreadCrumbs"]
+	path = MvcBreadCrumbs
+	url = https://github.com/Swizzy/MvcBreadCrumbs
