@@ -305,7 +305,6 @@
     <Content Include="Views\Users\EditTeacher.cshtml" />
     <Content Include="Views\Documents\ModuleCreateFile.cshtml" />
     <Content Include="Views\Documents\Delete.cshtml" />
-    <Content Include="Views\Documents\Details.cshtml" />
     <Content Include="Views\Documents\EditFile.cshtml" />
     <Content Include="Views\Documents\CourseDocumentsIndex.cshtml" />
     <Content Include="Views\Documents\ModuleDocumentsIndex.cshtml" />
