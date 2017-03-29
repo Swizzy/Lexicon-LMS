@@ -28,5 +28,6 @@ namespace LexiconLMS.Models
 
         //Navigation Properties
         public virtual ICollection<Module> Modules { get; set; }
+        public virtual ICollection<Document> Documents { get; set; }
     }
 }

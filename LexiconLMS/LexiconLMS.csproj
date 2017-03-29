@@ -178,13 +178,9 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ModulesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
-    <Compile Include="Migrations\201703271332569_AddDocuments.cs" />
-    <Compile Include="Migrations\201703271332569_AddDocuments.Designer.cs">
-      <DependentUpon>201703271332569_AddDocuments.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201703271418188_Link.cs" />
-    <Compile Include="Migrations\201703271418188_Link.Designer.cs">
-      <DependentUpon>201703271418188_Link.cs</DependentUpon>
+    <Compile Include="Migrations\201703290752493_AddDocuments.cs" />
+    <Compile Include="Migrations\201703290752493_AddDocuments.Designer.cs">
+      <DependentUpon>201703290752493_AddDocuments.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Document.cs" />
     <Compile Include="Migrations\201703270659476_AddCourseIdToUser.cs" />
@@ -338,14 +334,11 @@
     <EmbeddedResource Include="Migrations\201703231156555_updateIdentity.resx">
       <DependentUpon>201703231156555_updateIdentity.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201703271332569_AddDocuments.resx">
-      <DependentUpon>201703271332569_AddDocuments.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201703271418188_Link.resx">
-      <DependentUpon>201703271418188_Link.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703270659476_AddCourseIdToUser.resx">
       <DependentUpon>201703270659476_AddCourseIdToUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703290752493_AddDocuments.resx">
+      <DependentUpon>201703290752493_AddDocuments.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

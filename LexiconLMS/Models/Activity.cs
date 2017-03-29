@@ -42,6 +42,7 @@ namespace LexiconLMS.Models
         // Navigation Properties
         public virtual ActivityType ActivityType { get; set; }
         public virtual Module Module { get; set; }
+        public virtual ICollection<Document> Documents { get; set; }
 
         public void Update(ActivityCreateViewModel activity)
         {
