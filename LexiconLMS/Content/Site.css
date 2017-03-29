@@ -30,3 +30,15 @@ textarea {
 .editdisplay {
     padding-top: 7px;
 }
+
+.breadcrumb {
+    margin-left: -15px;
+    background: inherit;
+    padding: inherit;
+    margin-bottom: inherit;
+    border-radius: inherit;
+}
+
+.table {
+    border-bottom: 1px solid #ddd;
+}

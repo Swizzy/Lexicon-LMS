@@ -58,8 +58,10 @@
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Add Teacher" class="btn btn-default" />
+                <input type="button" value="Generate Random Password" class="btn btn-default" id="passwdbtn" />
             </div>
         </div>
+        <p id="passwd"></p>
     </div>
 }
 
@@ -69,4 +71,14 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript" src="~/Scripts/RandomPassword.js"></script>
+    <script type="text/javascript">
+        $("#passwdbtn").on("click",
+            function() {
+                var password = generateRandomPassword(6);
+                document.getElementById("passwd").innerText = "Generated Password: " + password;
+                document.getElementById("Password").value = password;
+                document.getElementById("ConfirmPassword").value = password;
+            });
+    </script>
 }

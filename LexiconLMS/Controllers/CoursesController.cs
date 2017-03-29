@@ -7,12 +7,19 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using LexiconLMS.Models;
+using MvcBreadCrumbs;
 
 namespace LexiconLMS.Controllers
 {
     [Authorize]
     public class CoursesController : Controller
     {
+        public CoursesController()
+        {
+            BreadCrumb.Clear();
+            BreadCrumb.Add("/", "Home");
+        }
+
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Courses

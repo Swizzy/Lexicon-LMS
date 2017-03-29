@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using LexiconLMS.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using MvcBreadCrumbs;
 
 namespace LexiconLMS.Controllers
 {
@@ -17,11 +18,21 @@ namespace LexiconLMS.Controllers
         private ApplicationUserManager _userManager;
         public ApplicationUserManager UserManager => _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
 
+        private void MakeBreadCrumbs(object routeValues = null)
+        {
+            if (routeValues == null)
+                routeValues = TempData["routeValues"];
+            TempData["routeValues"] = routeValues;
+            BreadCrumb.Clear();
+            BreadCrumb.Add(Url.Action("Index", "Users", routeValues), "Home");
+        }
+
         // GET: Users
         public ActionResult Index(bool? studentsOnly, int? courseId)
         {
             IEnumerable<ApplicationUser> users = null;
             string view;
+            MakeBreadCrumbs(new {studentsOnly, courseId});
             if (User.IsInRole("Teacher"))
             {
                 if (studentsOnly != true && courseId == null)
@@ -66,6 +77,7 @@ namespace LexiconLMS.Controllers
         [Authorize(Roles = "Teacher")]
         public ActionResult RegisterTeacher()
         {
+            MakeBreadCrumbs();
             return View();
         }
 
@@ -92,7 +104,7 @@ namespace LexiconLMS.Controllers
                     AddErrors(result);
                 }
             }
-
+            MakeBreadCrumbs();
             // If we got this far, something failed, redisplay form
             return View(model);
         }
@@ -103,6 +115,7 @@ namespace LexiconLMS.Controllers
         public ActionResult RegisterStudent()
         {
             ViewBag.CourseId = new SelectList(db.Courses, "Id", "Name");
+            MakeBreadCrumbs();
             return View();
         }
 
@@ -121,6 +134,7 @@ namespace LexiconLMS.Controllers
                     return RedirectToAction("Index", new { studentsOnly = true, courseId = model.CourseId });
                 AddErrors(result);
             }
+            MakeBreadCrumbs();
             // If we got this far, something failed, redisplay form
             ViewBag.CourseId = new SelectList(db.Courses, "Id", "Name");
             return View(model);
@@ -149,6 +163,7 @@ namespace LexiconLMS.Controllers
             var user = db.Users.Find(id);
             if (user == null)
                 return HttpNotFound();
+            MakeBreadCrumbs();
             return View(new EditTeacherViewModel(user));
         }
 
@@ -171,6 +186,7 @@ namespace LexiconLMS.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            MakeBreadCrumbs();
             return View(model);
         }
 
@@ -189,6 +205,7 @@ namespace LexiconLMS.Controllers
             if (user == null)
                 return HttpNotFound();
             ViewBag.CourseId = new SelectList(db.Courses, "Id", "Name", user.CourseId);
+            MakeBreadCrumbs();
             return View(new EditStudentViewModel(user));
         }
 
@@ -209,10 +226,24 @@ namespace LexiconLMS.Controllers
                     return HttpNotFound();
                 user.Update(model);
                 db.SaveChanges();
-                return RedirectToAction("Index", new { studentsOnly = true, courseId = model.CourseId });
+                return RedirectToIndex(model.CourseId);
             }
+            MakeBreadCrumbs();
             ViewBag.CourseId = new SelectList(db.Courses, "Id", "Name", model.CourseId);
             return View(model);
+        }
+
+        private ActionResult RedirectToIndex(int? courseId = null)
+        {
+            object routeValues = null;
+            // Fetch previous route values if we have some stored
+            if (TempData.ContainsKey("routeValues"))
+                routeValues = TempData["routeValues"];
+
+            // Fall back on showing the students list filtered on the deleted users course
+            if (routeValues == null)
+                routeValues = new { studentsOnly = true, courseId };
+            return RedirectToAction("Index", routeValues);
         }
 
         // GET: Users/Delete/5
@@ -225,6 +256,7 @@ namespace LexiconLMS.Controllers
             var user = db.Users.Find(id);
             if (user == null)
                 return HttpNotFound();
+            MakeBreadCrumbs();
             return View(new UserViewModel(user, UserManager.IsInRole(user.Id, "Teacher")));
         }
 
@@ -245,7 +277,7 @@ namespace LexiconLMS.Controllers
             UserManager.Delete(user);
             if (isTeacher)
                 return RedirectToAction("Index");
-            return RedirectToAction("Index", new { studentsOnly = true });
+            return RedirectToIndex(cuser.CourseId);
         }
 
         protected override void Dispose(bool disposing)
