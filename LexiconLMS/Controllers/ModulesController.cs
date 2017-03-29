@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using LexiconLMS.Models;
 using Microsoft.AspNet.Identity;
@@ -85,7 +82,7 @@ namespace LexiconLMS.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Module module = db.Modules.Find(id);
+            var module = db.Modules.Find(id);
             if (module == null)
             {
                 return HttpNotFound();
@@ -105,34 +102,31 @@ namespace LexiconLMS.Controllers
 
             var course = db.Courses.FirstOrDefault(c => c.Id == courseId);
             if (course == null)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return HttpNotFound();
 
             MakeBreadCrumbs(course);
 
-            return View(new ModuleSingleViewModel(course));
+            return View();
         }
 
         // POST: Modules/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Teacher")]
-        public ActionResult Create(ModuleSingleViewModel module)
+        public ActionResult Create(int? courseId, ModuleCreateViewModel module)
         {
+            if (courseId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
             if (ModelState.IsValid)
             {
-                db.Modules.Add(new Module()
-                {
-                    CourseId = module.CourseId,
-                    Name = module.Name,
-                    Description = module.Description
-                });
+                db.Modules.Add(new Module(module, courseId.Value));
                 db.SaveChanges();
-                return RedirectToAction("Index", new { courseId = module.CourseId });
+                return RedirectToAction("Index", new { courseId = courseId });
             }
 
-            MakeBreadCrumbs(db.Courses.Find(module.CourseId));
+            MakeBreadCrumbs(db.Courses.Find(courseId));
 
             return View(module);
         }
@@ -145,34 +139,32 @@ namespace LexiconLMS.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Module module = db.Modules.Find(id);
+            var module = db.Modules.Find(id);
             if (module == null)
             {
                 return HttpNotFound();
             }
-
             MakeBreadCrumbs(module.Course);
 
-            return View(new ModuleSingleViewModel(module));
+            return View(new ModuleCreateViewModel(module));
         }
 
         // POST: Modules/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Teacher")]
-        public ActionResult Edit(int? id, ModuleSingleViewModel module)
+        public ActionResult Edit(int? id, ModuleCreateViewModel module)
         {
             if (ModelState.IsValid)
             {
                 var dbmodule = db.Modules.Find(id);
                 if (dbmodule == null)
+                {
                     return HttpNotFound();
-                dbmodule.Name = module.Name;
-                dbmodule.Description = module.Description;
+                }
+                dbmodule.Update(module);
                 db.SaveChanges();
-                return RedirectToAction("Index", new { courseId = module.CourseId });
+                return RedirectToAction("Index", new { courseId = dbmodule.CourseId });
             }
 
             MakeBreadCrumbs(db.Courses.Find(id));
@@ -188,7 +180,7 @@ namespace LexiconLMS.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Module module = db.Modules.Find(id);
+            var module = db.Modules.Find(id);
             if (module == null)
             {
                 return HttpNotFound();
@@ -199,8 +191,8 @@ namespace LexiconLMS.Controllers
             return View(new ModuleDeleteViewModel(module));
         }
 
-    // POST: Modules/Delete/5
-    [HttpPost, ActionName("Delete")]
+        // POST: Modules/Delete/5
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Teacher")]
         public ActionResult DeleteConfirmed(int id)

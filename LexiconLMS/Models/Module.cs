@@ -1,64 +1,44 @@
-﻿using LexiconLMS.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web;
+using System.Text;
 
 namespace LexiconLMS.Models
 {
     public class Module
     {
+        public Module()
+        {
+        }
+
+        public Module(ModuleCreateViewModel module, int courseId)
+        {
+            Update(module);
+            CourseId = courseId;
+        }
+
         public int Id { get; set; }
 
-        [Required(AllowEmptyStrings = false)]
+        [Required]
         public string Name { get; set; }
 
         public string Description { get; set; }
         public int CourseId { get; set; }
 
-        public DateTime? StartDate
-        {
-            get { return Activities.OrderBy(a => a.StartDate).FirstOrDefault()?.StartDate; }
-        }
-
-        public DateTime? EndDate
-        {
-            get { return Activities.OrderBy(a => a.EndDate).LastOrDefault()?.EndDate; }
-        }
+        public DateTime? StartDate => Activities.OrderBy(a => a.StartDate).FirstOrDefault()?.StartDate;
+        public DateTime? EndDate => Activities.OrderBy(a => a.EndDate).LastOrDefault()?.EndDate;
 
         // Navigation properties
         public virtual Course Course { get; set; }
         public virtual ICollection<Activity> Activities { get; set; }
         public virtual ICollection<Document> Documents { get; set; }
-    }
 
-    public class ModuleSingleViewModel
-    {
-        public ModuleSingleViewModel()
+        public void Update(ModuleCreateViewModel module)
         {
-
-        }
-
-        public ModuleSingleViewModel(Module module)
-        {
-            CourseName = module.Course.Name;
-            CourseId = module.CourseId;
             Name = module.Name;
             Description = module.Description;
         }
-
-        public ModuleSingleViewModel(Course course)
-        {
-            CourseName = course.Name;
-            CourseId = course.Id;
-        }
-
-        public string CourseName { get; set; }
-        public int CourseId { get; set; }
-        [Required]
-        public string Name { get; set; }
-        public string Description { get; set; }
     }
 
     public class ModuleIndexStudentViewModel
@@ -95,40 +75,37 @@ namespace LexiconLMS.Models
         public IEnumerable<ModuleViewModel> Modules { get; }
     }
 
-    public class ModuleDeleteViewModel
+    public class ModuleCreateViewModel
     {
-        public ModuleDeleteViewModel()
+        public ModuleCreateViewModel()
         {
-
         }
 
-        public ModuleDeleteViewModel(Module module)
+        public ModuleCreateViewModel(Module module)
         {
-            CourseName = module.Course.Name;
-            CourseId = module.CourseId;
             Name = module.Name;
             Description = module.Description;
-
-            HasActivities = module.Activities.Any();
-            if (!HasActivities)
-            {
-                ActivityCount = module.Activities.Count;
-
-                StartDate = module.StartDate;
-                EndDate = module.EndDate;
-                if (!HasDocuments)
-                {
-                    DocumentCount = module.Documents.Count;
-                    //var sortedDocuments = module.Documents.OrderByDescending(d => d.CreateDate);
-                }
-            }
         }
 
-        [Display(Name = "Course")]
-        public string CourseName { get; }
-        public int CourseId { get; }
+        [Required]
+        public string Name { get; set; }
+        public string Description { get; set; }
+    }
+
+    public class ModuleDeleteViewModel
+    {
+        public ModuleDeleteViewModel(Module module)
+        {
+            Name = module.Name;
+            StartDate = module.StartDate;
+            EndDate = module.EndDate;
+
+            ActivityCount = module.Activities.Count;
+            ModuleDocumentsCount = module.Documents.Count;
+            ActivityDocumentsCount = module.Activities.SelectMany(a => a.Documents).Count();
+        }
+
         public string Name { get; }
-        public string Description { get; }
 
         [DisplayFormat(DataFormatString ="{0:yyyy-MM-dd HH:mm}")]
         [Display(Name = "Start Date")]
@@ -140,12 +117,49 @@ namespace LexiconLMS.Models
 
         [Display(Name = "Activities")]
         public int ActivityCount { get; }
-        public bool HasActivities { get; }
+        
+        [Display(Name = "Module Documents")]
+        public int ModuleDocumentsCount { get; }
 
-        [Display(Name = "Module Document")]
-        public int DocumentCount { get; }
-        public bool HasDocuments { get; }
+        [Display(Name = "Activity Documents")]
+        public int ActivityDocumentsCount { get; }
 
+        public bool HasActivities => ActivityCount > 0;
+        public bool HasDocuments => ModuleDocumentsCount > 0 || ActivityDocumentsCount > 0;
+
+        public string DeleteType
+        {
+            get
+            {
+                var types = new List<string>();
+                if (HasActivities)
+                {
+                    types.Add("Activities");
+                }
+                if (HasDocuments)
+                {
+                    types.Add("Documents");
+                }
+
+                var sb = new StringBuilder("Module");
+                if (types.Count > 0)
+                {
+                    sb.Append(" and the related " + types[0]);
+                    for (int i = 1; i < types.Count; i++)
+                    {
+                        if (i < types.Count - 1)
+                        {
+                            sb.Append(", " + types[i]);
+                        }
+                        else
+                        {
+                            sb.Append(" and " + types[i]);
+                        }
+                    }
+                }
+                return sb.ToString();
+            }
+        }
 
     }
 
@@ -155,26 +169,14 @@ namespace LexiconLMS.Models
         {
             Id = module.Id;
             Name = module.Name;
-            Description = module.Description;
-
-            HasActivities = module.Activities.Any();
-            if (HasActivities)
-            {
-                ActivityCount = module.Activities.Count;
-
-                StartDate = module.StartDate;
-                EndDate = module.EndDate;
-                if (HasDocuments)
-                {
-                    DocumentCount = module.Documents.Count;
-                    //var sortedDocuments = module.Documents.OrderByDescending(d => d.CreateDate);
-                }
-            }
+            StartDate = module.StartDate;
+            EndDate = module.EndDate;
+            DocumentsCount = module.Documents.Count;
+            ActivitiesCount = module.Activities.Count;
         }
 
         public int Id { get; }
         public string Name { get; }
-        public string Description { get; }
 
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
         [Display(Name = "Start Date")]
@@ -185,13 +187,9 @@ namespace LexiconLMS.Models
         public DateTime? EndDate { get; }
 
         [Display(Name = "Activities")]
-        public int ActivityCount { get; }
-        public bool HasActivities { get; }
+        public int ActivitiesCount { get; }
 
         [Display(Name = "Module Document")]
-        public int DocumentCount { get; }
-        public bool HasDocuments { get; }
-
+        public int DocumentsCount { get; }
     }
-
 }

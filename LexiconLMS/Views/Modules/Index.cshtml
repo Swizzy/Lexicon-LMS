@@ -17,10 +17,10 @@
             @Html.DisplayNameFor(model => model.Modules.FirstOrDefault().EndDate)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Modules.FirstOrDefault().ActivityCount)
+            @Html.DisplayNameFor(model => model.Modules.FirstOrDefault().ActivitiesCount)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Modules.FirstOrDefault().DocumentCount)
+            @Html.DisplayNameFor(model => model.Modules.FirstOrDefault().DocumentsCount)
         </th>
         <th></th>
     </tr>
@@ -37,10 +37,10 @@
             @Html.DisplayFor(modelItem => item.EndDate)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.ActivityCount)
+            @Html.DisplayFor(modelItem => item.ActivitiesCount)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.DocumentCount)
+            @Html.DisplayFor(modelItem => item.DocumentsCount)
         </td>
         <td>
             @Html.ActionLink("Modify", "Edit", new { id=item.Id }) |
