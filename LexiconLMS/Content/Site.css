@@ -23,7 +23,7 @@ textarea {
     max-width: 280px;
 }
 
-.deleteView > dt, dd {
+.deleteView dt, .deleteView dd {
     line-height: 320%;
 }
 
