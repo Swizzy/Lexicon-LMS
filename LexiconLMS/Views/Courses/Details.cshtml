@@ -7,28 +7,15 @@
 <h2>@Html.DisplayFor(model => model.Name)</h2>
 
 <div style="word-wrap:break-word;">
-    <h4>Description</h4>
+   
     <hr />
     <dl>
-        <dt>
-            @*@Html.DisplayNameFor(model => model.Name)*@
-        </dt>
-
-        <dd>
-            @*@Html.DisplayFor(model => model.Name)*@
-        </dd>
-
-        <dt>
-            @*@Html.DisplayNameFor(model => model.Description)*@
-        </dt>
-            @*@Html.TextAreaFor(model => model.Description, new { rows = 10 })*@
-            @*@Html.TextBoxFor(model => model.Description, new { rows = 1000 })*@
-            @Html.DisplayFor(model => model.Description)
-      
-
+        @Html.DisplayFor(model => model.Description)
+     </dl>
+    @*@foreach (var item in Model.Documents)
+    {
+    <dl>
+        @Html.DisplayFor(modelItem => item.Documents.FirstOrDefault().Name)
     </dl>
+    }*@
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
