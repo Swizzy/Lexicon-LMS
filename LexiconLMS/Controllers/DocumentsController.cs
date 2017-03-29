@@ -264,6 +264,10 @@ namespace LexiconLMS.Controllers
         public ActionResult Download(int id)
         {
             var document = db.Documents.Find(id);
+            if (document == null)
+            {
+                return HttpNotFound();
+            }
             if (!string.IsNullOrWhiteSpace(document.Link))
             {
                 return Redirect(document.Link);
