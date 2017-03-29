@@ -30,6 +30,7 @@
                 else if (User.Identity.IsAuthenticated)
                 {
                     <li>@Html.ActionLink("Students", "Index", "Users")</li>
+                    <li>@Html.ActionLink("Schedule", "Index", "Modules")</li>
                 }
                 </ul>
                 @Html.Partial("_LoginPartial")
