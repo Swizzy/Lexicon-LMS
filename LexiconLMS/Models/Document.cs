@@ -72,6 +72,7 @@ namespace LexiconLMS.Models
         {
             Name = document.Name;
             Link = document.Link;
+            CreateDate = DateTime.Now;
         }
     }
 
