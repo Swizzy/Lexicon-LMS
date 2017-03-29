@@ -274,10 +274,11 @@ namespace LexiconLMS.Controllers
             var user = UserManager.FindById(id);
             if (user == null)
                 return HttpNotFound();
+            var courseId = user.CourseId;
             UserManager.Delete(user);
             if (isTeacher)
                 return RedirectToAction("Index");
-            return RedirectToIndex(cuser.CourseId);
+            return RedirectToIndex(courseId);
         }
 
         protected override void Dispose(bool disposing)
