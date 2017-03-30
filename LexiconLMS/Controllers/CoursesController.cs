@@ -3,6 +3,7 @@ using System.Net;
 using System.Web.Mvc;
 using LexiconLMS.Models;
 using MvcBreadCrumbs;
+using Microsoft.AspNet.Identity;
 
 namespace LexiconLMS.Controllers
 {
