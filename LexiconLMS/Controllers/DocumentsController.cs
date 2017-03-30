@@ -55,7 +55,12 @@ namespace LexiconLMS.Controllers
                 if (course == null)
                     return HttpNotFound();
                 MakeBreadCrumbs();
-                return View("CourseDocumentsIndex", new CourseDocumentsViewModel(course, docList));
+                if (User.IsInRole("Teacher"))
+                {
+                    return View("CourseDocumentsIndex", new CourseDocumentsViewModel(course, docList));
+                }
+                else
+                    return View("CourseDocumentsStudentIndex", new CourseDocumentsViewModel(course, docList));
             }
             if (moduleId != null)
             {
@@ -309,7 +314,7 @@ namespace LexiconLMS.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "Teacher")]
+       // [Authorize(Roles = "Teacher")]
         public ActionResult Download(int id)
         {
             var document = db.Documents.Find(id);
