@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Web;
 using System.Web.Mvc;
 using LexiconLMS.Models;
 using Microsoft.AspNet.Identity;
@@ -12,91 +16,117 @@ namespace LexiconLMS.Controllers
     public class DocumentsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-        
-        private Tuple<Course, Module, Activity> MakeBreadCrumbs(int? courseId, int? moduleId, int? activityId)
+
+        private void MakeBreadCrumbs()
         {
             BreadCrumb.Clear();
             BreadCrumb.Add("/", "Home");
+        }
 
-            // Fetch DB Activity, Module and Course
-            var activity = db.Activities.Find(activityId);
-            var module = db.Modules.Find(moduleId);
-            var course = db.Courses.Find(courseId);
-
-            // Create return object
-            var ret = new Tuple<Course, Module, Activity>(course, module, activity);
-
-            // Make sure we have a course, fall back on module.Course or activity.Module.Course if course is null
-            course = course ?? module?.Course ?? activity?.Module?.Course;
+        private void MakeBreadCrumbs(Course course)
+        {
+            MakeBreadCrumbs();
             if (course != null)
             {
                 BreadCrumb.Add(Url.Action("Index", "Modules", new { courseId = course.Id }), course.Name);
-                // Make sure we have a module, fall back on activity.Module if module is null
-                module = module ?? activity?.Module;
-                if (module != null)
-                {
-                    BreadCrumb.Add(Url.Action("Index", "Activities", new { moduleId = module.Id }), module.Name);
-                    if (activity != null)
-                    {
-                        BreadCrumb.Add(Url.Action("Index", "Activities", new { moduleId = activity.ModuleId }), activity.Name);
-                    }
-                }
             }
-            return ret;
+        }
+
+        private void MakeBreadCrumbs(Module module)
+        {
+            MakeBreadCrumbs();
+            if (module != null)
+            {
+                MakeBreadCrumbs(module.Course);
+                BreadCrumb.Add(Url.Action("Index", "Activities", new { moduleId = module.Id }), module.Name);
+            }
         }
 
         // GET: Documents
         public ActionResult Index(int? courseId, int? moduleId, int? activityId)
         {
-            var ret = MakeBreadCrumbs(courseId, moduleId, activityId);
-            if (ret.Item1 != null)
+            IQueryable<Document> documents = db.Documents;
+
+            if (courseId != null)
             {
-                var documents = db.Documents.Where(d => d.CourseId == courseId).ToList().Select(d => new DocumentViewModel(d));
-                return View("CourseDocumentsIndex", new CourseDocumentsViewModel(ret.Item1, documents));
+                documents = documents.Where(d => d.CourseId == courseId).Include(d => d.Course);
+                var docList = documents.ToList().Select(d => new DocumentViewModel(d));
+                var course = db.Courses.Find(courseId);
+                if (course == null)
+                    return HttpNotFound();
+                MakeBreadCrumbs();
+                if (User.IsInRole("Teacher"))
+                {
+                    return View("CourseDocumentsIndex", new CourseDocumentsViewModel(course, docList));
+                }
+                else
+                    return View("CourseDocumentsStudentIndex", new CourseDocumentsViewModel(course, docList));
             }
-            if (ret.Item2 != null)
+            if (moduleId != null)
             {
-                var documents = db.Documents.Where(d => d.ModuleId == moduleId).ToList().Select(d => new DocumentViewModel(d));
-                return View("ModuleDocumentsIndex", new ModuleDocumentsViewModel(ret.Item2, documents));
+                documents = documents.Where(d => d.ModuleId == moduleId).Include(d => d.Module);
+                var docList = documents.ToList().Select(d => new DocumentViewModel(d));
+                var module = db.Modules.Find(moduleId);
+                if (module == null)
+                    return HttpNotFound();
+                MakeBreadCrumbs(module.Course);
+                return View("ModuleDocumentsIndex", new ModuleDocumentsViewModel(module, docList));
             }
-            if (ret.Item3 != null)
+            if (activityId != null)
             {
-                var documents = db.Documents.Where(d => d.ActivityId == activityId).ToList().Select(d => new DocumentViewModel(d));
-                return View("ActivityDocumentsIndex", new ActivityDocumentsViewModel(ret.Item3, documents));
+                documents = documents.Where(d => d.ActivityId == activityId).Include(d => d.Activity);
+                var docList = documents.ToList().Select(d => new DocumentViewModel(d));
+                var activity = db.Activities.Find(activityId);
+                if (activity == null)
+                    return HttpNotFound();
+                MakeBreadCrumbs(activity.Module);
+                return View("ActivityDocumentsIndex", new ActivityDocumentsViewModel(activity, docList));
             }
-            if (courseId != null || moduleId != null || activityId != null)
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
+
+        // GET: Documents/Details/5
+        public ActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var document = db.Documents.Find(id);
+            if (document == null)
             {
                 return HttpNotFound();
             }
-            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            return View(document);
         }
 
         // GET: Documents/Create
         [Authorize(Roles = "Teacher")]
         public ActionResult CreateFile(int? courseId, int? moduleId, int? activityId)
         {
-            MakeBreadCrumbs(courseId, moduleId, activityId);
-
             if (courseId != null)
             {
                 var course = db.Courses.Find(courseId);
                 if (course == null)
                     return HttpNotFound();
-                return View("CourseCreateFile", new CourseCreateDocumentFileViewModel(course));
+                MakeBreadCrumbs();
+                return View("CourseCreateFile", new CreateCourseDocumentFileViewModel(course));
             }
             if (moduleId != null)
             {
                 var module = db.Modules.Find(moduleId);
                 if (module == null)
                     return HttpNotFound();
-                return View("ModuleCreateFile", new ModuleCreateDocumentFileViewModel(module));
+                MakeBreadCrumbs(module.Course);
+                return View("ModuleCreateFile", new CreateModuleDocumentFileViewModel(module));
             }
             if (activityId != null)
             {
                 var activity = db.Activities.Find(activityId);
                 if (activity == null)
                     return HttpNotFound();
-                return View("ActivityCreateFile", new ActivityCreateDocumentFileViewModel(activity));
+                MakeBreadCrumbs(activity.Module);
+                return View("ActivityCreateFile", new CreateActivityDocumentFileViewModel(activity));
             }
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
@@ -105,81 +135,112 @@ namespace LexiconLMS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Teacher")]
-        public ActionResult CreateCourseFile(CourseCreateDocumentFileViewModel model)
+        public ActionResult CreateCourseFile(CreateCourseDocumentFileViewModel model)
         {
             if (ModelState.IsValid)
             {
-                db.Documents.Add(new Document(model, User.Identity.GetUserId())
+                using (var br = new System.IO.BinaryReader(model.Upload.InputStream))
                 {
-                    CourseId = model.CourseId
-                });
-                db.SaveChanges();
-                return RedirectToAction("Index", new { model.CourseId });
+                    var doc = new Document()
+                    {
+                        Name = model.Name,
+                        FileName = model.Upload.FileName,
+                        ContentType = model.Upload.ContentType,
+                        Content = br.ReadBytes(model.Upload.ContentLength),
+                        CreateDate = DateTime.Now,
+                        UserId = User.Identity.GetUserId(),
+                        CourseId = model.CourseId
+                    };
+                    db.Documents.Add(doc);
+                    db.SaveChanges();
+                    return RedirectToAction("Index", new { model.CourseId });
+                }
             }
-            return View("CourseCreateFile", model);
+            return View(model);
         }
 
         // POST: Module Documents/CreateFile
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Teacher")]
-        public ActionResult CreateModuleFile(ModuleCreateDocumentFileViewModel model)
+        public ActionResult CreateModuleFile(CreateModuleDocumentFileViewModel model)
         {
             if (ModelState.IsValid)
             {
-                db.Documents.Add(new Document(model, User.Identity.GetUserId())
+                using (var br = new System.IO.BinaryReader(model.Upload.InputStream))
                 {
-                    ModuleId = model.ModuleId
-                });
-                db.SaveChanges();
-                return RedirectToAction("Index", new { model.ModuleId });
+                    var doc = new Document()
+                    {
+                        Name = model.Name,
+                        FileName = model.Upload.FileName,
+                        ContentType = model.Upload.ContentType,
+                        Content = br.ReadBytes(model.Upload.ContentLength),
+                        CreateDate = DateTime.Now,
+                        UserId = User.Identity.GetUserId(),
+                        ModuleId = model.ModuleId
+                    };
+                    db.Documents.Add(doc);
+                    db.SaveChanges();
+                    return RedirectToAction("Index", new { model.ModuleId });
+                }
             }
-            return View("ModuleCreateFile", model);
+            return View(model);
         }
 
         // POST: Activity Documents/CreateFile
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Teacher")]
-        public ActionResult CreateActivityFile(ActivityCreateDocumentFileViewModel model)
+        public ActionResult CreateActivityFile(CreateActivityDocumentFileViewModel model)
         {
             if (ModelState.IsValid)
             {
-                db.Documents.Add(new Document(model, User.Identity.GetUserId())
+                using (var br = new System.IO.BinaryReader(model.Upload.InputStream))
                 {
-                    ActivityId = model.ActivityId
-                });
-                db.SaveChanges();
-                return RedirectToAction("Index", new {model.ActivityId});
+                    var doc = new Document()
+                    {
+                        Name = model.Name,
+                        FileName = model.Upload.FileName,
+                        ContentType = model.Upload.ContentType,
+                        Content = br.ReadBytes(model.Upload.ContentLength),
+                        CreateDate = DateTime.Now,
+                        UserId = User.Identity.GetUserId(),
+                        ActivityId = model.ActivityId
+                    };
+                    db.Documents.Add(doc);
+                    db.SaveChanges();
+                    return RedirectToAction("Index", new { model.ActivityId });
+                }
             }
-            return View("ActivityCreateFile", model);
+            return View(model);
         }
 
         [Authorize(Roles = "Teacher")]
         public ActionResult CreateLink(int? courseId, int? moduleId, int? activityId)
         {
-            MakeBreadCrumbs(courseId, moduleId, activityId);
-
             if (courseId != null)
             {
                 var course = db.Courses.Find(courseId);
                 if (course == null)
                     return HttpNotFound();
-                return View("CourseCreateLink", new CourseCreateDocumentLinkViewModel(course));
+                MakeBreadCrumbs();
+                return View("CourseCreateLink", new CreateCourseDocumentLinkViewModel(course));
             }
             if (moduleId != null)
             {
                 var module = db.Modules.Find(moduleId);
                 if (module == null)
                     return HttpNotFound();
-                return View("ModuleCreateLink", new ModuleCreateDocumentLinkViewModel(module));
+                MakeBreadCrumbs(module.Course);
+                return View("ModuleCreateLink", new CreateModuleDocumentLinkViewModel(module));
             }
             if (activityId != null)
             {
                 var activity = db.Activities.Find(activityId);
                 if (activity == null)
                     return HttpNotFound();
-                return View("ActivityCreateLink", new ActivityCreateDocumentLinkViewModel(activity));
+                MakeBreadCrumbs(activity.Module);
+                return View("ActivityCreateLink", new CreateActivityDocumentLinkViewModel(activity));
             }
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
@@ -188,64 +249,75 @@ namespace LexiconLMS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Teacher")]
-        public ActionResult CreateCourseLink(CourseCreateDocumentLinkViewModel model)
+        public ActionResult CreateCourseLink(CreateCourseDocumentLinkViewModel model)
         {
             if (ModelState.IsValid)
             {
-                db.Documents.Add(new Document(model, User.Identity.GetUserId())
-                {
-                    CourseId = model.CourseId
-                });
-                db.SaveChanges();
-                return RedirectToAction("Index", new { model.CourseId });
+                    var doc = new Document()
+                    {
+                        Name = model.Name,
+                        Link = model.Link,
+                        CreateDate = DateTime.Now,
+                        UserId = User.Identity.GetUserId(),
+                        CourseId = model.CourseId
+                    };
+                    db.Documents.Add(doc);
+                    db.SaveChanges();
+                    return RedirectToAction("Index", new { model.CourseId });
             }
-            return View("CourseCreateLink", model);
+            return View(model);
         }
 
         // POST: Module Documents/CreateLink
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Teacher")]
-        public ActionResult CreateModuleLink(ModuleCreateDocumentLinkViewModel model)
+        public ActionResult CreateModuleLink(CreateModuleDocumentLinkViewModel model)
         {
             if (ModelState.IsValid)
             {
-                db.Documents.Add(new Document(model, User.Identity.GetUserId())
+                var doc = new Document()
                 {
+                    Name = model.Name,
+                    Link = model.Link,
+                    CreateDate = DateTime.Now,
+                    UserId = User.Identity.GetUserId(),
                     ModuleId = model.ModuleId
-                });
+                };
+                db.Documents.Add(doc);
                 db.SaveChanges();
                 return RedirectToAction("Index", new { model.ModuleId });
             }
-            return View("ModuleCreateLink", model);
+            return View(model);
         }
 
         // POST: Activity Documents/CreateLink
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Teacher")]
-        public ActionResult CreateActivityLink(ActivityCreateDocumentLinkViewModel model)
+        public ActionResult CreateActivityLink(CreateActivityDocumentLinkViewModel model)
         {
             if (ModelState.IsValid)
             {
-                db.Documents.Add(new Document(model, User.Identity.GetUserId())
+                var doc = new Document()
                 {
+                    Name = model.Name,
+                    Link = model.Link,
+                    CreateDate = DateTime.Now,
+                    UserId = User.Identity.GetUserId(),
                     ActivityId = model.ActivityId
-                });
+                };
+                db.Documents.Add(doc);
                 db.SaveChanges();
                 return RedirectToAction("Index", new { model.ActivityId });
             }
-            return View("ActivityCreateLink", model);
+            return View(model);
         }
 
-        [Authorize(Roles = "Teacher")]
+       // [Authorize(Roles = "Teacher")]
         public ActionResult Download(int id)
         {
             var document = db.Documents.Find(id);
-            if (document == null)
-            {
-                return HttpNotFound();
-            }
             if (!string.IsNullOrWhiteSpace(document.Link))
             {
                 return Redirect(document.Link);
@@ -267,8 +339,27 @@ namespace LexiconLMS.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.RoutingObject = new
+            {
+                CourseId = document.CourseId,
+                ModuleId = document.ModuleId,
+                ActivityId = document.ActivityId
+            };
 
-            MakeBreadCrumbs(document.CourseId, document.ModuleId, document.ActivityId);
+            if (document.CourseId != null)
+            {
+                MakeBreadCrumbs();
+            }
+            else if (document.ModuleId != null)
+            {
+                var module = db.Modules.Find(document.ModuleId);
+                MakeBreadCrumbs(module?.Course);
+            }
+            else
+            {
+                var activity = db.Activities.Find(document.ActivityId);
+                MakeBreadCrumbs(activity?.Module);
+            }
 
             if (!string.IsNullOrWhiteSpace(document.Link))
             {
@@ -330,6 +421,12 @@ namespace LexiconLMS.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.RoutingObject = new
+            {
+                CourseId = document.CourseId,
+                ModuleId = document.ModuleId,
+                ActivityId = document.ActivityId
+            };
             return View(new DocumentDeleteViewModel(document));
         }
 
@@ -363,4 +460,3 @@ namespace LexiconLMS.Controllers
         }
     }
 }
-
