@@ -116,7 +116,7 @@ namespace LexiconLMS.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index", new { model.CourseId });
             }
-            return View(model);
+            return View("CourseCreateFile", model);
         }
 
         // POST: Module Documents/CreateFile
@@ -134,7 +134,7 @@ namespace LexiconLMS.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index", new { model.ModuleId });
             }
-            return View(model);
+            return View("ModuleCreateFile", model);
         }
 
         // POST: Activity Documents/CreateFile
@@ -152,7 +152,7 @@ namespace LexiconLMS.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index", new {model.ActivityId});
             }
-            return View(model);
+            return View("ActivityCreateFile", model);
         }
 
         [Authorize(Roles = "Teacher")]
@@ -199,7 +199,7 @@ namespace LexiconLMS.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index", new { model.CourseId });
             }
-            return View(model);
+            return View("CourseCreateLink", model);
         }
 
         // POST: Module Documents/CreateLink
@@ -217,7 +217,7 @@ namespace LexiconLMS.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index", new { model.ModuleId });
             }
-            return View(model);
+            return View("ModuleCreateLink", model);
         }
 
         // POST: Activity Documents/CreateLink
@@ -235,7 +235,7 @@ namespace LexiconLMS.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index", new { model.ActivityId });
             }
-            return View(model);
+            return View("ActivityCreateLink", model);
         }
 
         [Authorize(Roles = "Teacher")]
