@@ -19,7 +19,16 @@ namespace LexiconLMS.Controllers
             BreadCrumb.Clear();
             BreadCrumb.Add("/", "Home");
             if (course != null)
-                BreadCrumb.Add(Url.Action("Index", "Modules", new { courseId = course.Id }), course.Name);
+            {
+                if (User.IsInRole("Teacher"))
+                {
+                    BreadCrumb.Add(Url.Action("Index", "Modules", new { courseId = course.Id }), course.Name);
+                }
+                else
+                {
+                    BreadCrumb.Add(Url.Action("Index", "Modules"), "Schedule for " + course.Name);
+                }
+            }
         }
 
         // GET: Modules
