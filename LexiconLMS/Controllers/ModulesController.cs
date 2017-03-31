@@ -35,7 +35,6 @@ namespace LexiconLMS.Controllers
         public ActionResult Index(int? courseId)
         {
             var view = "Index";
-            ModuleIndexViewModel ViewModel = null;
             if (User.IsInRole("Teacher"))
             {
                 if (courseId == null)
