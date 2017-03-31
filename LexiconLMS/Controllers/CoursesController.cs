@@ -33,18 +33,15 @@ namespace LexiconLMS.Controllers
 
 
         // GET: Courses/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details()
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var course = db.Courses.Find(id);
+            var user = db.Users.Find(User.Identity.GetUserId());
+            var course = db.Courses.Find(user?.CourseId);
             if (course == null)
             {
                 return HttpNotFound();
             }
-            return View(course);
+            return View(new CourseDetailsViewModel(course));
         }
 
         // GET: Courses/Create
