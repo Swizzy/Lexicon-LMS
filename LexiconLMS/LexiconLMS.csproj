@@ -182,6 +182,10 @@
     <Compile Include="Migrations\201703301209281_UpdateDocumentsView.Designer.cs">
       <DependentUpon>201703301209281_UpdateDocumentsView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703310606370_CourseDocumentsStudentViewModel.cs" />
+    <Compile Include="Migrations\201703310606370_CourseDocumentsStudentViewModel.Designer.cs">
+      <DependentUpon>201703310606370_CourseDocumentsStudentViewModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Document.cs" />
     <Compile Include="Migrations\201703270659476_AddCourseIdToUser.cs" />
     <Compile Include="Migrations\201703270659476_AddCourseIdToUser.Designer.cs">
@@ -343,6 +347,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703301209281_UpdateDocumentsView.resx">
       <DependentUpon>201703301209281_UpdateDocumentsView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703310606370_CourseDocumentsStudentViewModel.resx">
+      <DependentUpon>201703310606370_CourseDocumentsStudentViewModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

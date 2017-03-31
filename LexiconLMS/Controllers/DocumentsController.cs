@@ -60,7 +60,7 @@ namespace LexiconLMS.Controllers
                     return View("CourseDocumentsIndex", new CourseDocumentsViewModel(course, docList));
                 }
                 else
-                    return View("CourseDocumentsStudentIndex", new CourseDocumentsViewModel(course, docList));
+                    return View("CourseDocumentsStudentIndex", new CourseDocumentsStudentViewModel(course, docList));
             }
             if (moduleId != null)
             {
