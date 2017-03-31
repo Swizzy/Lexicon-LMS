@@ -66,7 +66,7 @@ namespace LexiconLMS.Controllers
                 return HttpNotFound();
             }
             MakeBreadCrumbs(activity.Module);
-            return View(activity);
+            return View(new ActivityDetailsViewModel(activity));
         }
 
         // GET: Activities/Create

@@ -100,7 +100,7 @@ namespace LexiconLMS.Controllers
 
             MakeBreadCrumbs(module.Course);
 
-            return View(new ModuleViewModel(module));
+            return View(new ModuleDetailsViewModel(module));
         }
 
         // GET: Modules/Create
