@@ -1,21 +1,18 @@
-﻿@model LexiconLMS.Models.Course
+﻿@model LexiconLMS.Models.CourseDetailsViewModel
 
-@{
-    ViewBag.Title = "Details";
-}
+<h2>@Model.Name</h2>
 
-<h2>@Html.DisplayFor(model => model.Name)</h2>
-
-<div style="word-wrap:break-word;">
-   
-    <hr />
-    <dl>
+<div class="col-md-10">
+    <p>
         @Html.DisplayFor(model => model.Description)
-     </dl>
-    @*@foreach (var item in Model.Documents)
-    {
-    <dl>
-        @Html.DisplayFor(modelItem => item.Documents.FirstOrDefault().Name)
-    </dl>
-    }*@
+    </p>
+</div>
+
+<div class="col-md-2">
+    <ul>
+        @foreach (var item in Model.Documents)
+        {
+            <li>@Html.ActionLink(item.Name, "Download", "Documents", new { item.Id }, null)</li>
+        }
+    </ul>
 </div>

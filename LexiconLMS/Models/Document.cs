@@ -162,7 +162,7 @@ namespace LexiconLMS.Models
         {
             Link = document.Link;
         }
-        
+
         [Required]
         [DataType(DataType.Url)]
         public string Link { get; set; }
@@ -284,7 +284,7 @@ namespace LexiconLMS.Models
         }
 
         public int ModuleId { get; }
-        public IEnumerable<DocumentViewModel> Documents { get;}
+        public IEnumerable<DocumentViewModel> Documents { get; }
     }
 
     public class ActivityDocumentsViewModel

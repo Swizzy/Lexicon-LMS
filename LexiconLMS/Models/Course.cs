@@ -195,4 +195,19 @@ namespace LexiconLMS.Models
             }
         }
     }
+
+    public class CourseDetailsViewModel
+    {
+        public CourseDetailsViewModel(Course course)
+        {
+            Name = course.Name;
+            Description = course.Description;
+            Documents = course.Documents.Select(d => new DocumentViewModel(d));
+        }
+
+        public string Name { get; }
+
+        public IEnumerable<DocumentViewModel> Documents { get; }
+        public string Description { get; }
+    }
 }

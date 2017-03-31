@@ -238,7 +238,7 @@ namespace LexiconLMS.Controllers
             return View("ActivityCreateLink", model);
         }
 
-        [Authorize(Roles = "Teacher")]
+       // [Authorize(Roles = "Teacher")]
         public ActionResult Download(int id)
         {
             var document = db.Documents.Find(id);

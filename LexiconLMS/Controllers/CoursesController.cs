@@ -25,15 +25,10 @@ namespace LexiconLMS.Controllers
             {
                 return View(db.Courses.ToList().Select(c => new CourseViewModel(c)));
             }
-            else
-            {
-                var user = db.Users.Find(User.Identity.GetUserId());
-                if (user == null)
+            var user = db.Users.Find(User.Identity.GetUserId());
+            if (user == null)
                 return HttpNotFound();
-                //int? courseId = user.CourseId;
-                //return RedirectToAction("Index", "Modules");
-                return RedirectToAction("Details", "Courses", new { Id = user.CourseId });
-            }
+            return RedirectToAction("Details");
         }
 
 
