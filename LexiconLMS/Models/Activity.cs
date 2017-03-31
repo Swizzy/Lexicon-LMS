@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text;
 
 namespace LexiconLMS.Models
@@ -223,4 +224,19 @@ namespace LexiconLMS.Models
 
         public string ModuleName { get; set; }
     }
+
+    public class ActivityDetailsViewModel
+    {
+        public ActivityDetailsViewModel(Activity activity)
+        {
+            Name = activity.Name;
+            Description = activity.Description;
+            Documents = activity.Documents.Select(d => new DocumentViewModel(d));
+        }
+
+        public string Name { get; }
+        public string Description { get; }
+        public IEnumerable<DocumentViewModel> Documents { get; }
+    }
 }
+

@@ -202,12 +202,13 @@ namespace LexiconLMS.Models
         {
             Name = course.Name;
             Description = course.Description;
+            Modules = course.Modules.ToList().OrderBy(m => m.StartDate).Select(m => new ModuleViewModel(m));
             Documents = course.Documents.Select(d => new DocumentViewModel(d));
         }
 
         public string Name { get; }
-
-        public IEnumerable<DocumentViewModel> Documents { get; }
         public string Description { get; }
+        public IEnumerable<ModuleViewModel> Modules { get; }
+        public IEnumerable<DocumentViewModel> Documents { get; }
     }
 }

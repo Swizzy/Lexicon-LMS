@@ -1,41 +1,36 @@
-﻿@model LexiconLMS.Models.Module
+﻿@model LexiconLMS.Models.ModuleDetailsViewModel
 
-@{
-    ViewBag.Title = "Details";
-}
-
-<h2>Details</h2>
-
-<div>
-    <h4>Module</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-
-        <dd>
+<h2>@Model.Name</h2>
+<div class="row">
+    <div class="col-md-10">
+        <p>
             @Html.DisplayFor(model => model.Description)
-        </dd>
+        </p>
+        <h4>Activities</h4>
+        <table class="table">
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.Activities.FirstOrDefault().Name)</th>
+                <th>@Html.DisplayNameFor(m => m.Activities.FirstOrDefault().StartDate)</th>
+                <th>@Html.DisplayNameFor(m => m.Activities.FirstOrDefault().EndDate)</th>
+            </tr>
+            @foreach (var activity in Model.Activities)
+            {
+                <tr>
+                    <td>@Html.ActionLink(activity.Name, "Details", "Activities", new { activity.Id }, null)</td>
+                    <td>@Html.DisplayFor(m => activity.StartDate)</td>
+                    <td>@Html.DisplayFor(m => activity.EndDate)</td>
+                </tr>
+            }
+        </table>
+    </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CourseId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CourseId)
-        </dd>
-
-    </dl>
+    <div class="col-md-2">
+        <h4>Documents</h4>
+        <ul>
+            @foreach (var item in Model.Documents)
+            {
+                <li>@Html.ActionLink(item.Name, "Download", "Documents", new { item.Id }, new { target = "_blank" })</li>
+            }
+        </ul>
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) 
-</p>
