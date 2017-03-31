@@ -137,6 +137,10 @@ namespace LexiconLMS.Controllers
                 {
                     return HttpNotFound();
                 }
+                foreach (var doc in dbactivity.Documents)
+                {
+                    db.Documents.Remove(doc);
+                }
                 dbactivity.Update(activity);
                 db.SaveChanges();
                 return RedirectToAction("Index", new { activity.ModuleId });

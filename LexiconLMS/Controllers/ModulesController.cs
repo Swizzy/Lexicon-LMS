@@ -211,6 +211,18 @@ namespace LexiconLMS.Controllers
             if (module == null)
                 return HttpNotFound();
 
+            foreach (var activity in module.Activities)
+            {
+                foreach (var doc in activity.Documents)
+                {
+                    db.Documents.Remove(doc);
+                }
+                db.Activities.Remove(activity);
+            }
+            foreach (var doc in module.Documents)
+            {
+                db.Documents.Remove(doc);
+            }
             db.Modules.Remove(module);
             db.SaveChanges();
             return RedirectToAction("Index", new { courseId = module.CourseId });

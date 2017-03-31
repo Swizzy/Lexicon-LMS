@@ -131,6 +131,26 @@ namespace LexiconLMS.Controllers
             var course = db.Courses.Find(id);
             if (course != null)
             {
+                foreach (var doc in course.Documents)
+                {
+                    db.Documents.Remove(doc);
+                }
+                foreach (var module in course.Modules)
+                {
+                    foreach (var activity in module.Activities)
+                    {
+                        foreach (var doc in activity.Documents)
+                        {
+                            db.Documents.Remove(doc);
+                        }
+                        db.Activities.Remove(activity);
+                    }
+                    foreach (var doc in module.Documents)
+                    {
+                        db.Documents.Remove(doc);
+                    }
+                    db.Modules.Remove(module);
+                }
                 db.Courses.Remove(course);
                 db.SaveChanges();
             }
