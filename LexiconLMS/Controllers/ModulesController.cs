@@ -14,13 +14,13 @@ namespace LexiconLMS.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        private void MakeBreadCrumbs(Course course)
+        private void MakeBreadCrumbs(Course course, bool index = false)
         {
             BreadCrumb.Clear();
             BreadCrumb.Add("/", "Home");
             if (course != null)
             {
-                if (User.IsInRole("Teacher"))
+                if (User.IsInRole("Teacher") || !index)
                 {
                     BreadCrumb.Add(Url.Action("Index", "Modules", new { courseId = course.Id }), course.Name);
                 }
@@ -55,7 +55,7 @@ namespace LexiconLMS.Controllers
             var dbmodules = db.Modules.Where(m => m.CourseId == courseId).ToList();
             var modules = dbmodules.Select(m => new ModuleViewModel(m));
 
-            MakeBreadCrumbs(course);
+            MakeBreadCrumbs(course, index: true);
 
             if (!User.IsInRole("Teacher")) {
                 var activities = dbmodules.SelectMany(m => m.Activities);
