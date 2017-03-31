@@ -12,7 +12,7 @@
     <ul>
         @foreach (var item in Model.Documents)
         {
-            <li>@Html.ActionLink(item.Name, "Download", "Documents", new { item.Id }, null)</li>
+            <li>@Html.ActionLink(item.Name, "Download", "Documents", new { item.Id }, new { target = "_blank"})</li>
         }
     </ul>
 </div>
