@@ -20,9 +20,13 @@ namespace LexiconLMS.Controllers
             BreadCrumb.Add("/", "Home");
             if (course != null)
             {
-                if (User.IsInRole("Teacher") || !index)
+                if (User.IsInRole("Teacher"))
                 {
                     BreadCrumb.Add(Url.Action("Index", "Modules", new { courseId = course.Id }), course.Name);
+                }
+                else if (!index)
+                {
+                    BreadCrumb.Add(Url.Action("Details", "Courses"), course.Name);
                 }
                 else
                 {
