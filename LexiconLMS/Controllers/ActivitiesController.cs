@@ -137,7 +137,7 @@ namespace LexiconLMS.Controllers
                 {
                     return HttpNotFound();
                 }
-                foreach (var doc in dbactivity.Documents)
+                foreach (var doc in dbactivity.Documents.ToList())
                 {
                     db.Documents.Remove(doc);
                 }

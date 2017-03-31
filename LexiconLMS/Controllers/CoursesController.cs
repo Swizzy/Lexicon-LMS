@@ -131,21 +131,21 @@ namespace LexiconLMS.Controllers
             var course = db.Courses.Find(id);
             if (course != null)
             {
-                foreach (var doc in course.Documents)
+                foreach (var doc in course.Documents.ToList())
                 {
                     db.Documents.Remove(doc);
                 }
-                foreach (var module in course.Modules)
+                foreach (var module in course.Modules.ToList())
                 {
-                    foreach (var activity in module.Activities)
+                    foreach (var activity in module.Activities.ToList())
                     {
-                        foreach (var doc in activity.Documents)
+                        foreach (var doc in activity.Documents.ToList())
                         {
                             db.Documents.Remove(doc);
                         }
                         db.Activities.Remove(activity);
                     }
-                    foreach (var doc in module.Documents)
+                    foreach (var doc in module.Documents.ToList())
                     {
                         db.Documents.Remove(doc);
                     }

@@ -211,15 +211,15 @@ namespace LexiconLMS.Controllers
             if (module == null)
                 return HttpNotFound();
 
-            foreach (var activity in module.Activities)
+            foreach (var activity in module.Activities.ToList())
             {
-                foreach (var doc in activity.Documents)
+                foreach (var doc in activity.Documents.ToList())
                 {
                     db.Documents.Remove(doc);
                 }
                 db.Activities.Remove(activity);
             }
-            foreach (var doc in module.Documents)
+            foreach (var doc in module.Documents.ToList())
             {
                 db.Documents.Remove(doc);
             }
