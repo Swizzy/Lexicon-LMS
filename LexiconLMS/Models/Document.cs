@@ -29,10 +29,6 @@ namespace LexiconLMS.Models
         public int? ModuleId { get; set; }
         public int? ActivityId { get; set; }
 
-        [DataType(DataType.MultilineText)]
-        [StringLength(250)]
-        public string CourseDescription { get; set; }
-
         // Navigation properties
         public virtual Course Course { get; set; }
         public virtual Module Module { get; set; }
@@ -276,6 +272,21 @@ namespace LexiconLMS.Models
             CourseName = course.Name;
             CourseId = course.Id;
             Documents = documents;
+        }
+
+        public string CourseName { get; }
+        public int CourseId { get; }
+        
+        public IEnumerable<DocumentViewModel> Documents { get; }
+    }
+
+    public class CourseDocumentsStudentViewModel
+    {
+        public CourseDocumentsStudentViewModel(Course course, IEnumerable<DocumentViewModel> documents)
+        {
+            CourseName = course.Name;
+            CourseId = course.Id;
+            Documents = documents;
             CourseDescription = course.Description;
         }
 
@@ -284,10 +295,9 @@ namespace LexiconLMS.Models
 
         [DataType(DataType.MultilineText)]
         [StringLength(250)]
-        public string CourseDescription { get;}
+        public string CourseDescription { get; }
         public IEnumerable<DocumentViewModel> Documents { get; }
     }
-
     public class ModuleDocumentsViewModel
     {
         public ModuleDocumentsViewModel(Module module, IEnumerable<DocumentViewModel> documents)

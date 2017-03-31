@@ -39,7 +39,7 @@ namespace LexiconLMS.Controllers
                 return HttpNotFound();
                 //int? courseId = user.CourseId;
                 //return RedirectToAction("Index", "Modules");
-                return RedirectToAction("Details", "Courses", new { Id = user.CourseId });
+                return RedirectToAction("Index", "Documents", new { CourseId = user.CourseId });
             }
         }
 
