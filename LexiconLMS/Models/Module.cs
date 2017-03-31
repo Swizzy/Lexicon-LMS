@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -190,5 +191,21 @@ namespace LexiconLMS.Models
 
         [Display(Name = "Module Documents")]
         public int DocumentsCount { get; }
+    }
+
+    public class ModuleDetailsViewModel
+    {
+        public ModuleDetailsViewModel(Module module)
+        {
+            Name = module.Name;
+            Description = module.Description;
+            Activities = module.Activities.Select(a => new ActivityViewModel(a));
+            Documents = module.Documents.Select(d => new DocumentViewModel(d));
+        }
+
+        public string Name { get; }
+        public string Description { get; }
+        public IEnumerable<ActivityViewModel> Activities { get; }
+        public IEnumerable<DocumentViewModel> Documents { get; }
     }
 }
