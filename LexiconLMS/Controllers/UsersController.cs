@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -145,7 +146,10 @@ namespace LexiconLMS.Controllers
         {
             foreach (var error in result.Errors)
             {
-                ModelState.AddModelError("", error);
+                if (!Regex.IsMatch(error, "^Name .* is already taken\\.$"))
+                {
+                    ModelState.AddModelError("", error);
+                }
             }
         }
 
@@ -184,6 +188,7 @@ namespace LexiconLMS.Controllers
                     return HttpNotFound();
                 user.Update(model);
                 db.SaveChanges();
+                HttpContext.GetOwinContext().Get<ApplicationSignInManager>().SignIn(user, false, false);
                 return RedirectToAction("Index");
             }
             MakeBreadCrumbs();

@@ -23,7 +23,7 @@
     {
         <tr>
             <td>
-                @Html.ActionLink(item.Name, "Download", new { item.Id })
+                @Html.ActionLink(item.Name, "Download", new { item.Id }, new { target = "_blank" })
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.UploadedBy)

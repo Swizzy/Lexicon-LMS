@@ -1,0 +1,27 @@
+﻿@model LexiconLMS.Models.TeacherAssignmentsViewModel
+
+<h2>Assignments</h2>
+<table class="table">
+    <tr>
+        <th>@Html.DisplayNameFor(m => Model.Assignments.FirstOrDefault().Student)</th>
+        <th>@Html.DisplayNameFor(m => Model.Assignments.FirstOrDefault().CreateDate)</th>
+        <th>@Html.DisplayNameFor(m => Model.Assignments.FirstOrDefault().Status)</th>
+    </tr>
+    @foreach (var item in Model.Assignments)
+    {
+        <tr>
+            <td>
+                @if (item.HasDocument)
+                {
+                    @Html.ActionLink(item.Student, "Download", "Documents", new { Id = item.DocumentId }, new { target = "_blank" })
+                }
+                else
+                {
+                    @Html.DisplayFor(m => item.Student)
+                }
+            </td>
+            <th>@Html.DisplayFor(m => item.CreateDate)</th>
+            <td>@Html.DisplayFor(m => item.Status)</td>
+        </tr>
+    }
+</table>

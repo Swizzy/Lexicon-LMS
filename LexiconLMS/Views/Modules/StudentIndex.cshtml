@@ -1,6 +1,15 @@
 ﻿@model IEnumerable<LexiconLMS.Models.ModuleIndexStudentViewModel>
 
 <h2>Course Schedule</h2>
+@if (ViewBag.showAll == true)
+{
+    <p>@Html.ActionLink("Show Less", "Index", "Modules", new { showAll = false }, null)</p>
+}
+else
+{
+    <p>@Html.ActionLink("Show All", "Index", "Modules", new { showAll = true }, null)</p>
+}
+
 <div class="panel-group" id="accordion">
 
     @{int i = 0;}

@@ -25,31 +25,23 @@ namespace LexiconLMS.Controllers
             {
                 return View(db.Courses.ToList().Select(c => new CourseViewModel(c)));
             }
-            else
-            {
-                var user = db.Users.Find(User.Identity.GetUserId());
-                if (user == null)
+            var user = db.Users.Find(User.Identity.GetUserId());
+            if (user == null)
                 return HttpNotFound();
-                //int? courseId = user.CourseId;
-                //return RedirectToAction("Index", "Modules");
-                return RedirectToAction("Index", "Documents", new { CourseId = user.CourseId });
-            }
+            return RedirectToAction("Details");
         }
 
 
         // GET: Courses/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details()
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var course = db.Courses.Find(id);
+            var user = db.Users.Find(User.Identity.GetUserId());
+            var course = db.Courses.Find(user?.CourseId);
             if (course == null)
             {
                 return HttpNotFound();
             }
-            return View(course);
+            return View(new CourseDetailsViewModel(course));
         }
 
         // GET: Courses/Create
@@ -139,6 +131,26 @@ namespace LexiconLMS.Controllers
             var course = db.Courses.Find(id);
             if (course != null)
             {
+                foreach (var doc in course.Documents.ToList())
+                {
+                    db.Documents.Remove(doc);
+                }
+                foreach (var module in course.Modules.ToList())
+                {
+                    foreach (var activity in module.Activities.ToList())
+                    {
+                        foreach (var doc in activity.Documents.ToList())
+                        {
+                            db.Documents.Remove(doc);
+                        }
+                        db.Activities.Remove(activity);
+                    }
+                    foreach (var doc in module.Documents.ToList())
+                    {
+                        db.Documents.Remove(doc);
+                    }
+                    db.Modules.Remove(module);
+                }
                 db.Courses.Remove(course);
                 db.SaveChanges();
             }

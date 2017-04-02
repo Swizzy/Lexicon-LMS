@@ -14,19 +14,31 @@ namespace LexiconLMS.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        private void MakeBreadCrumbs(Course course)
+        private void MakeBreadCrumbs(Course course, bool index = false)
         {
             BreadCrumb.Clear();
             BreadCrumb.Add("/", "Home");
             if (course != null)
-                BreadCrumb.Add(Url.Action("Index", "Modules", new { courseId = course.Id }), course.Name);
+            {
+                if (User.IsInRole("Teacher"))
+                {
+                    BreadCrumb.Add(Url.Action("Index", "Modules", new { courseId = course.Id }), course.Name);
+                }
+                else if (!index)
+                {
+                    BreadCrumb.Add(Url.Action("Details", "Courses"), course.Name);
+                }
+                else
+                {
+                    BreadCrumb.Add(Url.Action("Index", "Modules"), "Schedule for " + course.Name);
+                }
+            }
         }
 
         // GET: Modules
-        public ActionResult Index(int? courseId)
+        public ActionResult Index(int? courseId, bool? showAll)
         {
             var view = "Index";
-            ModuleIndexViewModel ViewModel = null;
             if (User.IsInRole("Teacher"))
             {
                 if (courseId == null)
@@ -47,14 +59,17 @@ namespace LexiconLMS.Controllers
             var dbmodules = db.Modules.Where(m => m.CourseId == courseId).ToList();
             var modules = dbmodules.Select(m => new ModuleViewModel(m));
 
-            MakeBreadCrumbs(course);
+            MakeBreadCrumbs(course, index: true);
 
             if (!User.IsInRole("Teacher")) {
                 var activities = dbmodules.SelectMany(m => m.Activities);
                 var data = new List<ModuleIndexStudentViewModel>();
                 if (course.StartDate != null)
                 {
-                    var date = (DateTime)course.StartDate;
+                    var date = DateTime.Now;
+                    ViewBag.showAll = showAll;
+                    if (showAll == true)
+                       date = (DateTime)course.StartDate;
                     do
                     {
                         var dayActivities = new List<ActivityScheduleViewModel>();
@@ -64,7 +79,7 @@ namespace LexiconLMS.Controllers
                         }
 
                         if (dayActivities.Count != 0)
-                        data.Add(new ModuleIndexStudentViewModel(date, dayActivities));
+                            data.Add(new ModuleIndexStudentViewModel(date, dayActivities));
                         date = date.AddDays(1);
                         if (date.DayOfWeek == DayOfWeek.Saturday) {
                             date = date.AddDays(2);
@@ -92,7 +107,7 @@ namespace LexiconLMS.Controllers
 
             MakeBreadCrumbs(module.Course);
 
-            return View(new ModuleViewModel(module));
+            return View(new ModuleDetailsViewModel(module));
         }
 
         // GET: Modules/Create
@@ -203,6 +218,18 @@ namespace LexiconLMS.Controllers
             if (module == null)
                 return HttpNotFound();
 
+            foreach (var activity in module.Activities.ToList())
+            {
+                foreach (var doc in activity.Documents.ToList())
+                {
+                    db.Documents.Remove(doc);
+                }
+                db.Activities.Remove(activity);
+            }
+            foreach (var doc in module.Documents.ToList())
+            {
+                db.Documents.Remove(doc);
+            }
             db.Modules.Remove(module);
             db.SaveChanges();
             return RedirectToAction("Index", new { courseId = module.CourseId });

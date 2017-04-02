@@ -54,6 +54,7 @@ namespace LexiconLMS.Models
         //Navigation Properties
         public virtual ICollection<Module> Modules { get; set; }
         public virtual ICollection<Document> Documents { get; set; }
+        public virtual ICollection<ApplicationUser> Students { get; set; }
     }
 
     public class CourseCreateViewModel
@@ -194,5 +195,21 @@ namespace LexiconLMS.Models
                 return sb.ToString();
             }
         }
+    }
+
+    public class CourseDetailsViewModel
+    {
+        public CourseDetailsViewModel(Course course)
+        {
+            Name = course.Name;
+            Description = course.Description;
+            Modules = course.Modules.ToList().OrderBy(m => m.StartDate).Select(m => new ModuleViewModel(m));
+            Documents = course.Documents.Select(d => new DocumentViewModel(d));
+        }
+
+        public string Name { get; }
+        public string Description { get; }
+        public IEnumerable<ModuleViewModel> Modules { get; }
+        public IEnumerable<DocumentViewModel> Documents { get; }
     }
 }

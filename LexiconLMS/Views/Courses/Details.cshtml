@@ -1,15 +1,47 @@
-﻿@model LexiconLMS.Models.Course
+﻿@model LexiconLMS.Models.CourseDetailsViewModel
 
 @{
-    ViewBag.Title = "Details";
+    var cssClass = "col-md-10";
+    if (Model.Documents.Any())
+    {
+        cssClass = "col-md-6";
+    }
 }
 
-<h2>@Html.DisplayFor(model => model.Name)</h2>
+<h2>@Model.Name</h2>
 
-<div style="word-wrap:break-word;">
-   
-    <hr />
-    <dl>
-        @Html.DisplayFor(model => model.Description)
-     </dl>
+<div class="row">
+    <div class="@cssClass">
+        <p>
+            @Html.DisplayFor(model => model.Description)
+        </p>
+        <br />
+        <h4>Modules</h4>
+        <table class="table">
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.Modules.FirstOrDefault().Name)</th>
+                <th>@Html.DisplayNameFor(m => m.Modules.FirstOrDefault().StartDate)</th>
+                <th>@Html.DisplayNameFor(m => m.Modules.FirstOrDefault().EndDate)</th>
+            </tr>
+            @foreach (var module in Model.Modules)
+            {
+                <tr>
+                    <td>@Html.ActionLink(module.Name, "Details", "Modules", new { module.Id }, null)</td>
+                    <td>@Html.DisplayFor(m => module.StartDate)</td>
+                    <td>@Html.DisplayFor(m => module.EndDate)</td>
+                </tr>
+            }
+        </table>
+    </div>
+    @if (Model.Documents.Any())
+    {
+        <div class="col-md-6">
+            <ul>
+                @foreach (var item in Model.Documents)
+                {
+                    <li>@Html.ActionLink(item.Name, "Download", "Documents", new { item.Id }, new { target = "_blank" })</li>
+                }
+            </ul>
+        </div>
+    }
 </div>

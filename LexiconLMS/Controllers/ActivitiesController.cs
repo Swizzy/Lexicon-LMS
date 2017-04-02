@@ -1,10 +1,12 @@
 ﻿using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Web;
 using System.Web.Mvc;
 using LexiconLMS.Models;
 using MvcBreadCrumbs;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace LexiconLMS.Controllers
 {
@@ -12,6 +14,7 @@ namespace LexiconLMS.Controllers
     public class ActivitiesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+        private ApplicationUserManager UserManager => HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
 
         private void MakeBreadCrumbs(Module module)
         {
@@ -21,6 +24,17 @@ namespace LexiconLMS.Controllers
             {
                 BreadCrumb.Add(Url.Action("Index", "Modules", new { courseId = module.CourseId}), module.Course.Name);
                 BreadCrumb.Add(Url.Action("Index", "Activities", new {moduleId = module.Id}), module.Name);
+            }
+        }
+
+        private void MakeBreadCrumbs(Activity activity)
+        {
+            BreadCrumb.Clear();
+            BreadCrumb.Add("/", "Home");
+            if (activity != null)
+            {
+                BreadCrumb.Add(Url.Action("Index", "Modules", new { courseId = activity.Module.CourseId }), activity.Module.Course.Name);
+                BreadCrumb.Add(Url.Action("Index", "Activities", new { activity.Id }), activity.Name);
             }
         }
 
@@ -66,7 +80,8 @@ namespace LexiconLMS.Controllers
                 return HttpNotFound();
             }
             MakeBreadCrumbs(activity.Module);
-            return View(activity);
+            
+            return View(new ActivityDetailsViewModel(activity, UserManager));
         }
 
         // GET: Activities/Create
@@ -137,6 +152,10 @@ namespace LexiconLMS.Controllers
                 {
                     return HttpNotFound();
                 }
+                foreach (var doc in dbactivity.Documents.ToList())
+                {
+                    db.Documents.Remove(doc);
+                }
                 dbactivity.Update(activity);
                 db.SaveChanges();
                 return RedirectToAction("Index", new { activity.ModuleId });
@@ -177,6 +196,41 @@ namespace LexiconLMS.Controllers
             db.Activities.Remove(activity);
             db.SaveChanges();
             return RedirectToAction("Index", new { activity.ModuleId });
+        }
+
+        public ActionResult Assignments(int? id)
+        {
+            if (User.IsInRole("Teacher"))
+            {
+                var activity = db.Activities.Find(id);
+                if (activity == null || !activity.ActivityType.IsAssignment)
+                {
+                    return HttpNotFound();
+                }
+
+                MakeBreadCrumbs(activity);
+
+                return View("TeacherAssignments", new TeacherAssignmentsViewModel(activity, UserManager));
+            }
+
+            var userId = User.Identity.GetUserId();
+
+            var user = db.Users.Find(userId);
+            if (user == null)
+            {
+                return RedirectToAction("LogOff", "Account");
+            }
+            var course = db.Courses.Find(user.CourseId);
+            if (course == null)
+            {
+                return HttpNotFound();
+            }
+
+            BreadCrumb.Clear();
+            BreadCrumb.Add("/", "Home");
+            BreadCrumb.Add(Url.Action("Index", "Activities"), "Assignments");
+
+            return View("StudentAssignments", new StudentAssignmentsViewModel(course, user));
         }
 
         protected override void Dispose(bool disposing)
