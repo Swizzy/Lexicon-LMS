@@ -201,6 +201,8 @@ namespace LexiconLMS.Models
 
         [Display(Name = "Link")]
         public string Link { get; set; }
+
+        public string DeleteType => DocumentType + " " + (string.IsNullOrWhiteSpace(Link) ? "File" : "Link");
     }
 
     public class CourseCreateDocumentFileViewModel : CreateDocumentFileViewModel
