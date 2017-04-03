@@ -93,6 +93,7 @@ namespace LexiconLMS.Controllers
                 }
                 user.Update(model);
                 db.SaveChanges();
+                SignInManager.SignIn(user, false, false);
                 return RedirectToAction("Index", new {message = ManageMessageId.UpdateUserInfoSuccess});
             }
             return View(model);

@@ -188,6 +188,7 @@ namespace LexiconLMS.Controllers
                     return HttpNotFound();
                 user.Update(model);
                 db.SaveChanges();
+                HttpContext.GetOwinContext().Get<ApplicationSignInManager>().SignIn(user, false, false);
                 return RedirectToAction("Index");
             }
             MakeBreadCrumbs();
