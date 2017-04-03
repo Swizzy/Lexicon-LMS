@@ -1,10 +1,12 @@
 ﻿using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Web;
 using System.Web.Mvc;
 using LexiconLMS.Models;
 using MvcBreadCrumbs;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace LexiconLMS.Controllers
 {
@@ -12,6 +14,7 @@ namespace LexiconLMS.Controllers
     public class ActivitiesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+        private ApplicationUserManager UserManager => HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
 
         private void MakeBreadCrumbs(Module module)
         {
@@ -66,7 +69,8 @@ namespace LexiconLMS.Controllers
                 return HttpNotFound();
             }
             MakeBreadCrumbs(activity.Module);
-            return View(new ActivityDetailsViewModel(activity));
+            
+            return View(new ActivityDetailsViewModel(activity, UserManager));
         }
 
         // GET: Activities/Create

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using Microsoft.AspNet.Identity;
 
 namespace LexiconLMS.Models
 {
@@ -227,11 +228,17 @@ namespace LexiconLMS.Models
 
     public class ActivityDetailsViewModel
     {
-        public ActivityDetailsViewModel(Activity activity)
+        public ActivityDetailsViewModel(Activity activity, ApplicationUserManager userManager)
         {
             Name = activity.Name;
             Description = activity.Description;
-            Documents = activity.Documents.Select(d => new DocumentViewModel(d));
+            var documents = activity.Documents.AsEnumerable();
+            // If this is an assignment, only show documents from the teacher
+            if (activity.ActivityType.IsAssignment)
+            {
+                documents = documents.Where(d => userManager.IsInRole(d.UserId, "Teacher"));
+            }
+            Documents = documents.Select(d => new DocumentViewModel(d));
         }
 
         public string Name { get; }

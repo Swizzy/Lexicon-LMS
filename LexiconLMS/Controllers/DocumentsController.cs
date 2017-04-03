@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using System.Web;
 using System.Web.Mvc;
 using LexiconLMS.Models;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using MvcBreadCrumbs;
 
 namespace LexiconLMS.Controllers
@@ -12,7 +14,8 @@ namespace LexiconLMS.Controllers
     public class DocumentsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-        
+        private ApplicationUserManager UserManager => HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+
         private Tuple<Course, Module, Activity> MakeBreadCrumbs(int? courseId, int? moduleId, int? activityId)
         {
             BreadCrumb.Clear();
@@ -46,6 +49,7 @@ namespace LexiconLMS.Controllers
         }
 
         // GET: Documents
+        [Authorize(Roles = "Teacher")]
         public ActionResult Index(int? courseId, int? moduleId, int? activityId)
         {
             var ret = MakeBreadCrumbs(courseId, moduleId, activityId);
@@ -61,7 +65,10 @@ namespace LexiconLMS.Controllers
             }
             if (ret.Item3 != null)
             {
-                var documents = db.Documents.Where(d => d.ActivityId == activityId).ToList().Select(d => new DocumentViewModel(d));
+                var documents = db.Documents.Where(d => d.ActivityId == activityId)
+                                            .ToList()
+                                            .Where(d => UserManager.IsInRole(d.UserId, "Teacher")) // Only show documents a teacher has uploaded
+                                            .Select(d => new DocumentViewModel(d));
                 return View("ActivityDocumentsIndex", new ActivityDocumentsViewModel(ret.Item3, documents));
             }
             if (courseId != null || moduleId != null || activityId != null)
@@ -238,7 +245,6 @@ namespace LexiconLMS.Controllers
             return View("ActivityCreateLink", model);
         }
 
-       // [Authorize(Roles = "Teacher")]
         public ActionResult Download(int id)
         {
             var document = db.Documents.Find(id);
