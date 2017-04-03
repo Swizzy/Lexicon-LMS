@@ -178,6 +178,7 @@
     <Compile Include="Migrations\201703290752493_AddDocuments.Designer.cs">
       <DependentUpon>201703290752493_AddDocuments.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\Assignment.cs" />
     <Compile Include="Models\Document.cs" />
     <Compile Include="Migrations\201703270659476_AddCourseIdToUser.cs" />
     <Compile Include="Migrations\201703270659476_AddCourseIdToUser.Designer.cs">
@@ -316,6 +317,10 @@
     <Content Include="Views\Users\EditStudent.cshtml" />
     <Content Include="Views\Modules\Index.cshtml" />
     <Content Include="Views\Courses\Details.cshtml" />
+    <Content Include="Views\Activities\TeacherAssignments.cshtml" />
+    <Content Include="Views\Activities\StudentAssignments.cshtml" />
+    <Content Include="Views\Documents\UploadAssignment.cshtml" />
+    <Content Include="Views\Documents\UpdateAssignment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201703210849336_AddModules.resx">

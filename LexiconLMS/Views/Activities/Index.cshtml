@@ -1,4 +1,5 @@
-﻿@model LexiconLMS.Models.ActivityIndexVieWModel
+﻿@using System.Web.UI.HtmlControls
+@model LexiconLMS.Models.ActivityIndexVieWModel
 
 <h2>Activities</h2>
 <p>
@@ -44,6 +45,10 @@
         <td>
             @Html.ActionLink("Modify", "Edit", new { id=item.Id }) |
             @Html.ActionLink("Documents", "Index", "Documents", new { activityId = item.Id }, null) |
+            @if (item.IsAssignment)
+            {
+                @Html.ActionLink("Assignments", "Assignments", new { item.Id })<span> | </span>
+            }
             @Html.ActionLink("Delete", "Delete", new { id = item.Id })
         </td>
     </tr>

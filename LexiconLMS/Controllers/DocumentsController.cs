@@ -367,6 +367,100 @@ namespace LexiconLMS.Controllers
             }
             base.Dispose(disposing);
         }
+
+        public ActionResult UploadAssignment(int? activityId)
+        {
+            var activity = db.Activities.Find(activityId);
+            if (activity == null || !activity.ActivityType.IsAssignment)
+            {
+                return HttpNotFound();
+            }
+            if (activity.EndDate < DateTime.Now)
+            {
+                ModelState.AddModelError("", "You are not allowed to upload an assignment after it's due date!");
+            }
+            return View(new UploadAssignmentViewModel(activity));
+        }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UploadAssignment(UploadAssignmentViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var activity = db.Activities.Find(model.ActivityId);
+                if (activity == null || !activity.ActivityType.IsAssignment)
+                {
+                    return HttpNotFound();
+                }
+
+                if (activity.EndDate < DateTime.Now)
+                {
+                    ModelState.AddModelError("", "You are not allowed to upload an assignment after it's due date!");
+                    model.UpdateAllowPost(activity);
+                    return View(model);
+                }
+
+                db.Documents.Add(new Document(model, User.Identity.GetUserId())
+                {
+                    ActivityId = model.ActivityId
+                });
+                db.SaveChanges();
+                return RedirectToAction("Assignments", "Activities");
+            }
+            return View(model);
+        }
+
+        public ActionResult UpdateAssignment(int? id)
+        {
+            var document = db.Documents.Find(id);
+            if (document == null)
+            {
+                return HttpNotFound();
+            }
+            var activity = document.Activity;
+            if (activity == null || !activity.ActivityType.IsAssignment)
+            {
+                return HttpNotFound();
+            }
+            if (activity.EndDate < DateTime.Now)
+            {
+                ModelState.AddModelError("", "You are not allowed to update an assignment after it's due date!");
+            }
+            return View(new UpdateAssignmentViewModel(document));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateAssignment(int? id, UpdateAssignmentViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var assignment = db.Documents.Find(id);
+                if (assignment == null)
+                {
+                    return HttpNotFound();
+                }
+
+                var activity = db.Activities.Find(assignment.ActivityId);
+                if (activity == null || !activity.ActivityType.IsAssignment)
+                {
+                    return HttpNotFound();
+                }
+
+                if (activity.EndDate < DateTime.Now)
+                {
+                    ModelState.AddModelError("", "You are not allowed to update an assignment after it's due date!");
+                    model.UpdateAllowPost(activity);
+                    return View(model);
+                }
+
+                assignment.Update(model);
+                db.SaveChanges();
+                return RedirectToAction("Assignments", "Activities");
+            }
+            return View(model);
+        }
     }
 }
 

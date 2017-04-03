@@ -13,26 +13,26 @@ namespace LexiconLMS.Models
         {
         }
 
-        private Document(string name, string userId)
+        private Document(string userId, string name = null)
         {
             CreateDate = DateTime.Now;
             UserId = userId;
             Name = name;
         }
 
-        public Document(CreateDocumentFileViewModel model, string userId) : this(model.Name, userId)
+        public Document(CreateDocumentFileViewModel model, string userId) : this(userId, model.Name)
         {
-            using (var br = new BinaryReader(model.Upload.InputStream))
-            {
-                FileName = model.Upload.FileName;
-                ContentType = model.Upload.ContentType;
-                Content = br.ReadBytes(model.Upload.ContentLength);
-            }
+            AddFile(model.Upload);
         }
 
-        public Document(CreateDocumentLinkViewModel model, string userId) : this(model.Name, userId)
+        public Document(CreateDocumentLinkViewModel model, string userId) : this(userId, model.Name)
         {
             Link = model.Link;
+        }
+
+        public Document(UpdateAssignmentViewModel model, string userId) : this(userId)
+        {
+            AddFile(model.Upload);
         }
 
         public int Id { get; set; }
@@ -63,6 +63,16 @@ namespace LexiconLMS.Models
         [ForeignKey("UserId")]
         public virtual ApplicationUser ApplicationUser { get; set; }
 
+        private void AddFile(HttpPostedFileBase upload)
+        {
+            using (var br = new BinaryReader(upload.InputStream))
+            {
+                FileName = upload.FileName;
+                ContentType = upload.ContentType;
+                Content = br.ReadBytes(upload.ContentLength);
+            }
+        }
+
         internal void Update(DocumentEditFileViewModel document)
         {
             Name = document.Name;
@@ -73,6 +83,12 @@ namespace LexiconLMS.Models
             Name = document.Name;
             Link = document.Link;
             CreateDate = DateTime.Now;
+        }
+
+        internal void Update(UpdateAssignmentViewModel document)
+        {
+            CreateDate = DateTime.Now;
+            AddFile(document.Upload);
         }
     }
 

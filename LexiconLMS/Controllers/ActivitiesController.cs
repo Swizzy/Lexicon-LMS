@@ -27,6 +27,17 @@ namespace LexiconLMS.Controllers
             }
         }
 
+        private void MakeBreadCrumbs(Activity activity)
+        {
+            BreadCrumb.Clear();
+            BreadCrumb.Add("/", "Home");
+            if (activity != null)
+            {
+                BreadCrumb.Add(Url.Action("Index", "Modules", new { courseId = activity.Module.CourseId }), activity.Module.Course.Name);
+                BreadCrumb.Add(Url.Action("Index", "Activities", new { activity.Id }), activity.Name);
+            }
+        }
+
         // GET: Activities
         public ActionResult Index(int? moduleId)
         {
@@ -185,6 +196,41 @@ namespace LexiconLMS.Controllers
             db.Activities.Remove(activity);
             db.SaveChanges();
             return RedirectToAction("Index", new { activity.ModuleId });
+        }
+
+        public ActionResult Assignments(int? id)
+        {
+            if (User.IsInRole("Teacher"))
+            {
+                var activity = db.Activities.Find(id);
+                if (activity == null || !activity.ActivityType.IsAssignment)
+                {
+                    return HttpNotFound();
+                }
+
+                MakeBreadCrumbs(activity);
+
+                return View("TeacherAssignments", new TeacherAssignmentsViewModel(activity, UserManager));
+            }
+
+            var userId = User.Identity.GetUserId();
+
+            var user = db.Users.Find(userId);
+            if (user == null)
+            {
+                return RedirectToAction("LogOff", "Account");
+            }
+            var course = db.Courses.Find(user.CourseId);
+            if (course == null)
+            {
+                return HttpNotFound();
+            }
+
+            BreadCrumb.Clear();
+            BreadCrumb.Add("/", "Home");
+            BreadCrumb.Add(Url.Action("Index", "Activities"), "Assignments");
+
+            return View("StudentAssignments", new StudentAssignmentsViewModel(course, user));
         }
 
         protected override void Dispose(bool disposing)
