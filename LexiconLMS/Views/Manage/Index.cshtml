@@ -4,7 +4,6 @@
 
 <p class="@ViewBag.StatusMessageClass">@ViewBag.StatusMessage</p>
 <div>
-    @Html.ActionLink("Change your password", "ChangePassword")
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
@@ -46,8 +45,10 @@
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" value="Save" class="btn btn-default"/>
+                    @Html.ActionLink("Change password", "ChangePassword", null, new { @class = "btn btn-default" })
                 </div>
             </div>
+            
         </div>
     }
 </div>
