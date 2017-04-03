@@ -9,18 +9,13 @@ namespace MvcBreadCrumbs
 
         public static State GetState(string id)
         {
-            if (States.FirstOrDefault(x => x.SessionCookie == id) == null)
-            {
-                StateManager.CreateState(id);
-            }
-            return States.First(x => x.SessionCookie == id);
+            return States.FirstOrDefault(x => x.SessionCookie == id) ?? CreateState(id);
         }
 
         public static State CreateState(string cookie)
         {
             var newstate = new State(cookie);
             States.Add(newstate);
-
             return newstate;
 
         }
@@ -33,6 +28,5 @@ namespace MvcBreadCrumbs
                 States.Remove(state);
             }
         }
-
     }
 }
