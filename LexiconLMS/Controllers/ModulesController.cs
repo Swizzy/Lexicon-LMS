@@ -36,7 +36,7 @@ namespace LexiconLMS.Controllers
         }
 
         // GET: Modules
-        public ActionResult Index(int? courseId)
+        public ActionResult Index(int? courseId, bool? showAll)
         {
             var view = "Index";
             if (User.IsInRole("Teacher"))
@@ -66,7 +66,10 @@ namespace LexiconLMS.Controllers
                 var data = new List<ModuleIndexStudentViewModel>();
                 if (course.StartDate != null)
                 {
-                    var date = (DateTime)course.StartDate;
+                    var date = DateTime.Now;
+                    ViewBag.showAll = showAll;
+                    if (showAll == true)
+                       date = (DateTime)course.StartDate;
                     do
                     {
                         var dayActivities = new List<ActivityScheduleViewModel>();
@@ -76,7 +79,7 @@ namespace LexiconLMS.Controllers
                         }
 
                         if (dayActivities.Count != 0)
-                        data.Add(new ModuleIndexStudentViewModel(date, dayActivities));
+                            data.Add(new ModuleIndexStudentViewModel(date, dayActivities));
                         date = date.AddDays(1);
                         if (date.DayOfWeek == DayOfWeek.Saturday) {
                             date = date.AddDays(2);
