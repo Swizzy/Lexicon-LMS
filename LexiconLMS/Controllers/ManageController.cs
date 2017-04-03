@@ -3,7 +3,6 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
 using LexiconLMS.Models;
 using MvcBreadCrumbs;
 
@@ -14,6 +13,7 @@ namespace LexiconLMS.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private readonly ApplicationDbContext db = new ApplicationDbContext();
 
         public ManageController()
         {
@@ -55,21 +55,47 @@ namespace LexiconLMS.Controllers
         // GET: /Manage/Index
         public ActionResult Index(ManageMessageId? message)
         {
+            var user = db.Users.Find(User.Identity.GetUserId());
+            if (user == null)
+            {
+                return RedirectToAction("LogOff", "Account");
+            }
+
             switch (message)
             {
                 case ManageMessageId.ChangePasswordSuccess:
                     ViewBag.StatusMessage = "Your password has been changed.";
-                    ViewBag.StatusMessageClass = "text-success";
+                    break;
+                case ManageMessageId.UpdateUserInfoSuccess:
+                    ViewBag.StatusMessage = "Your user information has been changed.";
                     break;
                 case ManageMessageId.Error:
                     ViewBag.StatusMessage = "An error has occurred.";
-                    ViewBag.StatusMessageClass = "text-danger";
                     break;
                 default:
                     ViewBag.StatusMessage = "";
                     break;
             }
-            return View();
+            ViewBag.StatusMessageClass = message == ManageMessageId.Error ? "text-danger" : "text-success";
+            return View(new EditTeacherViewModel(user));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(EditTeacherViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = db.Users.Find(User.Identity.GetUserId());
+                if (user == null)
+                {
+                    return RedirectToAction("LogOff", "Account");
+                }
+                user.Update(model);
+                db.SaveChanges();
+                return RedirectToAction("Index", new {message = ManageMessageId.UpdateUserInfoSuccess});
+            }
+            return View(model);
         }
 
         //
@@ -115,13 +141,6 @@ namespace LexiconLMS.Controllers
         }
 
 #region Helpers
-        private IAuthenticationManager AuthenticationManager
-        {
-            get
-            {
-                return HttpContext.GetOwinContext().Authentication;
-            }
-        }
 
         private void AddErrors(IdentityResult result)
         {
@@ -134,6 +153,7 @@ namespace LexiconLMS.Controllers
         public enum ManageMessageId
         {
             ChangePasswordSuccess,
+            UpdateUserInfoSuccess,
             Error
         }
 
