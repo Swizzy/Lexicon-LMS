@@ -22,37 +22,41 @@ namespace LexiconLMS.Controllers
             BreadCrumb.Add("/", "Home");
             if (module != null)
             {
-                BreadCrumb.Add(Url.Action("Index", "Modules", new { courseId = module.CourseId}), module.Course.Name);
-                BreadCrumb.Add(Url.Action("Index", "Activities", new {moduleId = module.Id}), module.Name);
+                if (User.IsInRole("Teacher"))
+                {
+                    BreadCrumb.Add(Url.Action("Index", "Modules", new {courseId = module.CourseId}), module.Course.Name);
+                    BreadCrumb.Add(Url.Action("Index", "Activities", new {moduleId = module.Id}), module.Name);
+                }
+                else
+                {
+                    BreadCrumb.Add(Url.Action("Details", "Courses"), module.Course.Name);
+                    BreadCrumb.Add(Url.Action("Details", "Modules", new { id = module.Id }), module.Name);
+                }
             }
         }
 
         private void MakeBreadCrumbs(Activity activity)
         {
-            BreadCrumb.Clear();
-            BreadCrumb.Add("/", "Home");
-            if (activity != null)
-            {
-                BreadCrumb.Add(Url.Action("Index", "Modules", new { courseId = activity.Module.CourseId }), activity.Module.Course.Name);
-                BreadCrumb.Add(Url.Action("Index", "Activities", new { activity.Id }), activity.Name);
+            MakeBreadCrumbs(activity?.Module);
+            if (activity != null) {
+                if (User.IsInRole("Teacher"))
+                {
+                    BreadCrumb.Add(Url.Action("Index", "Activities", new { moduleId = activity.ModuleId}), activity.Name);
+                }
+                else
+                {
+                    BreadCrumb.Add(Url.Action("Details", "Activities", new { activity.Id }), activity.Name);
+                }
             }
+            
         }
 
         // GET: Activities
         public ActionResult Index(int? moduleId)
         {
-            var view = "Index";
-            if (User.IsInRole("Teacher"))
+            if (!User.IsInRole("Teacher"))
             {
-                if (moduleId == null)
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            else
-            {
-                var user = db.Users.Find(User.Identity.GetUserId());
-                if (user == null)
-                    return HttpNotFound();
-                view = "StudentIndex";
+                return RedirectToAction("Details", "Modules", new { Id = moduleId });
             }
             var module = db.Modules.FirstOrDefault(m => m.Id == moduleId);
             if (module == null)
@@ -64,7 +68,7 @@ namespace LexiconLMS.Controllers
                                           .Select(a => new ActivityViewModel(a));
             MakeBreadCrumbs(module);
 
-            return View(view, new ActivityIndexVieWModel(module, activities));
+            return View(new ActivityIndexVieWModel(module, activities));
         }
 
         // GET: Activities/Details/5
@@ -228,7 +232,7 @@ namespace LexiconLMS.Controllers
 
             BreadCrumb.Clear();
             BreadCrumb.Add("/", "Home");
-            BreadCrumb.Add(Url.Action("Index", "Activities"), "Assignments");
+            BreadCrumb.Add(Url.Action("Assignments", "Activities"), "Assignments");
 
             return View("StudentAssignments", new StudentAssignmentsViewModel(course, user));
         }
