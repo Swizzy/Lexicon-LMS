@@ -60,7 +60,7 @@ namespace LexiconLMS.Migrations
                 new Activity
                 {
                     Name = "Intro",
-                    Description = "",
+                    Description = "C# (pronounced C sharp) is a simple, modern, object-oriented, and type-safe programming language. It will immediately be familiar to C and C++ programmers. C# combines the high productivity of Rapid Application Development (RAD) languages and the raw power of C++.",
                     ModuleId = modules[0].Id,
                     ActivityTypeId = activityTypes[0].Id,
                     StartDate = DateTime.Parse("2017-01-09 08:30"),
@@ -69,7 +69,7 @@ namespace LexiconLMS.Migrations
                 new Activity
                 {
                     Name = "Grund",
-                    Description = "",
+                    Description = "Visual C# .NET is Microsoft's C# development tool. It includes an interactive development environment, visual designers for building Windows and Web applications, a compiler, and a debugger.",
                     ModuleId = modules[0].Id,
                     ActivityTypeId = activityTypes[1].Id,
                     StartDate = DateTime.Parse("2017-01-10 08:30"),
@@ -78,7 +78,7 @@ namespace LexiconLMS.Migrations
                 new Activity
                 {
                     Name = "Övning 1",
-                    Description = "",
+                    Description = "C# övning - Flöde via loopar och strängmanipulation. Resultatet av övningen skall visas för lärare och godkännas innan den kan anses vara genomförd.",
                     ModuleId = modules[0].Id,
                     ActivityTypeId = activityTypes[2].Id,
                     StartDate = DateTime.Parse("2017-01-11 08:30"),
@@ -87,7 +87,7 @@ namespace LexiconLMS.Migrations
                 new Activity
                 {
                     Name = "OOP",
-                    Description = "",
+                    Description = "Object-oriented programming (OOP) is a programming language model organized around objects rather than \"actions\" and data rather than logic.",
                     ModuleId = modules[0].Id,
                     ActivityTypeId = activityTypes[0].Id,
                     StartDate = DateTime.Parse("2017-01-12 08:30"),
@@ -96,7 +96,7 @@ namespace LexiconLMS.Migrations
                 new Activity
                 {
                     Name = "HTML",
-                    Description = "",
+                    Description = "Hypertext Markup Language (HTML) is the standard markup language for creating web pages and web applications. With Cascading Style Sheets (CSS) and JavaScript it forms a triad of cornerstone technologies for the World Wide Web.",
                     ModuleId = modules[1].Id,
                     ActivityTypeId = activityTypes[0].Id,
                     StartDate = DateTime.Parse("2017-01-13 08:30"),
@@ -105,7 +105,7 @@ namespace LexiconLMS.Migrations
                 new Activity
                 {
                     Name = "CSS",
-                    Description = "",
+                    Description = "Cascading Style Sheets, fondly referred to as CSS, is a simple design language intended to simplify the process of making web pages presentable.",
                     ModuleId = modules[2].Id,
                     ActivityTypeId = activityTypes[0].Id,
                     StartDate = DateTime.Parse("2017-01-13 13:00"),
@@ -186,7 +186,7 @@ namespace LexiconLMS.Migrations
                 new Activity
                 {
                     Name = "SQL",
-                    Description = "",
+                    Description = "SQL (Structured Query Language) is a standardized programming language used for managing relational databases and performing various operations on the data in them.",
                     ModuleId = modules[3].Id,
                     ActivityTypeId = activityTypes[1].Id,
                     StartDate = DateTime.Parse("2017-01-14 08:30"),
