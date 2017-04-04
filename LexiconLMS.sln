@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexiconLMS", "LexiconLMS\Le
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcBreadCrumbs", "MvcBreadCrumbs\MvcBreadCrumbs\MvcBreadCrumbs.csproj", "{BE48AD0B-E472-4F94-80A5-BCC1F0EBF13E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileToByteArray", "FileToByteArray\FileToByteArray.csproj", "{DCC9BC03-94CC-4DF2-9631-446CAB697F04}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{BE48AD0B-E472-4F94-80A5-BCC1F0EBF13E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE48AD0B-E472-4F94-80A5-BCC1F0EBF13E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE48AD0B-E472-4F94-80A5-BCC1F0EBF13E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCC9BC03-94CC-4DF2-9631-446CAB697F04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCC9BC03-94CC-4DF2-9631-446CAB697F04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCC9BC03-94CC-4DF2-9631-446CAB697F04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCC9BC03-94CC-4DF2-9631-446CAB697F04}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
