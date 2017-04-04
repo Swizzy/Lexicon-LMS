@@ -178,6 +178,10 @@
     <Compile Include="Migrations\201703290752493_AddDocuments.Designer.cs">
       <DependentUpon>201703290752493_AddDocuments.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201704041244527_UpdateCourseModle.cs" />
+    <Compile Include="Migrations\201704041244527_UpdateCourseModle.Designer.cs">
+      <DependentUpon>201704041244527_UpdateCourseModle.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Document.cs" />
     <Compile Include="Migrations\201703270659476_AddCourseIdToUser.cs" />
     <Compile Include="Migrations\201703270659476_AddCourseIdToUser.Designer.cs">
@@ -316,6 +320,7 @@
     <Content Include="Views\Users\EditStudent.cshtml" />
     <Content Include="Views\Modules\Index.cshtml" />
     <Content Include="Views\Courses\Details.cshtml" />
+    <Content Include="Views\Courses\Clone.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201703210849336_AddModules.resx">
@@ -335,6 +340,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703290752493_AddDocuments.resx">
       <DependentUpon>201703290752493_AddDocuments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704041244527_UpdateCourseModle.resx">
+      <DependentUpon>201704041244527_UpdateCourseModle.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

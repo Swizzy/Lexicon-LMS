@@ -13,6 +13,13 @@ namespace LexiconLMS.Models
         {
         }
 
+        public Module(Module module, int courseId)
+        {
+            CourseId = courseId;
+            Name = module.Name;
+            Description = module.Description;
+        }
+
         public Module(ModuleCreateViewModel module, int courseId)
         {
             Update(module);

@@ -23,7 +23,8 @@
         <td>@Html.DisplayFor(modelItem => item.ModulesCount)</td>
         <td>@Html.DisplayFor(modelItem => item.DocumentsCount)</td>
         <td>
-            @Html.ActionLink("Modify", "Edit", new {id = item.Id}) |
+            @Html.ActionLink("Modify", "Edit", new { id = item.Id }) |
+            @Html.ActionLink("Clone", "Clone", new { courseId = item.Id, isClone = true}) |
             @Html.ActionLink("Modules", "Index", "Modules", new {courseId = item.Id}, null) |
             @Html.ActionLink("Documents", "Index", "Documents", new { courseId = item.Id }, null) |
             @Html.ActionLink("Delete", "Delete", new { id = item.Id })

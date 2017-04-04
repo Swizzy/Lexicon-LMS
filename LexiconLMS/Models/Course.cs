@@ -12,6 +12,12 @@ namespace LexiconLMS.Models
         {
         }
 
+        public Course(Course course)
+        {
+            Name = course.Name;
+            Description = course.Description;
+        }
+
         public Course(CourseCreateViewModel course)
         {
             Update(course);
@@ -36,7 +42,7 @@ namespace LexiconLMS.Models
         public DateTime? StartDate {
             get {
                 return Activities.OrderBy(a => a.StartDate).FirstOrDefault()?.StartDate;
-            }
+            } set {;}
         }
         public DateTime? EndDate
         {
@@ -69,6 +75,13 @@ namespace LexiconLMS.Models
             Description = course.Description;
         }
 
+        public CourseCreateViewModel(Course course, DateTime startDate)
+        {
+            Name = course.Name;
+            Description = course.Description;
+            StartDate = startDate;
+        }
+
         [Required]
         [StringLength(maximumLength: 30)]
         public string Name { get; set; }
@@ -76,6 +89,8 @@ namespace LexiconLMS.Models
         [DataType(DataType.MultilineText)]
         [StringLength(maximumLength: 250)]
         public string Description { get; set; }
+
+        public DateTime StartDate { get; set; }
     }
 
     public class CourseViewModel
