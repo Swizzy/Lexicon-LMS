@@ -42,7 +42,7 @@ namespace LexiconLMS.Models
         public DateTime? StartDate {
             get {
                 return Activities.OrderBy(a => a.StartDate).FirstOrDefault()?.StartDate;
-            } set {;}
+            }
         }
         public DateTime? EndDate
         {

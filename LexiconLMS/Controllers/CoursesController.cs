@@ -170,7 +170,7 @@ namespace LexiconLMS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Teacher")]
-        public ActionResult Clone(CourseCreateViewModel course, int? courseId, DateTime startDate)
+        public ActionResult Clone(CourseCreateViewModel course, int? courseId)
         {
             if (courseId == null)
             {
@@ -178,7 +178,7 @@ namespace LexiconLMS.Controllers
             }
             // Add new cloned course
             var oldCourse = db.Courses.FirstOrDefault(c => c.Id == courseId);
-            var diff = (startDate - oldCourse.StartDate).Value.Days;
+            var diff = (course.StartDate - oldCourse.StartDate).Value.Days;
             var courseClone = new Course(oldCourse);
             courseClone.Name = course.Name;
             db.Courses.Add(courseClone);
