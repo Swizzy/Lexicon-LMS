@@ -345,6 +345,7 @@
     <Content Include="Views\Activities\StudentAssignments.cshtml" />
     <Content Include="Views\Documents\UploadAssignment.cshtml" />
     <Content Include="Views\Documents\UpdateAssignment.cshtml" />
+    <Content Include="Views\Courses\Clone.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201703210849336_AddModules.resx">

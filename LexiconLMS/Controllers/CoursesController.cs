@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using LexiconLMS.Models;
@@ -61,8 +62,10 @@ namespace LexiconLMS.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Courses.Add(new Course(course));
-                db.SaveChanges();
+                   
+                    db.Courses.Add(new Course(course));
+                    db.SaveChanges();
+                
                 return RedirectToAction("Index");
             }
 
@@ -157,6 +160,57 @@ namespace LexiconLMS.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult Clone()
+        {
+            return View();
+        }
+        // POST: Courses/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Teacher")]
+        public ActionResult Clone(CourseCreateViewModel course, int? courseId)
+        {
+            if (courseId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            // Add new cloned course
+            var oldCourse = db.Courses.FirstOrDefault(c => c.Id == courseId);
+            var diff = (course.StartDate - oldCourse.StartDate).Value.Days;
+            var courseClone = new Course(oldCourse);
+            courseClone.Name = course.Name;
+            db.Courses.Add(courseClone);
+            db.SaveChanges();
+
+            // Add cloned modules
+            var modulesClone = db.Modules.Where(m => m.CourseId == courseId)
+                                         .ToList()
+                                         .Select(m => new Module(m, courseClone.Id))
+                                         .ToArray();
+
+            var moduleIds = db.Modules.Where(m => m.CourseId == courseId)
+                                      .Select(m => m.Id)
+                                      .ToArray();
+
+            db.Modules.AddRange(modulesClone);
+            db.SaveChanges();
+
+            // Add cloned activities
+            for (int i = 0; i < moduleIds.Length; i++)
+            {
+                var id = moduleIds[i];
+                
+                var activities = db.Activities.Where(a => a.ModuleId == id)
+                                              .ToList()
+                                              .Select(a => new Activity(a, modulesClone[i].Id, diff));
+                db.Activities.AddRange(activities);
+            }
+            db.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

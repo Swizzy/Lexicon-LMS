@@ -30,7 +30,7 @@
                 else if (User.Identity.IsAuthenticated)
                 {
                     <li>@Html.ActionLink("Students", "Index", "Users")</li>
-                        <li>@Html.ActionLink("Schedule", "Index", "Modules", new { showAll = false }, null)</li>
+                    <li>@Html.ActionLink("Schedule", "Index", "Modules")</li>
                     <li>@Html.ActionLink("Assignments", "Assignments", "Activities")</li>
                 }
                 </ul>

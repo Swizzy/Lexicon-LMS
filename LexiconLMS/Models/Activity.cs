@@ -23,6 +23,17 @@ namespace LexiconLMS.Models
             ModuleId = activity.ModuleId;
         }
 
+        public Activity(Activity activity, int moduleId, int diff)
+        {
+            Name = activity.Name;
+            ActivityTypeId = activity.ActivityTypeId;
+            Description = activity.Description;
+            StartDate = activity.StartDate.AddDays(diff);
+            EndDate = activity.EndDate.AddDays(diff);
+            ModuleId = moduleId;
+
+        }
+
         public int Id { get; set; }
 
         [Required]

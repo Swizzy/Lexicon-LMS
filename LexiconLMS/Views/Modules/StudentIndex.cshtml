@@ -1,9 +1,9 @@
 ﻿@model IEnumerable<LexiconLMS.Models.ModuleIndexStudentViewModel>
 
 <h2>Course Schedule</h2>
-@if (ViewBag.showAll == true)
+@if (ViewBag.showAll)
 {
-    <p>@Html.ActionLink("Show Less", "Index", "Modules", new { showAll = false }, null)</p>
+    <p>@Html.ActionLink("Show Less", "Index", "Modules")</p>
 }
 else
 {

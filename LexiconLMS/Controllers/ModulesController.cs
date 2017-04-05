@@ -36,7 +36,7 @@ namespace LexiconLMS.Controllers
         }
 
         // GET: Modules
-        public ActionResult Index(int? courseId, bool? showAll)
+        public ActionResult Index(int? courseId, bool showAll = false)
         {
             var view = "Index";
             if (User.IsInRole("Teacher"))
@@ -68,7 +68,7 @@ namespace LexiconLMS.Controllers
                 {
                     var date = DateTime.Now;
                     ViewBag.showAll = showAll;
-                    if (showAll == true)
+                    if (showAll)
                        date = (DateTime)course.StartDate;
                     do
                     {
