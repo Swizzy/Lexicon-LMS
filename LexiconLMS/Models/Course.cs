@@ -12,9 +12,9 @@ namespace LexiconLMS.Models
         {
         }
 
-        public Course(Course course)
+        public Course(Course course, CourseCloneViewModel clone)
         {
-            Name = course.Name;
+            Name = clone.Name;
             Description = course.Description;
         }
 
@@ -44,6 +44,7 @@ namespace LexiconLMS.Models
                 return Activities.OrderBy(a => a.StartDate).FirstOrDefault()?.StartDate;
             }
         }
+
         public DateTime? EndDate
         {
             get
@@ -76,13 +77,6 @@ namespace LexiconLMS.Models
             Description = course.Description;
         }
 
-        public CourseCreateViewModel(Course course, DateTime startDate)
-        {
-            Name = course.Name;
-            Description = course.Description;
-            StartDate = startDate;
-        }
-
         [Required]
         [StringLength(maximumLength: 30)]
         public string Name { get; set; }
@@ -90,8 +84,34 @@ namespace LexiconLMS.Models
         [DataType(DataType.MultilineText)]
         [StringLength(maximumLength: 250)]
         public string Description { get; set; }
+    }
 
-        public DateTime StartDate { get; set; }
+    public class CourseCloneViewModel
+    {
+        public CourseCloneViewModel()
+        {
+        }
+
+        public CourseCloneViewModel(Course course)
+        {
+            Name = course.Name;
+            // Default to 
+            if (course.EndDate != null)
+            {
+                StartDate = course.EndDate?.AddDays(1);
+                while (StartDate?.DayOfWeek == DayOfWeek.Saturday || StartDate?.DayOfWeek == DayOfWeek.Sunday)
+                    StartDate = StartDate?.AddDays(1);
+            }
+        }
+
+        [Required]
+        [StringLength(maximumLength: 30)]
+        public string Name { get; set; }
+
+        [Required]
+        [Display(Name = "Start Date")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime? StartDate { get; set; }
     }
 
     public class CourseViewModel

@@ -160,57 +160,84 @@ namespace LexiconLMS.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult Clone()
+        public ActionResult Clone(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var course = db.Courses.Find(id);
+            if (course == null)
+            {
+                return HttpNotFound();
+            }
+            return View(new CourseCloneViewModel(course));
         }
+
         // POST: Courses/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Teacher")]
-        public ActionResult Clone(CourseCreateViewModel course, int? courseId)
+        public ActionResult Clone(int id, CourseCloneViewModel course)
         {
-            if (courseId == null)
+            if (ModelState.IsValid)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                // Find old course
+                var oldCourse = db.Courses.FirstOrDefault(c => c.Id == id);
+                if (oldCourse == null)
+                {
+                    return HttpNotFound();
+                }
+
+                // Calculate the difference between the old and new start date in days
+                var diff = (course.StartDate - oldCourse.StartDate)?.Days ?? 0;
+                if (diff > 0)
+                    diff += 1;
+
+                // Create and add the new course
+                var courseClone = new Course(oldCourse, course);
+                db.Courses.Add(courseClone);
+                // Save the DB changes to get the ID for the new course
+                db.SaveChanges();
+
+                // Fetch modules related to this course
+                var modulesClone = db.Modules.Where(m => m.CourseId == id)
+                                             .ToList()
+                                             .Select(m => new Module(m, courseClone.Id))
+                                             .ToArray();
+                // Store all the old IDs
+                var moduleIds = db.Modules.Where(m => m.CourseId == id)
+                                          .Select(m => m.Id)
+                                          .ToArray();
+
+                // Add the new modules
+                db.Modules.AddRange(modulesClone);
+                // Save the DB changes to get the IDs for the new modules
+                db.SaveChanges();
+
+                // Loop over the existing ModuleIDs
+                for (int i = 0; i < moduleIds.Length; i++)
+                {
+                    // This is required for EntityFramework, it don't support arrayindexes
+                    var moduleId = moduleIds[i];
+                    var newModuleId = modulesClone[i].Id;
+                    // Fetch all activities related to the ModuleID we're currently working on
+                    var activities = db.Activities.Where(a => a.ModuleId == moduleId)
+                                                  .ToList()
+                    // Create a new Activity with the time difference specified linked to the new module
+                                                  .Select(a => new Activity(a, newModuleId, diff));
+                    // Add the new activities
+                    db.Activities.AddRange(activities);
+                }
+                db.SaveChanges();
+
+                return RedirectToAction("Index");
             }
-            // Add new cloned course
-            var oldCourse = db.Courses.FirstOrDefault(c => c.Id == courseId);
-            var diff = (course.StartDate - oldCourse.StartDate).Value.Days;
-            var courseClone = new Course(oldCourse);
-            courseClone.Name = course.Name;
-            db.Courses.Add(courseClone);
-            db.SaveChanges();
-
-            // Add cloned modules
-            var modulesClone = db.Modules.Where(m => m.CourseId == courseId)
-                                         .ToList()
-                                         .Select(m => new Module(m, courseClone.Id))
-                                         .ToArray();
-
-            var moduleIds = db.Modules.Where(m => m.CourseId == courseId)
-                                      .Select(m => m.Id)
-                                      .ToArray();
-
-            db.Modules.AddRange(modulesClone);
-            db.SaveChanges();
-
-            // Add cloned activities
-            for (int i = 0; i < moduleIds.Length; i++)
-            {
-                var id = moduleIds[i];
-                
-                var activities = db.Activities.Where(a => a.ModuleId == id)
-                                              .ToList()
-                                              .Select(a => new Activity(a, modulesClone[i].Id, diff));
-                db.Activities.AddRange(activities);
-            }
-            db.SaveChanges();
-
-            return RedirectToAction("Index");
+            return View(course);
         }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
