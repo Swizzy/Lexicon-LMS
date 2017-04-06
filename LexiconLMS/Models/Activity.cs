@@ -111,17 +111,19 @@ namespace LexiconLMS.Models
         {
             Id = activity.Id;
             Name = activity.Name;
-            Description = activity.Description;
             StartDate = activity.StartDate;
             EndDate = activity.EndDate;
             ActivityType = activity.ActivityType.Name;
             IsAssignment = activity.ActivityType.IsAssignment;
-            DocumentsCount = activity.Documents.Count;
+        }
+
+        public ActivityViewModel(Activity activity, ApplicationUserManager userManager) : this(activity)
+        {
+            DocumentsCount = activity.Documents.Count(d => userManager.IsInRole(d.UserId, "Teacher"));
         }
 
         public int Id { get; }
         public string Name { get; }
-        public string Description { get; }
 
         [Display(Name = "Start Date")]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]

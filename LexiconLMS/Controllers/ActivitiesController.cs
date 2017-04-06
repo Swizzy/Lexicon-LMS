@@ -65,7 +65,7 @@ namespace LexiconLMS.Controllers
             var activities = db.Activities.Where(a => a.ModuleId == moduleId)
                                           .Include(a => a.ActivityType)
                                           .ToList()
-                                          .Select(a => new ActivityViewModel(a));
+                                          .Select(a => new ActivityViewModel(a, UserManager));
             MakeBreadCrumbs(module);
 
             return View(new ActivityIndexVieWModel(module, activities));
