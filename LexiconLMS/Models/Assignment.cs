@@ -76,6 +76,8 @@ namespace LexiconLMS.Models
             ModuleId = activity.ModuleId;
             ModuleName = activity.Module.Name;
             Status = activity.EndDate > DateTime.Now ? StatusValues.Pending : StatusValues.Late;
+            if (DateTime.Now < activity.EndDate && DateTime.Now > activity.StartDate)
+                IsUploadOk = true;
         }
 
         public int? DocumentId { get; }
@@ -105,7 +107,7 @@ namespace LexiconLMS.Models
         public bool HasDocument => DocumentId != null;
 
         // This is for the view, to show or not show the upload link
-        public bool IsUploadOk => Status != StatusValues.Late;
+        public bool IsUploadOk { get; }
 
         public bool IsUpdateOk { get; }
     }
