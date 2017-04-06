@@ -16,20 +16,24 @@
         </p>
         <br/>
         <h4>Activities</h4>
-        <table class="table">
-            <tr>
-                <th>@Html.DisplayNameFor(m => m.Activities.FirstOrDefault().Name)</th>
-                <th>@Html.DisplayNameFor(m => m.Activities.FirstOrDefault().StartDate)</th>
-                <th>@Html.DisplayNameFor(m => m.Activities.FirstOrDefault().EndDate)</th>
-            </tr>
-            @foreach (var activity in Model.Activities)
-            {
+        <table class="table sortable">
+            <thead>
                 <tr>
-                    <td>@Html.ActionLink(activity.Name, "Details", "Activities", new { activity.Id }, null)</td>
-                    <td>@Html.DisplayFor(m => activity.StartDate)</td>
-                    <td>@Html.DisplayFor(m => activity.EndDate)</td>
+                    <th>@Html.DisplayNameFor(m => m.Activities.FirstOrDefault().Name)</th>
+                    <th data-defaultsort="asc">@Html.DisplayNameFor(m => m.Activities.FirstOrDefault().StartDate)</th>
+                    <th>@Html.DisplayNameFor(m => m.Activities.FirstOrDefault().EndDate)</th>
                 </tr>
-            }
+            </thead>
+            <tbody>
+                @foreach (var activity in Model.Activities)
+                {
+                    <tr>
+                        <td>@Html.ActionLink(activity.Name, "Details", "Activities", new { activity.Id }, null)</td>
+                        <td>@Html.DisplayFor(m => activity.StartDate)</td>
+                        <td>@Html.DisplayFor(m => activity.EndDate)</td>
+                    </tr>
+                }
+            </tbody>
         </table>
     </div>
 
