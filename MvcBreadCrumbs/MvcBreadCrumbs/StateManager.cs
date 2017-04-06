@@ -22,7 +22,7 @@ namespace MvcBreadCrumbs
 
         public static void RemoveState(string id)
         {
-            var state = GetState(id);
+            var state = States.FirstOrDefault(x => x.SessionCookie == id);
             if (state != null)
             {
                 States.Remove(state);
