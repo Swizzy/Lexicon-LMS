@@ -5,50 +5,33 @@
 <p>
     @Html.ActionLink("Add Module", "Create", new { Model.CourseId }, null)
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Modules.FirstOrDefault().Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Modules.FirstOrDefault().StartDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Modules.FirstOrDefault().EndDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Modules.FirstOrDefault().ActivitiesCount)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Modules.FirstOrDefault().DocumentsCount)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model.Modules) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.StartDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EndDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ActivitiesCount)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DocumentsCount)
-        </td>
-        <td>
-            @Html.ActionLink("Modify", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Activities", "Index", "Activities", new { moduleId = item.Id }, null) |
-            @Html.ActionLink("Documents", "Index", "Documents", new { moduleId = item.Id }, null) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-        </td>
-    </tr>
-}
-
+<table class="table sortable">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Modules.FirstOrDefault().Name)</th>
+            <th data-defaultsort="asc">@Html.DisplayNameFor(model => model.Modules.FirstOrDefault().StartDate)</th>
+            <th>@Html.DisplayNameFor(model => model.Modules.FirstOrDefault().EndDate)</th>
+            <th>@Html.DisplayNameFor(model => model.Modules.FirstOrDefault().ActivitiesCount)</th>
+            <th>@Html.DisplayNameFor(model => model.Modules.FirstOrDefault().DocumentsCount)</th>
+            <th data-defaultsort="disabled"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Modules)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.StartDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.EndDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.ActivitiesCount)</td>
+                <td>@Html.DisplayFor(modelItem => item.DocumentsCount)</td>
+                <td>
+                    @Html.ActionLink("Modify", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Activities", "Index", "Activities", new { moduleId = item.Id }, null) |
+                    @Html.ActionLink("Documents", "Index", "Documents", new { moduleId = item.Id }, null) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>

@@ -1,57 +1,39 @@
-﻿@using System.Web.UI.HtmlControls
-@model LexiconLMS.Models.ActivityIndexVieWModel
+﻿@model LexiconLMS.Models.ActivityIndexVieWModel
 
 <h2>Activities</h2>
 <p>
-    @Html.ActionLink("Add Activity", "Create", new { Model.ModuleId }, null)
+    @Html.ActionLink("Add Activity", "Create", new {Model.ModuleId}, htmlAttributes: null)
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Activities.FirstOrDefault().Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Activities.FirstOrDefault().ActivityType)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Activities.FirstOrDefault().StartDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Activities.FirstOrDefault().EndDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Activities.FirstOrDefault().DocumentsCount)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model.Activities) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ActivityType)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.StartDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EndDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DocumentsCount)
-        </td>
-        <td>
-            @Html.ActionLink("Modify", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Documents", "Index", "Documents", new { activityId = item.Id }, null) |
-            @if (item.IsAssignment)
-            {
-                @Html.ActionLink("Assignments", "Assignments", new { item.Id })<span> | </span>
-            }
-            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-        </td>
-    </tr>
-}
-
+<table class="table sortable">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Activities.FirstOrDefault().Name)</th>
+            <th>@Html.DisplayNameFor(model => model.Activities.FirstOrDefault().ActivityType)</th>
+            <th data-defaultsort="asc">@Html.DisplayNameFor(model => model.Activities.FirstOrDefault().StartDate)</th>
+            <th>@Html.DisplayNameFor(model => model.Activities.FirstOrDefault().EndDate)</th>
+            <th>@Html.DisplayNameFor(model => model.Activities.FirstOrDefault().DocumentsCount)</th>
+            <th data-defaultsort="disabled"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Activities)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.ActivityType)</td>
+                <td>@Html.DisplayFor(modelItem => item.StartDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.EndDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.DocumentsCount)</td>
+                <td>
+                    @Html.ActionLink("Modify", "Edit", new {id = item.Id}) |
+                    @Html.ActionLink("Documents", "Index", "Documents", new {activityId = item.Id}, htmlAttributes: null) |
+                    @if (item.IsAssignment)
+                    {
+                        @Html.ActionLink("Assignments", "Assignments", new {item.Id})<span> | </span>
+                    }
+                    @Html.ActionLink("Delete", "Delete", new {id = item.Id})
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
