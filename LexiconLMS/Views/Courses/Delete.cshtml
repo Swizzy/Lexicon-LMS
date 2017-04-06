@@ -16,6 +16,12 @@
             <dd>@Html.DisplayFor(model => model.EndDate)</dd>
         }
         
+        @if (Model.HasStudents)
+        {
+            <dt>@Html.DisplayNameFor(model => model.StudentsCount)</dt>
+            <dd>@Html.DisplayFor(model => model.StudentsCount)</dd>
+        }
+
         @if (Model.HasModules)
         {
             <dt>@Html.DisplayNameFor(model => model.ModulesCount)</dt>

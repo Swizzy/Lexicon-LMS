@@ -161,6 +161,8 @@ namespace LexiconLMS.Models
 
             ActivitiesCount = course.Activities.Count();
             ActivityDocumentsCount = course.Activities.SelectMany(a => a.Documents).Count();
+
+            StudentsCount = course.Students.Count;
         }
 
         public string Name { get; }
@@ -188,10 +190,14 @@ namespace LexiconLMS.Models
         [Display(Name = "Activity Documents")]
         public int ActivityDocumentsCount { get; }
 
+        [Display(Name = "Students")]
+        public int StudentsCount { get; }
+
         public bool HasDates => StartDate != null && EndDate != null;
         public bool HasModules => ModulesCount > 0;
         public bool HasActivities => ActivitiesCount > 0;
         public bool HasDocuments => CourseDocumentsCount > 0 || ModuleDocumentsCount > 0 || ActivityDocumentsCount > 0;
+        public bool HasStudents => StudentsCount > 0;
 
         public string DeleteType
         {
@@ -209,6 +215,10 @@ namespace LexiconLMS.Models
                 if (HasDocuments)
                 {
                     types.Add("Documents");
+                }
+                if (HasStudents)
+                {
+                    types.Add("Student accounts");
                 }
 
                 var sb = new StringBuilder("Course");
