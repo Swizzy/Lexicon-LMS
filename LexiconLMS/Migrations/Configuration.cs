@@ -290,6 +290,10 @@ namespace LexiconLMS.Migrations
                         throw new Exception(string.Join("\n", result.Errors));
                     }
                 }
+                else
+                {
+                    user.Id = context.Users.First(u => u.UserName == user.UserName).Id;
+                }
             }
 
             var students = new[]
@@ -706,6 +710,10 @@ namespace LexiconLMS.Migrations
                         throw new Exception(string.Join("\n", result.Errors));
                     }
                 }
+                else
+                {
+                    user.Id = context.Users.First(u => u.UserName == user.UserName).Id;
+                }
             }
 
             var documents = new[]
@@ -786,32 +794,6 @@ namespace LexiconLMS.Migrations
                     CreateDate = DateTime.Parse("2017-01-09 08:30"),
                     CourseId = courses[0].Id,
                     ModuleId = null,
-                    ActivityId = null
-                },
-                //Excel
-                new Document {
-                    Name = "Ekipage_LA",
-                    FileName = "Ekipage_LA.xlsx",
-                    Link = null,
-                    ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                    Content = DocumentSeedData.Ekipage_LA,//System.IO.File.ReadAllBytes("C:\\Users\\User\\Desktop\\DocumentSeed\\Ekipage_LA.xlsx"),
-                    UserId = users[0].Id,
-                    CreateDate = DateTime.Parse("2017-01-09 08:30"),
-                    CourseId = null,
-                    ModuleId = modules[1].Id,
-                    ActivityId = null
-                },
-                //Excel
-                new Document {
-                    Name = "Ekipage_LA",
-                    FileName = "Ekipage_LA.xlsx",
-                    Link = null,
-                    ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                    Content = DocumentSeedData.Ekipage_LA,//System.IO.File.ReadAllBytes("C:\\Users\\User\\Desktop\\DocumentSeed\\Ekipage_LA.xlsx"),
-                    UserId = users[0].Id,
-                    CreateDate = DateTime.Parse("2017-01-09 08:30"),
-                    CourseId = null,
-                    ModuleId = modules[2].Id,
                     ActivityId = null
                 },
                 //PDF
@@ -1050,9 +1032,106 @@ namespace LexiconLMS.Migrations
                 }
             };
 
-            context.Documents.AddOrUpdate(d => d.Name, documents);
-            context.SaveChanges();
+            context.Documents.RemoveRange(context.Documents.ToArray());
+            context.Documents.AddRange(documents);
 
+            var assignments = new[]
+            {
+                //Assignment in Word
+                new Document {
+                    Name = null,
+                    FileName = "Assignment01.docx",
+                    Link = null,
+                    ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    Content = DocumentSeedData.Assignment01,//System.IO.File.ReadAllBytes("C:\\Users\\User\\Desktop\\DocumentSeed\\Assignment01.docx"),
+                    UserId = students[0].Id,
+                    CreateDate = DateTime.Parse("2017-03-30 17:22"),
+                    CourseId = null,
+                    ModuleId = null,
+                    ActivityId = activities[6].Id // 1, 7, 8, 9, 10, 11, 12, 13, 14
+                },
+                //Assignment in Word
+                new Document {
+                    Name = null,
+                    FileName = "Assignment02.docx",
+                    Link = null,
+                    ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    Content = DocumentSeedData.Assignment02,//System.IO.File.ReadAllBytes("C:\\Users\\User\\Desktop\\DocumentSeed\\Assignment02.docx"),
+                    UserId = students[3].Id,
+                    CreateDate = DateTime.Parse("2017-03-30 17:22"),
+                    CourseId = null,
+                    ModuleId = null,
+                    ActivityId = activities[6].Id // 1, 7, 8, 9, 10, 11, 12, 13, 14
+                },
+                //Assignment in Word
+                new Document {
+                    Name = null,
+                    FileName = "Assignment03.docx",
+                    Link = null,
+                    ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    Content = DocumentSeedData.Assignment03,//System.IO.File.ReadAllBytes("C:\\Users\\User\\Desktop\\DocumentSeed\\Assignment03.docx"),
+                    UserId = students[3].Id,
+                    CreateDate = DateTime.Parse("2017-03-30 17:22"),
+                    CourseId = null,
+                    ModuleId = null,
+                    ActivityId = activities[12].Id // 1, 7, 8, 9, 10, 11, 12, 13, 14
+                },
+                //Assignment in Word
+                new Document {
+                    Name = null,
+                    FileName = "Assignment04.docx",
+                    Link = null,
+                    ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    Content = DocumentSeedData.Assignment04,//System.IO.File.ReadAllBytes("C:\\Users\\User\\Desktop\\DocumentSeed\\Assignment04.docx"),
+                    UserId = students[2].Id,
+                    CreateDate = DateTime.Parse("2017-03-30 17:22"),
+                    CourseId = null,
+                    ModuleId = null,
+                    ActivityId = activities[12].Id // 1, 7, 8, 9, 10, 11, 12, 13, 14
+                },
+                //Assignment in Word
+                new Document {
+                    Name = null,
+                    FileName = "Assignment05.docx",
+                    Link = null,
+                    ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    Content = DocumentSeedData.Assignment05,//System.IO.File.ReadAllBytes("C:\\Users\\User\\Desktop\\DocumentSeed\\Assignment05.docx"),
+                    UserId = students[4].Id,
+                    CreateDate = DateTime.Parse("2017-03-30 17:22"),
+                    CourseId = null,
+                    ModuleId = null,
+                    ActivityId = activities[13].Id // 1, 7, 8, 9, 10, 11, 12, 13, 14
+                },
+                //Assignment in Word
+                new Document {
+                    Name = null,
+                    FileName = "Assignment06.docx",
+                    Link = null,
+                    ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    Content = DocumentSeedData.Assignment06,//System.IO.File.ReadAllBytes("C:\\Users\\User\\Desktop\\DocumentSeed\\Assignment06.docx"),
+                    UserId = students[5].Id,
+                    CreateDate = DateTime.Parse("2017-03-30 17:22"),
+                    CourseId = null,
+                    ModuleId = null,
+                    ActivityId = activities[13].Id // 1, 7, 8, 9, 10, 11, 12, 13, 14
+                },
+                //Assignment in Word
+                new Document {
+                    Name = null,
+                    FileName = "Assignment07.docx",
+                    Link = null,
+                    ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    Content = DocumentSeedData.Assignment07,//System.IO.File.ReadAllBytes("C:\\Users\\User\\Desktop\\DocumentSeed\\Assignment07.docx"),
+                    UserId = students[7].Id,
+                    CreateDate = DateTime.Parse("2017-03-30 17:22"),
+                    CourseId = null,
+                    ModuleId = null,
+                    ActivityId = activities[13].Id // 1, 7, 8, 9, 10, 11, 12, 13, 14
+                }
+            };
+            context.Documents.AddRange(assignments);
+            
+            context.SaveChanges();
         }
     }
 }
