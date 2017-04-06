@@ -35,6 +35,32 @@ namespace LexiconLMS.Models
             AddFile(model.Upload);
         }
 
+        private Document(Document document)
+        {
+            Name = document.Name;
+            FileName = document.FileName;
+            Link = document.Link;
+            ContentType = document.ContentType;
+            Content = document.Content;
+            UserId = document.UserId;
+            CreateDate = document.CreateDate;
+        }
+
+        public Document(Document document, Course course) : this(document)
+        {
+            CourseId = course.Id;
+        }
+
+        public Document(Document document, Module module) : this(document)
+        {
+            ModuleId = module.Id;
+        }
+
+        public Document(Document document, Activity activity) : this(document)
+        {
+            ActivityId = activity.Id;
+        }
+
         public int Id { get; set; }
         public string Name { get; set; }
 

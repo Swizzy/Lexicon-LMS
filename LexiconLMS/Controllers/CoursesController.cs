@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using System.Web;
 using System.Web.Mvc;
 using LexiconLMS.Models;
 using MvcBreadCrumbs;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace LexiconLMS.Controllers
 {
@@ -202,34 +204,52 @@ namespace LexiconLMS.Controllers
                 // Save the DB changes to get the ID for the new course
                 db.SaveChanges();
 
+                foreach (var document in oldCourse.Documents)
+                {
+                    db.Documents.Add(new Document(document, courseClone));
+                }
+
                 // Fetch modules related to this course
-                var modulesClone = db.Modules.Where(m => m.CourseId == id)
-                                             .ToList()
-                                             .Select(m => new Module(m, courseClone.Id))
-                                             .ToArray();
+                var modulesClone = oldCourse.Modules.Select(m => new Module(m, courseClone.Id)).ToArray();
                 // Store all the old IDs
-                var moduleIds = db.Modules.Where(m => m.CourseId == id)
-                                          .Select(m => m.Id)
-                                          .ToArray();
+                var oldModules = oldCourse.Modules.ToArray();
 
                 // Add the new modules
                 db.Modules.AddRange(modulesClone);
                 // Save the DB changes to get the IDs for the new modules
                 db.SaveChanges();
 
+                var userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+
                 // Loop over the existing ModuleIDs
-                for (int i = 0; i < moduleIds.Length; i++)
+                for (int i = 0; i < oldModules.Length; i++)
                 {
-                    // This is required for EntityFramework, it don't support arrayindexes
-                    var moduleId = moduleIds[i];
+                    // Add Module Documents
+                    foreach (var document in oldModules[i].Documents)
+                    {
+                        db.Documents.Add(new Document(document, modulesClone[i]));
+                    }
+
                     var newModuleId = modulesClone[i].Id;
                     // Fetch all activities related to the ModuleID we're currently working on
-                    var activities = db.Activities.Where(a => a.ModuleId == moduleId)
-                                                  .ToList()
-                    // Create a new Activity with the time difference specified linked to the new module
-                                                  .Select(a => new Activity(a, newModuleId, diff));
-                    // Add the new activities
-                    db.Activities.AddRange(activities);
+                    foreach (var activity in oldModules[i].Activities)
+                    {
+                        // Create a new Activity with the time difference specified linked to the new module
+                        var newActivity = new Activity(activity, newModuleId, diff);
+                        // Add the new activity to the database
+                        db.Activities.Add(newActivity);
+                        // Save the changes so we get the new ActivityId
+                        db.SaveChanges();
+                        // Fetch all documents associated to the previous ActivityID
+                        foreach (var document in activity.Documents)
+                        {
+                            // We are only interested in teacher uploaded documents, other documents are likely assignments
+                            if (userManager.IsInRole(document.UserId, "Teacher")) {
+                                db.Documents.Add(new Document(document, newActivity));
+                            }
+                        }
+                    }
+                    db.SaveChanges();
                 }
                 db.SaveChanges();
 
