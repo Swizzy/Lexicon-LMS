@@ -120,7 +120,7 @@ namespace LexiconLMS.Migrations
                 {
                     Name = "Final Project",
                     Description = "Final Project",
-                    ModuleId = modules[2].Id,
+                    ModuleId = modules[6].Id,
                     ActivityTypeId = activityTypes[2].Id,
                     StartDate = DateTime.Parse("2017-03-17 08:30"),
                     EndDate = DateTime.Parse("2017-04-11 17:00")
@@ -129,7 +129,7 @@ namespace LexiconLMS.Migrations
                 {
                     Name = "Final Project Sprint I Planning",
                     Description = "Final Project Sprint Planning",
-                    ModuleId = modules[2].Id,
+                    ModuleId = modules[6].Id,
                     ActivityTypeId = activityTypes[2].Id,
                     StartDate = DateTime.Parse("2017-03-17 10:00"),
                     EndDate = DateTime.Parse("2017-03-17 17:00")
@@ -138,7 +138,7 @@ namespace LexiconLMS.Migrations
                 {
                     Name = "Final Project Demo Sprint I",
                     Description = "Final Project Demo Sprint I",
-                    ModuleId = modules[2].Id,
+                    ModuleId = modules[6].Id,
                     ActivityTypeId = activityTypes[2].Id,
                     StartDate = DateTime.Parse("2017-03-24 10:00"),
                     EndDate = DateTime.Parse("2017-03-24 12:00")
@@ -147,7 +147,7 @@ namespace LexiconLMS.Migrations
                 {
                     Name = "Final Project Sprint II Planning",
                     Description = "Final Project Sprint II Planning",
-                    ModuleId = modules[2].Id,
+                    ModuleId = modules[6].Id,
                     ActivityTypeId = activityTypes[2].Id,
                     StartDate = DateTime.Parse("2017-03-24 13:00"),
                     EndDate = DateTime.Parse("2017-03-24 17:00")
@@ -156,7 +156,7 @@ namespace LexiconLMS.Migrations
                 {
                     Name = "Final Project Demo Sprint II",
                     Description = "Final Project Demo Sprint II",
-                    ModuleId = modules[2].Id,
+                    ModuleId = modules[6].Id,
                     ActivityTypeId = activityTypes[2].Id,
                     StartDate = DateTime.Parse("2017-03-31 10:00"),
                     EndDate = DateTime.Parse("2017-03-31 15:00")
@@ -165,7 +165,7 @@ namespace LexiconLMS.Migrations
                 {
                     Name = "Final Project Sprint III Planning",
                     Description = "Final Project Sprint III Planning",
-                    ModuleId = modules[2].Id,
+                    ModuleId = modules[6].Id,
                     ActivityTypeId = activityTypes[2].Id,
                     StartDate = DateTime.Parse("2017-03-31 15:00"),
                     EndDate = DateTime.Parse("2017-03-31 17:00")
@@ -174,7 +174,7 @@ namespace LexiconLMS.Migrations
                 {
                     Name = "Final Project Demo Sprint III",
                     Description = "Final Project Demo Sprint III",
-                    ModuleId = modules[2].Id,
+                    ModuleId = modules[6].Id,
                     ActivityTypeId = activityTypes[2].Id,
                     StartDate = DateTime.Parse("2017-04-07 10:00"),
                     EndDate = DateTime.Parse("2017-04-07 14:00")
@@ -183,7 +183,7 @@ namespace LexiconLMS.Migrations
                 {
                     Name = "Final Project Redovisioning",
                     Description = "Final Project Redovisioning",
-                    ModuleId = modules[2].Id,
+                    ModuleId = modules[6].Id,
                     ActivityTypeId = activityTypes[2].Id,
                     StartDate = DateTime.Parse("2017-04-11 10:00"),
                     EndDate = DateTime.Parse("2017-04-11 17:00")
