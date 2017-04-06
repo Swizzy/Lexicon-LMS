@@ -23,9 +23,9 @@
                 <td>@Html.DisplayFor(m => item.Status)</td>
                 <td>
                     @if (item.HasDocument)
-                {
-                    if (item.IsUpdateOk)
                     {
+                        if (item.IsUpdateOk)
+                        {
                             @Html.ActionLink("Update", "UpdateAssignment", "Documents", new { Id = item.DocumentId }, null)<span> | </span>
                         }
                         @Html.ActionLink("Download", "Download", "Documents", new { Id = item.DocumentId }, new { target = "_blank" })
