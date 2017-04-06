@@ -52,20 +52,18 @@ namespace LexiconLMS.Models
     public class ModuleIndexStudentViewModel
     {
 
-        public ModuleIndexStudentViewModel(DateTime timestamp, IEnumerable<ActivityScheduleViewModel> activities)
+        public ModuleIndexStudentViewModel(DateTime timestamp, IEnumerable<ActivityScheduleViewModel> activities, string modules)
         {
             Activities = activities;
             Timestamp = timestamp;
-
+            Modules = modules;
         }
 
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
-        public DateTime Timestamp { get; set; }
-
+        public DateTime Timestamp { get; }
+        public string Modules { get; }
         public IEnumerable<ActivityScheduleViewModel> Activities { get; }
         
-
-
     }
 
     public class ModuleIndexViewModel

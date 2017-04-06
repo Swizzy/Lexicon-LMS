@@ -10,33 +10,34 @@ else
     <p>@Html.ActionLink("Show All", "Index", "Modules", new { showAll = true }, null)</p>
 }
 
-<div class="panel-group" id="accordion">
-
+<div class="panel-group">
     @{int i = 0;}
     @foreach (var item in Model)
     {
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne_@i" aria-expanded="true" aria-controls="collapseOne_@i">
-                        @Html.DisplayFor(modelItem => item.Timestamp)
-                   </a>
-                </h4>
+                <a data-toggle="collapse" href="#collapse_@i">
+                    <div class="justify-content-between">
+                        <h4 class="panel-title">
+                            @Html.DisplayFor(modelItem => item.Timestamp)
+                        </h4>
+                        <h4 class="panel-title">
+                            @Html.DisplayFor(modelItem => item.Modules)
+                        </h4>
+                    </div>
+                </a>
             </div>
-            <div id="collapseOne_@i" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+            <div id="collapse_@i" class="panel-collapse collapse">
                 <div class="panel-body">
                     <ul>
                         @foreach (var activity in item.Activities)
                         {
-                            
-                            <li>@Html.DisplayFor(modelItem => activity.StartTime) :  @Html.DisplayFor(m => activity.Name)</li>
+                            <li>@Html.DisplayFor(modelItem => activity.StartTime) : @Html.ActionLink(activity.Name, "Details", "Activities", new {Id = activity.Id}, null)</li>
                         }
                     </ul>
                 </div>
             </div>
         </div>
-
-
         ++i;
     }
 </div>

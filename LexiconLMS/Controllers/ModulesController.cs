@@ -72,14 +72,19 @@ namespace LexiconLMS.Controllers
                        date = (DateTime)course.StartDate;
                     do
                     {
+                        var dayModules = new List<string>();
                         var dayActivities = new List<ActivityScheduleViewModel>();
                         foreach (var activity in activities.Where(a => a.StartDate.DayOfYear <= date.DayOfYear && date.DayOfYear <= a.EndDate.DayOfYear))
                         {
                             dayActivities.Add(new ActivityScheduleViewModel(activity));
+                            if (!dayModules.Contains(activity.Module.Name))
+                            {
+                                dayModules.Add(activity.Module.Name);
+                            }
                         }
 
                         if (dayActivities.Count != 0)
-                            data.Add(new ModuleIndexStudentViewModel(date, dayActivities));
+                            data.Add(new ModuleIndexStudentViewModel(date, dayActivities, string.Join(", ", dayModules)));
                         date = date.AddDays(1);
                         if (date.DayOfWeek == DayOfWeek.Saturday) {
                             date = date.AddDays(2);
