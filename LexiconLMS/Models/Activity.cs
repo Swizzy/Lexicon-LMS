@@ -70,13 +70,6 @@ namespace LexiconLMS.Models
         }
     }
 
-    public class ActivityType
-    {
-        public int Id { get; set; }
-        public bool IsAssignment { get; set; }
-        public string Name { get; set; }
-    }
-
     public class ActivityIndexVieWModel
     {
         public ActivityIndexVieWModel(Module module, IEnumerable<ActivityViewModel> activities)
@@ -146,6 +139,24 @@ namespace LexiconLMS.Models
 
         [Display(Name = "Assignments")]
         public string Assignments { get; set; }
+    }
+
+    public class ActivityTypeActivityViewModel
+    {
+        public ActivityTypeActivityViewModel(Activity activity)
+        {
+            Id = activity.Id;
+            Name = activity.Name;
+            ModuleId = activity.ModuleId;
+            ModuleName = activity.Module.Name;
+        }
+
+        [Display(Name = "Activity Name")]
+        public string Name { get; }
+        public int Id { get; }
+        [Display(Name = "Module Name")]
+        public string ModuleName { get; }
+        public int ModuleId { get; }
     }
 
     public class ActivityDeleteViewModel
@@ -259,4 +270,6 @@ namespace LexiconLMS.Models
         public IEnumerable<DocumentViewModel> Documents { get; }
     }
 }
+
+
 

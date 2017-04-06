@@ -1,8 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
@@ -14,7 +10,6 @@ using MvcBreadCrumbs;
 namespace LexiconLMS.Controllers
 {
     [Authorize]
-    [BreadCrumb(Clear = true, Label = "Home")]
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;

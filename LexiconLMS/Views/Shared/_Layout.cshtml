@@ -26,6 +26,7 @@
                 {
                     <li>@Html.ActionLink("Teachers List", "Index", "Users")</li>
                     <li>@Html.ActionLink("Student List", "Index", "Users", new {studentsOnly = true}, null)</li>
+                    <li>@Html.ActionLink("Manage Activity Types", "Index", "ActivityTypes")</li>
                 }
                 else if (User.Identity.IsAuthenticated)
                 {
