@@ -81,12 +81,10 @@ namespace LexiconLMS.Models
     {
         public ActivityIndexVieWModel(Module module, IEnumerable<ActivityViewModel> activities)
         {
-            ModuleName = module.Name;
             ModuleId = module.Id;
             Activities = activities;
         }
 
-        public string ModuleName { get; }
         public int ModuleId { get; }
         public IEnumerable<ActivityViewModel> Activities { get; }
     }
@@ -150,7 +148,6 @@ namespace LexiconLMS.Models
             StartDate = activity.StartDate;
             EndDate = activity.EndDate;
             ActivityType = activity.ActivityType.Name;
-            ModuleId = activity.ModuleId;
             DocumentsCount = activity.Documents.Count;
         }
 
@@ -169,8 +166,6 @@ namespace LexiconLMS.Models
 
         [Display(Name = "Activity Documents")]
         public int DocumentsCount { get; }
-
-        public int ModuleId { get; }
 
         public bool HasDocuments => DocumentsCount > 0;
 
@@ -198,7 +193,6 @@ namespace LexiconLMS.Models
         public ActivityCreateViewModel(Module module)
         {
             ModuleId = module.Id;
-            ModuleName = module.Name;
             if (StartDate == null)
                 StartDate = DateTime.Today.AddHours(value: 8);
             if (EndDate == null)
@@ -235,8 +229,6 @@ namespace LexiconLMS.Models
         [Required]
         [Display(Name = "Activity Type")]
         public int ActivityTypeId { get; set; }
-
-        public string ModuleName { get; set; }
     }
 
     public class ActivityDetailsViewModel
