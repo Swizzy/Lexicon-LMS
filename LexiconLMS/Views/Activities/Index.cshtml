@@ -12,6 +12,7 @@
             <th data-defaultsort="asc">@Html.DisplayNameFor(model => model.Activities.FirstOrDefault().StartDate)</th>
             <th>@Html.DisplayNameFor(model => model.Activities.FirstOrDefault().EndDate)</th>
             <th>@Html.DisplayNameFor(model => model.Activities.FirstOrDefault().DocumentsCount)</th>
+            <th>@Html.DisplayNameFor(model => model.Activities.FirstOrDefault().Assignments)</th>
             <th data-defaultsort="disabled"></th>
         </tr>
     </thead>
@@ -24,6 +25,7 @@
                 <td>@Html.DisplayFor(modelItem => item.StartDate)</td>
                 <td>@Html.DisplayFor(modelItem => item.EndDate)</td>
                 <td>@Html.DisplayFor(modelItem => item.DocumentsCount)</td>
+                <td>@Html.DisplayFor(modelItem => item.Assignments)</td>
                 <td>
                     @Html.ActionLink("Modify", "Edit", new {id = item.Id}) |
                     @Html.ActionLink("Documents", "Index", "Documents", new {activityId = item.Id}, htmlAttributes: null) |

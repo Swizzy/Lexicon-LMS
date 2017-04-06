@@ -118,6 +118,8 @@ namespace LexiconLMS.Models
         public ActivityViewModel(Activity activity, ApplicationUserManager userManager) : this(activity)
         {
             DocumentsCount = activity.Documents.Count(d => userManager.IsInRole(d.UserId, "Teacher"));
+            var assignments = activity.Documents.Count - DocumentsCount;
+            Assignments = $"{assignments} / {activity.Module.Course.Students.Count}";
         }
 
         public int Id { get; }
@@ -138,6 +140,9 @@ namespace LexiconLMS.Models
 
         [Display(Name = "Activity Documents")]
         public int DocumentsCount { get; }
+
+        [Display(Name = "Assignments")]
+        public string Assignments { get; set; }
     }
 
     public class ActivityDeleteViewModel
