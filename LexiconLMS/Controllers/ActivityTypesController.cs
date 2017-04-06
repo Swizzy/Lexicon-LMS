@@ -9,7 +9,7 @@ namespace LexiconLMS.Controllers
     [Authorize(Roles = "Teacher")]
     public class ActivityTypesController : Controller
     {
-        public ActivityTypesController()
+        private void MakeBreadCrumbs()
         {
             BreadCrumb.Clear();
             BreadCrumb.Add("/", "Home");
@@ -21,6 +21,7 @@ namespace LexiconLMS.Controllers
         // GET: ActivityTypes
         public ActionResult Index()
         {
+            MakeBreadCrumbs();
             return View(db.ActivityTypes.ToList().Select(at => new ActivityTypeViewModel(at)));
         }
 
@@ -33,12 +34,14 @@ namespace LexiconLMS.Controllers
             if (activityType == null)
                 return HttpNotFound();
             var activities = activityType.Activities.Select(a => new ActivityTypeActivityViewModel(a));
+            MakeBreadCrumbs();
             return View(new ActivityTypeDetailViewModel(activityType, activities));
         }
 
         // GET: ActivityTypes/Create
         public ActionResult Create()
         {
+            MakeBreadCrumbs();
             return View();
         }
 
@@ -53,7 +56,7 @@ namespace LexiconLMS.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-
+            MakeBreadCrumbs();
             return View(model);
         }
 
@@ -65,6 +68,7 @@ namespace LexiconLMS.Controllers
             var activityType = db.ActivityTypes.Find(id);
             if (activityType == null)
                 return HttpNotFound();
+            MakeBreadCrumbs();
             return View(new ActivityTypeCreateViewModel(activityType));
         }
 
@@ -82,6 +86,7 @@ namespace LexiconLMS.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            MakeBreadCrumbs();
             return View(model);
         }
 
@@ -93,6 +98,7 @@ namespace LexiconLMS.Controllers
             var activityType = db.ActivityTypes.Find(id);
             if (activityType == null)
                 return HttpNotFound();
+            MakeBreadCrumbs();
             return View(new ActivityTypeDeleteViewModel(activityType));
         }
 
