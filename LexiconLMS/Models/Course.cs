@@ -122,7 +122,9 @@ namespace LexiconLMS.Models
             Name = course.Name;
 
             ModulesCount = course.Modules.Count;
+            StudentsCount = course.Students.Count;
             DocumentsCount = course.Documents.Count;
+            ActivitiesCount = course.Activities.Count();
 
             StartDate = course.StartDate;
             EndDate = course.EndDate;
@@ -145,6 +147,12 @@ namespace LexiconLMS.Models
 
         [Display(Name = "Course Documents")]
         public int DocumentsCount { get; }
+
+        [Display(Name = "Students")]
+        public int StudentsCount { get; }
+
+        [Display(Name = "Activities")]
+        public int ActivitiesCount { get; }
     }
 
     public class CourseDeleteViewModel
