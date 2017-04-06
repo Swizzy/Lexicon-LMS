@@ -76,7 +76,7 @@ namespace LexiconLMS.Models
             ModuleId = activity.ModuleId;
             ModuleName = activity.Module.Name;
             Status = activity.EndDate > DateTime.Now ? StatusValues.Pending : StatusValues.Late;
-            if (DateTime.Now < activity.EndDate && DateTime.Now > activity.StartDate)
+            if (DateTime.Now < activity.EndDate)
                 IsUploadOk = true;
         }
 
@@ -127,7 +127,7 @@ namespace LexiconLMS.Models
 
         public void UpdateAllowPost(Activity activity)
         {
-            allowPost = activity.StartDate < DateTime.Now && activity.EndDate > DateTime.Now;
+            allowPost = activity.EndDate > DateTime.Now;
         }
 
         [Required]
