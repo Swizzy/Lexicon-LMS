@@ -42,7 +42,7 @@ namespace LexiconLMS.Models
 
         public string Name { get; }
 
-        [Display(Name = "Assignment?")]
+        [Display(Name = "Assignment")]
         public string IsAssignment { get; }
 
         [Display(Name = "Activities")]
@@ -102,7 +102,7 @@ namespace LexiconLMS.Models
 
         public string Name { get; }
 
-        [Display(Name = "Assignment?")]
+        [Display(Name = "Assignment")]
         public string IsAssignment { get; }
 
         public IEnumerable<ActivityTypeActivityViewModel> Activities { get; }
@@ -122,7 +122,7 @@ namespace LexiconLMS.Models
 
         public string Name { get; }
 
-        [Display(Name = "Assignment?")]
+        [Display(Name = "Assignment")]
         public string IsAssignment { get; }
 
         [Display(Name = "Activities")]
@@ -144,7 +144,7 @@ namespace LexiconLMS.Models
         [Required]
         public string Name { get; set; }
 
-        [Display(Name = "Assignment?")]
+        [Display(Name = "Assignment")]
         public bool IsAssignment { get; set; }
     }
 }
