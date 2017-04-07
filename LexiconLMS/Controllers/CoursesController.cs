@@ -30,7 +30,9 @@ namespace LexiconLMS.Controllers
             }
             var user = db.Users.Find(User.Identity.GetUserId());
             if (user == null)
-                return HttpNotFound();
+            {
+                return RedirectToAction("LogOff", "Account");
+            }
             return RedirectToAction("Details");
         }
 
@@ -39,7 +41,11 @@ namespace LexiconLMS.Controllers
         public ActionResult Details()
         {
             var user = db.Users.Find(User.Identity.GetUserId());
-            var course = db.Courses.Find(user?.CourseId);
+            if (user == null)
+            {
+                return RedirectToAction("LogOff", "Account");
+            }
+            var course = db.Courses.Find(user.CourseId);
             if (course == null)
             {
                 return HttpNotFound();
@@ -64,13 +70,10 @@ namespace LexiconLMS.Controllers
         {
             if (ModelState.IsValid)
             {
-                   
-                    db.Courses.Add(new Course(course));
-                    db.SaveChanges();
-                
+                db.Courses.Add(new Course(course));
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
-
             return View(course);
         }
 

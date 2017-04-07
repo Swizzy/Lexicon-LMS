@@ -97,7 +97,7 @@ namespace LexiconLMS.Controllers
 
             var module = db.Modules.Find(moduleId);
             if (module == null)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return HttpNotFound();
 
             MakeBreadCrumbs(module);
             ViewBag.ActivityTypeId = new SelectList(db.ActivityTypes, "Id", "Name");
@@ -204,6 +204,14 @@ namespace LexiconLMS.Controllers
 
         public ActionResult Assignments(int? id)
         {
+            var userId = User.Identity.GetUserId();
+
+            var user = db.Users.Find(userId);
+            if (user == null)
+            {
+                return RedirectToAction("LogOff", "Account");
+            }
+
             if (User.IsInRole("Teacher"))
             {
                 var activity = db.Activities.Find(id);
@@ -215,14 +223,6 @@ namespace LexiconLMS.Controllers
                 MakeBreadCrumbs(activity);
 
                 return View("TeacherAssignments", new TeacherAssignmentsViewModel(activity, UserManager));
-            }
-
-            var userId = User.Identity.GetUserId();
-
-            var user = db.Users.Find(userId);
-            if (user == null)
-            {
-                return RedirectToAction("LogOff", "Account");
             }
             var course = db.Courses.Find(user.CourseId);
             if (course == null)

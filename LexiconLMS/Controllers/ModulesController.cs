@@ -48,14 +48,14 @@ namespace LexiconLMS.Controllers
             {
                 var user = db.Users.Find(User.Identity.GetUserId());
                 if (user == null)
-                    return HttpNotFound();
+                    return RedirectToAction("LogOff", "Account");
                 courseId = user.CourseId;
                 view = "StudentIndex";
             }
 
             var course = db.Courses.FirstOrDefault(c => c.Id == courseId);
             if (course == null)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return HttpNotFound();
             var dbmodules = db.Modules.Where(m => m.CourseId == courseId).ToList();
             var modules = dbmodules.Select(m => new ModuleViewModel(m));
 

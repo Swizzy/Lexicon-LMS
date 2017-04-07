@@ -69,7 +69,7 @@ namespace LexiconLMS.Controllers
                 }
             }
             if (users == null)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("LogOff", "Account");
             return View(view, users.Select(u => new UserViewModel(u, false, u.Id != User.Identity.GetUserId())));
         }
 
@@ -256,7 +256,9 @@ namespace LexiconLMS.Controllers
         public ActionResult Delete(string id)
         {
             var cuser = db.Users.Find(User.Identity.GetUserId());
-            if (cuser == null || id == cuser.Id)
+            if (cuser == null)
+                return RedirectToAction("LogOff", "Account");
+            if (id == cuser.Id)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             var user = db.Users.Find(id);
             if (user == null)
@@ -273,7 +275,9 @@ namespace LexiconLMS.Controllers
         public ActionResult DeleteConfirmed(string id)
         {
             var cuser = db.Users.Find(User.Identity.GetUserId());
-            if (cuser == null || id == cuser.Id)
+            if (cuser == null)
+                return RedirectToAction("LogOff", "Account");
+            if (id == cuser.Id)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             var isTeacher = UserManager.IsInRole(id, "Teacher");
             var user = UserManager.FindById(id);
