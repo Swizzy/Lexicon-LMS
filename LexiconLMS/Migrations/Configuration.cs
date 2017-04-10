@@ -4,6 +4,7 @@ using System.Linq;
 using LexiconLMS.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Text;
 
 namespace LexiconLMS.Migrations
 {
@@ -15,32 +16,40 @@ namespace LexiconLMS.Migrations
             ContextKey = "ApplicationDbContext";
         }
 
+        private string RandomPhoneNumber(Random random)
+        {
+            var sb = new StringBuilder();
+            for (int i = 0; i < 7; i++)
+                sb.Append(random.Next(0, 9));
+            return sb.ToString();
+        }
+
         protected override void Seed(ApplicationDbContext context)
         {
             var courses = new[]
             {
-                new Course {Name = ".NET Vår 2017", Description = ""},
-                new Course {Name = "Java Höst 2017", Description = ""}
+                new Course {Name = ".NET Vår 2017", Description = "The .NET framework helps you create mobile, desktop, and web applications that run on Windows PCs, devices and servers"},
+                new Course {Name = "Java Höst 2017", Description = "Java is a widely used programming language expressly designed for use in the distributed environment of the internet"}
             };
             context.Courses.AddOrUpdate(c => c.Name, courses);
             context.SaveChanges();
 
             var modules = new[]
             {
-                new Module {Name = "C#", Description = ".NET", CourseId = courses[0].Id},
-                new Module {Name = "Webb", Description = "Webbutveckling", CourseId = courses[0].Id},
-                new Module {Name = "MVC", Description = "ASP.NET", CourseId = courses[0].Id},
-                new Module {Name = "Databas", Description = "SQL", CourseId = courses[0].Id},
-                new Module {Name = "Testning", Description = "Test och ledning", CourseId = courses[0].Id},
-                new Module {Name = "App.Utv.", Description = "Applikationsutveckling", CourseId = courses[0].Id},
-                new Module {Name = "MVC fördj", Description = "MVC fördjupning", CourseId = courses[0].Id},
-                new Module {Name = "Java", Description = "Java Enterprice", CourseId = courses[1].Id},
-                new Module {Name = "Java II", Description = "Java Enterprice Final Project", CourseId = courses[1].Id},
-                new Module {Name = "Database", Description = "Database Management", CourseId = courses[1].Id},
-                new Module {Name = "Cert", Description = "Certification Training", CourseId = courses[1].Id},
-                new Module {Name = "Testning", Description = "Test och ledning", CourseId = courses[1].Id},
-                new Module {Name = "Java adv", Description = "Java Advanced", CourseId = courses[1].Id},
-                new Module {Name = "Java fund", Description = "Java Fundamentals", CourseId = courses[1].Id}
+                new Module {Name = "C#", Description = "C# is an elegant and type-safe object-oriented language that enables developers to build a variety of secure and robust applications that run on the .NET Framework", CourseId = courses[0].Id},
+                new Module {Name = "Webb", Description = "Build beautiful, interactive websites by learning the fundamentals of HTML, CSS, and JavaScript — three common coding languages on which all modern websites are built", CourseId = courses[0].Id},
+                new Module {Name = "MVC", Description = "The Model-View-Controller (MVC) architectural pattern separates an application into three main components: the model, the view, and the controller", CourseId = courses[0].Id},
+                new Module {Name = "Database", Description = "SQL (Structured Query Language) is a standardized programming language used for managing relational databases and performing various operations on the data in them", CourseId = courses[0].Id},
+                new Module {Name = "Testing", Description = "ISTQB are responsible for developing and maintaining the various software testing syllabi and exams", CourseId = courses[0].Id},
+                new Module {Name = "App.Utv.", Description = "Mobile application development is the set of processes and procedures involved in writing software for small, wireless computing devices such as smartphones or tablets", CourseId = courses[0].Id},
+                new Module {Name = "MVC fördj", Description = "The ASP.NET MVC framework is a lightweight, highly testable presentation framework that (as with Web Forms-based applications) is integrated with existing ASP.NET features, such as master pages and membership-based authentication", CourseId = courses[0].Id},
+                new Module {Name = "Java", Description = "Java Platform, Enterprise Edition or Java EE is a widely used computing platform for development and deployment of enterprise software", CourseId = courses[1].Id},
+                new Module {Name = "Java II", Description = "This course extends the basic concepts learnt in Java I and is taught along similar lines.  Topics covered include exception handlers using try, catch and finally blocks, introduction to inheritance, interfaces, abstract and final classes", CourseId = courses[1].Id},
+                new Module {Name = "Database", Description = "SQL (Structured Query Language) is a standardized programming language used for managing relational databases and performing various operations on the data in them", CourseId = courses[1].Id},
+                new Module {Name = "Cert", Description = "The Foundation Level exam tests for knowledge, not skill. It provides information about the certificate holder’s level of familiarity with the most common concepts of software testing and the associated terminology", CourseId = courses[1].Id},
+                new Module {Name = "Testing", Description = "ISTQB are responsible for developing and maintaining the various software testing syllabi and exams", CourseId = courses[1].Id},
+                new Module {Name = "Java adv", Description = "Introduction to event handling, the MouseListener interface and the MouseAdapter class, use of the FlowLayout, BorderLayout, GridLayout and GridBagLayout layout managers with both the Abstract Windowing ", CourseId = courses[1].Id},
+                new Module {Name = "Java fund", Description = "Toolkit (AWT) and the Swing Toolkit, using dialog windows with applications with more than one frame, adding components to the graphical frame. Assessed work will include the creation of a number of applications with a graphical user interface (GUI)", CourseId = courses[1].Id}
             };
             context.Modules.AddOrUpdate(m => new {m.Name, m.CourseId}, modules);
             context.SaveChanges();
@@ -201,7 +210,7 @@ namespace LexiconLMS.Migrations
                 new Activity
                 {
                     Name = "ISTQB",
-                    Description = "",
+                    Description = "ISTQB revamps product portfolio and releases roadmap",
                     ModuleId = modules[4].Id,
                     ActivityTypeId = activityTypes[0].Id,
                     StartDate = DateTime.Parse("2017-01-15 08:30"),
@@ -210,7 +219,7 @@ namespace LexiconLMS.Migrations
                 new Activity
                 {
                     Name = "AngularJS",
-                    Description = "",
+                    Description = "AngularJS is a JavaScript framework. It can be added to an HTML page with a script tag",
                     ModuleId = modules[5].Id,
                     ActivityTypeId = activityTypes[0].Id,
                     StartDate = DateTime.Parse("2017-01-18 08:30"),
@@ -219,7 +228,8 @@ namespace LexiconLMS.Migrations
                 new Activity
                 {
                     Name = "Intro",
-                    Description = "",
+                    Description =
+                        "C# (pronounced C sharp) is a simple, modern, object-oriented, and type-safe programming language. It will immediately be familiar to C and C++ programmers. C# combines the high productivity of Rapid Application Development (RAD) languages and the raw power of C++.",
                     ModuleId = modules[7].Id,
                     ActivityTypeId = activityTypes[0].Id,
                     StartDate = DateTime.Parse("2017-08-18 08:30"),
@@ -228,7 +238,8 @@ namespace LexiconLMS.Migrations
                 new Activity
                 {
                     Name = "Grund",
-                    Description = "",
+                    Description =
+                        "Visual C# .NET is Microsoft's C# development tool. It includes an interactive development environment, visual designers for building Windows and Web applications, a compiler, and a debugger.",
                     ModuleId = modules[7].Id,
                     ActivityTypeId = activityTypes[0].Id,
                     StartDate = DateTime.Parse("2017-08-18 08:30"),
@@ -237,7 +248,8 @@ namespace LexiconLMS.Migrations
                 new Activity
                 {
                     Name = "OOP",
-                    Description = "",
+                    Description =
+                        "Object-oriented programming (OOP) is a programming language model organized around objects rather than \"actions\" and data rather than logic.",
                     ModuleId = modules[7].Id,
                     ActivityTypeId = activityTypes[0].Id,
                     StartDate = DateTime.Parse("2017-08-18 08:30"),
@@ -296,6 +308,8 @@ namespace LexiconLMS.Migrations
                 }
             }
 
+            var random = new Random();
+
             var students = new[]
             {
                 new ApplicationUser
@@ -304,7 +318,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Brodérus",
                     Email = "lukas.broderus@gmail.com",
                     UserName = "lukas.broderus@gmail.com",
-                    CourseId = courses[0].Id
+                    CourseId = courses[0].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -312,7 +327,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Eriksson",
                     Email = "olle.eriksson@gmail.com",
                     UserName = "olle.eriksson@gmail.com",
-                    CourseId = courses[0].Id
+                    CourseId = courses[0].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -320,7 +336,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Esping",
                     Email = "alexander.esping@gmail.com",
                     UserName = "alexander.esping@gmail.com",
-                    CourseId = courses[0].Id
+                    CourseId = courses[0].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -328,7 +345,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Ewing",
                     Email = "gustav.ewing@gmail.com",
                     UserName = "gustav.ewing@gmail.com",
-                    CourseId = courses[0].Id
+                    CourseId = courses[0].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -336,7 +354,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Gustafsson",
                     Email = "alva.gustafsson@gmail.com",
                     UserName = "alva.gustafsson@gmail.com",
-                    CourseId = courses[0].Id
+                    CourseId = courses[0].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -344,7 +363,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Haglén",
                     Email = "filip.haglen@gmail.com",
                     UserName = "filip.haglen@gmail.com",
-                    CourseId = courses[0].Id
+                    CourseId = courses[0].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -352,7 +372,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Hultgren",
                     Email = "oliver.hultgren@gmail.com",
                     UserName = "oliver.hultgren@gmail.com",
-                    CourseId = courses[0].Id
+                    CourseId = courses[0].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -360,7 +381,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Nichols Jutterdal",
                     Email = "ellinor.nichols.jutterdal@gmail.com",
                     UserName = "ellinor.nichols.jutterdal@gmail.com",
-                    CourseId = courses[0].Id
+                    CourseId = courses[0].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -368,7 +390,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Linder",
                     Email = "agust.linder@gmail.com",
                     UserName = "agust.linder@gmail.com",
-                    CourseId = courses[0].Id
+                    CourseId = courses[0].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -376,7 +399,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Lipka",
                     Email = "samuel.lipka@gmail.com",
                     UserName = "samuel.lipka@gmail.com",
-                    CourseId = courses[0].Id
+                    CourseId = courses[0].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -384,7 +408,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Lund",
                     Email = "malin.lund@gmail.com",
                     UserName = "malin.lund@gmail.com",
-                    CourseId = courses[0].Id
+                    CourseId = courses[0].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -392,7 +417,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Nilsson",
                     Email = "anton.nilsson@gmail.com",
                     UserName = "anton.nilsson@gmail.com",
-                    CourseId = courses[0].Id
+                    CourseId = courses[0].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -400,7 +426,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Olsson",
                     Email = "ida.olsson@gmail.com",
                     UserName = "ida.olsson@gmail.com",
-                    CourseId = courses[0].Id
+                    CourseId = courses[0].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -408,7 +435,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Pettersson Esping",
                     Email = "otilia.pettersson.esping@gmail.com",
                     UserName = "otilia.pettersson.esping@gmail.com",
-                    CourseId = courses[0].Id
+                    CourseId = courses[0].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -416,7 +444,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Pettersson",
                     Email = "rasmus.pettersson@gmail.com",
                     UserName = "rasmus.pettersson@gmail.com",
-                    CourseId = courses[0].Id
+                    CourseId = courses[0].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -424,7 +453,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Rosell",
                     Email = "esther.rosell@gmail.com",
                     UserName = "esther.rosell@gmail.com",
-                    CourseId = courses[0].Id
+                    CourseId = courses[0].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -432,7 +462,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Rydell",
                     Email = "frida.rydell@gmail.com",
                     UserName = "frida.rydell@gmail.com",
-                    CourseId = courses[0].Id
+                    CourseId = courses[0].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -440,7 +471,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Shahin",
                     Email = "houriya.shahin@gmail.com",
                     UserName = "houriya.shahin@gmail.com",
-                    CourseId = courses[0].Id
+                    CourseId = courses[0].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -448,7 +480,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Sjöholm",
                     Email = "gabriella.sjoholm@gmail.com",
                     UserName = "gabriella.sjoholm@gmail.com",
-                    CourseId = courses[0].Id
+                    CourseId = courses[0].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -456,7 +489,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Törn",
                     Email = "elin.torn@gmail.com",
                     UserName = "elin.torn@gmail.com",
-                    CourseId = courses[0].Id
+                    CourseId = courses[0].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -464,7 +498,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Wernetorp Sjölin",
                     Email = "edina.wernetorp.sjolin@gmail.com",
                     UserName = "edina.wernetorp.sjolin@gmail.com",
-                    CourseId = courses[0].Id
+                    CourseId = courses[0].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -472,7 +507,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Wiberg",
                     Email = "emelinn.wiberg@gmail.com",
                     UserName = "emelinn.wiberg@gmail.com",
-                    CourseId = courses[0].Id
+                    CourseId = courses[0].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -480,7 +516,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Wärnström",
                     Email = "william.warnstrom@gmail.com",
                     UserName = "william.warnstrom@gmail.com",
-                    CourseId = courses[0].Id
+                    CourseId = courses[0].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -488,7 +525,8 @@ namespace LexiconLMS.Migrations
                     FirstName = "Vendela",
                     Email = "vendela.adolfsson@gmail.com",
                     UserName = "vendela.adolfsson@gmail.com",
-                    CourseId = courses[1].Id
+                    CourseId = courses[1].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -496,7 +534,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Al Deek",
                     Email = "mohammed.baraa.al.deek@gmail.com",
                     UserName = "mohammed.baraa.al.deek@gmail.com",
-                    CourseId = courses[1].Id
+                    CourseId = courses[1].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -504,7 +543,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Allvin",
                     Email = "maja.allvin@gmail.com",
                     UserName = "maja.allvin@gmail.com",
-                    CourseId = courses[1].Id
+                    CourseId = courses[1].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -512,7 +552,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Backheden",
                     Email = "leo.backheden@gmail.com",
                     UserName = "leo.backheden@gmail.com",
-                    CourseId = courses[1].Id
+                    CourseId = courses[1].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -520,7 +561,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Chewell Ståhl",
                     Email = "rebecca.chewell.stahl@gmail.com",
                     UserName = "rebecca.chewell.stahl@gmail.com",
-                    CourseId = courses[1].Id
+                    CourseId = courses[1].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -528,7 +570,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Dahlman",
                     Email = "elinor.dahlman@gmail.com",
                     UserName = "elinor.dahlman@gmail.com",
-                    CourseId = courses[1].Id
+                    CourseId = courses[1].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -536,7 +579,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Green",
                     Email = "isac.green@gmail.com",
                     UserName = "isac.green@gmail.com",
-                    CourseId = courses[1].Id
+                    CourseId = courses[1].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -544,7 +588,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Gustafsson",
                     Email = "albin.gustafsson@gmail.com",
                     UserName = "albin.gustafsson@gmail.com",
-                    CourseId = courses[1].Id
+                    CourseId = courses[1].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -552,7 +597,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Gustafsson",
                     Email = "kim.gustafsson@gmail.com",
                     UserName = "kim.gustafsson@gmail.com",
-                    CourseId = courses[1].Id
+                    CourseId = courses[1].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -560,7 +606,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Hasan",
                     Email = "fatema.hasan@gmail.com",
                     UserName = "fatema.hasan@gmail.com",
-                    CourseId = courses[1].Id
+                    CourseId = courses[1].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -568,7 +615,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Hedberg Eriksson",
                     Email = "felicia.hedberg.eriksson@gmail.com",
                     UserName = "felicia.hedberg.eriksson@gmail.com",
-                    CourseId = courses[1].Id
+                    CourseId = courses[1].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -576,7 +624,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Henriksson",
                     Email = "elin.henriksson@gmail.com",
                     UserName = "elin.henriksson@gmail.com",
-                    CourseId = courses[1].Id
+                    CourseId = courses[1].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -584,7 +633,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Henriksson",
                     Email = "elvira.henriksson@gmail.com",
                     UserName = "elvira.henriksson@gmail.com",
-                    CourseId = courses[1].Id
+                    CourseId = courses[1].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -592,7 +642,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Karlsson",
                     Email = "sebastian.karlsson@gmail.com",
                     UserName = "sebastian.karlsson@gmail.com",
-                    CourseId = courses[1].Id
+                    CourseId = courses[1].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -600,7 +651,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Kus",
                     Email = "sara.kus@gmail.com",
                     UserName = "sara.kus@gmail.com",
-                    CourseId = courses[1].Id
+                    CourseId = courses[1].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -608,7 +660,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Linder",
                     Email = "oskar.linder@gmail.com",
                     UserName = "oskar.linder@gmail.com",
-                    CourseId = courses[1].Id
+                    CourseId = courses[1].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -616,7 +669,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Mohsini",
                     Email = "joshan.mohsini@gmail.com",
                     UserName = "joshan.mohsini@gmail.com",
-                    CourseId = courses[1].Id
+                    CourseId = courses[1].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -624,7 +678,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Nilsson",
                     Email = "joel.nilsson@gmail.com",
                     UserName = "joel.nilsson@gmail.com",
-                    CourseId = courses[1].Id
+                    CourseId = courses[1].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -632,7 +687,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Nilsson",
                     Email = "linus.nilsson@gmail.com",
                     UserName = "linus.nilsson@gmail.com",
-                    CourseId = courses[1].Id
+                    CourseId = courses[1].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -640,7 +696,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Norberg",
                     Email = "isabelle.norberg@gmail.com",
                     UserName = "isabelle.norberg@gmail.com",
-                    CourseId = courses[1].Id
+                    CourseId = courses[1].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -648,7 +705,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Shahini",
                     Email = "taunita.shahini@gmail.com",
                     UserName = "taunita.shahini@gmail.com",
-                    CourseId = courses[1].Id
+                    CourseId = courses[1].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -656,7 +714,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Shanab",
                     Email = "abdul.hakim.shanab@gmail.com",
                     UserName = "abdul.hakim.shanab@gmail.com",
-                    CourseId = courses[1].Id
+                    CourseId = courses[1].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -664,7 +723,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Storm",
                     Email = "joakim.storm@gmail.com",
                     UserName = "joakim.storm@gmail.com",
-                    CourseId = courses[1].Id
+                    CourseId = courses[1].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -672,7 +732,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Svensson",
                     Email = "viktor.svensson@gmail.com",
                     UserName = "viktor.svensson@gmail.com",
-                    CourseId = courses[1].Id
+                    CourseId = courses[1].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -680,7 +741,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Taha",
                     Email = "abdulrahman.taha@gmail.com",
                     UserName = "abdulrahman.taha@gmail.com",
-                    CourseId = courses[1].Id
+                    CourseId = courses[1].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -688,7 +750,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Thorén",
                     Email = "pontus.thoren@gmail.com",
                     UserName = "pontus.thoren@gmail.com",
-                    CourseId = courses[1].Id
+                    CourseId = courses[1].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 },
                 new ApplicationUser
                 {
@@ -696,7 +759,8 @@ namespace LexiconLMS.Migrations
                     LastName = "Vigren",
                     Email = "anton.vigren@gmail.com",
                     UserName = "anton.vigren@gmail.com",
-                    CourseId = courses[1].Id
+                    CourseId = courses[1].Id,
+                    PhoneNumber = "070-" + RandomPhoneNumber(random)
                 }
             };
 
@@ -716,11 +780,11 @@ namespace LexiconLMS.Migrations
 
             var documents = new[]
             {
-                //Word
+                //Word .NET course document
                 new Document
                 {
-                    Name = "Dressyr_LA",
-                    FileName = "Dressyr_LA.docx",
+                    Name = "Getting started with Visual Studio",
+                    FileName = "Getting started with Visual Studio.docx",
                     Link = null,
                     ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                     Content = DocumentSeedData.Dressyr_LA,
@@ -731,11 +795,11 @@ namespace LexiconLMS.Migrations
                     ModuleId = null,
                     ActivityId = null
                 },
-                //Word
+                //Word .NET course document
                 new Document
                 {
-                    Name = "Dressyr_LB",
-                    FileName = "Dressyr_LB.docx",
+                    Name = "Building a C# application",
+                    FileName = "Building a C# application.docx",
                     Link = null,
                     ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                     Content = DocumentSeedData.Dressyr_LB,
@@ -749,8 +813,8 @@ namespace LexiconLMS.Migrations
                 //Word
                 new Document
                 {
-                    Name = "Dressyr_LC",
-                    FileName = "Dressyr_LC.docx",
+                    Name = "Developer's Best Practices",
+                    FileName = "Developer's Best Practices.docx",
                     Link = null,
                     ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                     Content = DocumentSeedData.Dressyr_LC,
@@ -764,8 +828,8 @@ namespace LexiconLMS.Migrations
                 //Word
                 new Document
                 {
-                    Name = "Dressyr_msv",
-                    FileName = "Dressyr_msv.docx",
+                    Name = "Building a C# class library",
+                    FileName = "Building a C# class library.docx",
                     Link = null,
                     ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                     Content = DocumentSeedData.Dressyr_msv,
@@ -776,11 +840,11 @@ namespace LexiconLMS.Migrations
                     ModuleId = null,
                     ActivityId = activities[0].Id
                 },
-                //Excel
+                //Excel .NET course document
                 new Document
                 {
-                    Name = "Ekipage_LA",
-                    FileName = "Ekipage_LA.xlsx",
+                    Name = "Learn about GitHub",
+                    FileName = "Learn about GitHub.xlsx",
                     Link = null,
                     ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                     Content = DocumentSeedData.Ekipage_LA,
@@ -791,11 +855,11 @@ namespace LexiconLMS.Migrations
                     ModuleId = null,
                     ActivityId = null
                 },
-                //Excel
+                //Excel .NET course document
                 new Document
                 {
-                    Name = "Ekipage_LB",
-                    FileName = "Ekipage_LB.xlsx",
+                    Name = ".NET tooling and common infrastructure",
+                    FileName = ".NET tooling and common infrastructure.xlsx",
                     Link = null,
                     ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                     Content = DocumentSeedData.Ekipage_LB,
@@ -854,12 +918,11 @@ namespace LexiconLMS.Migrations
                 //PDF
                 new Document
                 {
-                    Name = "Övning 5",
-                    FileName = "Övning 5 - Garage 1.pdf",
+                    Name = "Övning 3",
+                    FileName = "Övning 3 - Inkapsling arv och polymorfism.pdf",
                     Link = null,
                     ContentType = "application/pdf",
-                    Content = DocumentSeedData._vning_5___Garage_1,
-                    //System.IO.File.ReadAllBytes("C:\\Users\\User\\Desktop\\DocumentSeed\\Övning 5 - Garage 1.pdf"),
+                    Content = DocumentSeedData._vning_3_C____Inkapsling__arv_och_polymorfism__2_,
                     UserId = users[0].Id,
                     CreateDate = DateTime.Parse("2017-01-09 08:30"),
                     CourseId = null,
@@ -899,9 +962,9 @@ namespace LexiconLMS.Migrations
                 //Link
                 new Document
                 {
-                    Name = "DN",
+                    Name = "Java Tutorial",
                     FileName = null,
-                    Link = "http://www.dn.se/",
+                    Link = "https://www.tutorialspoint.com/java/",
                     ContentType = null,
                     Content = null,
                     UserId = users[0].Id,
@@ -913,9 +976,9 @@ namespace LexiconLMS.Migrations
                 //Link
                 new Document
                 {
-                    Name = "Marathon",
+                    Name = "Java SE Documentation - Tutorials - Oracle",
                     FileName = null,
-                    Link = "http://www.marathon.se/",
+                    Link = "http://www.oracle.com/technetwork/java/javase/documentation/tutorials-jsp-138802.html",
                     ContentType = null,
                     Content = null,
                     UserId = users[0].Id,
@@ -927,9 +990,9 @@ namespace LexiconLMS.Migrations
                 //Link
                 new Document
                 {
-                    Name = "C# Fundamentals",
+                    Name = "Visual Studio Download",
                     FileName = null,
-                    Link = "https://app.pluralsight.com/library/courses/c-sharp-fundamentals-with-visual-studio-2015",
+                    Link = "https://www.visualstudio.com/downloads/",
                     ContentType = null,
                     Content = null,
                     UserId = users[0].Id,
@@ -941,9 +1004,9 @@ namespace LexiconLMS.Migrations
                 //Link
                 new Document
                 {
-                    Name = "C# Best Practices",
+                    Name = "Building Applications with ASP.NET MVC 4",
                     FileName = null,
-                    Link = "https://app.pluralsight.com/library/courses/csharp-best-practices-collections-generics",
+                    Link = "https://app.pluralsight.com/library/courses/mvc4-building",
                     ContentType = null,
                     Content = null,
                     UserId = users[0].Id,
@@ -955,9 +1018,9 @@ namespace LexiconLMS.Migrations
                 //Link
                 new Document
                 {
-                    Name = "C# Generics",
+                    Name = "Practical HTML5",
                     FileName = null,
-                    Link = "https://app.pluralsight.com/library/courses/csharp-generics",
+                    Link = "https://app.pluralsight.com/library/courses/practical-html5",
                     ContentType = null,
                     Content = null,
                     UserId = users[0].Id,
@@ -966,7 +1029,7 @@ namespace LexiconLMS.Migrations
                     ModuleId = modules[3].Id,
                     ActivityId = null
                 },
-                //Link
+                //Link WEBB
                 new Document
                 {
                     Name = "WEBB Front - end",
@@ -980,12 +1043,12 @@ namespace LexiconLMS.Migrations
                     ModuleId = modules[3].Id,
                     ActivityId = null
                 },
-                //Link
+                //Link Testning
                 new Document
                 {
-                    Name = "WEBB JavaScript",
+                    Name = "A Journey to Automated Testing in ASP.NET MVC",
                     FileName = null,
-                    Link = "https://app.pluralsight.com/library/courses/jscript-fundamentals",
+                    Link = "https://www.pluralsight.com/courses/confident-coding-automated-testing-aspdotnet-mvc",
                     ContentType = null,
                     Content = null,
                     UserId = users[0].Id,
