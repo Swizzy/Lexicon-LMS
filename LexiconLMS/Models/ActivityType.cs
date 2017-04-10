@@ -116,6 +116,7 @@ namespace LexiconLMS.Models
             Name = activityType.Name;
             IsAssignment = activityType.IsAssignment ? "Yes" : "No";
             ActivitiesCount = activityType.Activities.Count;
+            CanBeModified = activityType.Activities.Count == 0;
         }
 
         public int Id { get; }
@@ -127,6 +128,8 @@ namespace LexiconLMS.Models
 
         [Display(Name = "Activities")]
         public int ActivitiesCount { get; }
+
+        public bool CanBeModified { get; }
     }
 
     public class ActivityTypeCreateViewModel
@@ -146,5 +149,19 @@ namespace LexiconLMS.Models
 
         [Display(Name = "Assignment")]
         public bool IsAssignment { get; set; }
+    }
+
+    public class ActivityTypeEditViewModel : ActivityTypeCreateViewModel
+    {
+        public ActivityTypeEditViewModel()
+        {
+        }
+
+        public ActivityTypeEditViewModel(ActivityType activityType) : base(activityType)
+        {
+            DisabledString = activityType.Activities.Count == 0 ? "" : "disabled";
+        }
+
+        public string DisabledString { get; }
     }
 }

@@ -22,9 +22,12 @@
                 <td>@Html.DisplayFor(modelItem => item.IsAssignment)</td>
                 <td>@Html.DisplayFor(modelItem => item.ActivitiesCount)</td>
                 <td>
-                    @Html.ActionLink("Modify", "Edit", new { id = item.Id }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    @if (item.CanBeModified)
+                    {
+                        @Html.ActionLink("Modify", "Edit", new { id = item.Id }) <span> | </span>
+                    }
+                    @Html.ActionLink("Details", "Details", new {id = item.Id}) |
+                    @Html.ActionLink("Delete", "Delete", new {id = item.Id})
                 </td>
             </tr>
         }

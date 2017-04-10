@@ -69,19 +69,31 @@ namespace LexiconLMS.Controllers
             if (activityType == null)
                 return HttpNotFound();
             MakeBreadCrumbs();
-            return View(new ActivityTypeCreateViewModel(activityType));
+            if (activityType.Activities.Count != 0)
+            {
+                ModelState.AddModelError("", "You cannot modify an activity type that is currently in use");
+            }
+            return View(new ActivityTypeEditViewModel(activityType));
         }
 
         // POST: ActivityTypes/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int? id, ActivityTypeCreateViewModel model)
+        public ActionResult Edit(int? id, ActivityTypeEditViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var activityType = db.ActivityTypes.Find(id);
                 if (activityType == null)
                     return HttpNotFound();
+
+                if (activityType.Activities.Count != 0)
+                {
+                    ModelState.AddModelError("", "You cannot modify an activity type that is currently in use");
+                    MakeBreadCrumbs();
+                    return View(model);
+                }
+
                 activityType.Update(model);
                 db.SaveChanges();
                 return RedirectToAction("Index");
