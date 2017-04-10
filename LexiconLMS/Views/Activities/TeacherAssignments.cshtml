@@ -7,24 +7,22 @@
             <th>@Html.DisplayNameFor(m => Model.Assignments.FirstOrDefault().Student)</th>
             <th data-defaultsort="desc">@Html.DisplayNameFor(m => Model.Assignments.FirstOrDefault().CreateDate)</th>
             <th>@Html.DisplayNameFor(m => Model.Assignments.FirstOrDefault().Status)</th>
+            <th data-defaultsort="disabled"></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model.Assignments)
         {
             <tr>
-                <td>
-                    @if (item.HasDocument)
-                         {
-                             @Html.ActionLink(item.Student, "Download", "Documents", new {Id = item.DocumentId}, new {target = "_blank"})
-                         }
-                         else
-                         {
-                             @Html.DisplayFor(m => item.Student)
-                         }
-                </td>
+                <td>@Html.DisplayFor(m => item.Student)</td>
                 <td>@Html.DisplayFor(m => item.CreateDate)</td>
                 <td>@Html.DisplayFor(m => item.Status)</td>
+                <td>
+                    @if (item.HasDocument)
+                    {
+                        @Html.ActionLink("Download", "Download", "Documents", new { Id = item.DocumentId }, new { target = "_blank" })
+                    }
+                </td>
             </tr>
         }
     </tbody>
